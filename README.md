@@ -1,4 +1,4 @@
-<h1 align="center">Travel Package Proposal API</h1>
+<h1 align="center">Travel Package Proposal API (under construction)</h1>
 
 ## :bulb: About the project
 
