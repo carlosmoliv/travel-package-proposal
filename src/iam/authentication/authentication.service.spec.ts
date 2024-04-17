@@ -31,13 +31,18 @@ describe('AuthenticationService', () => {
   });
 
   describe('signUp()', () => {
-    test('Registration a new user', async () => {
-      // Arrange
-      const payload: SignUpPayload = {
+    let payload: SignUpPayload;
+
+    beforeEach(() => {
+      payload = {
         email: faker.internet.email(),
         password: faker.internet.password(),
         name: faker.person.fullName(),
       };
+    });
+
+    test('Registration a new user', async () => {
+      // Arrange
       userRepository.findByCriteria.mockResolvedValue(undefined);
       hashingService.hash.mockResolvedValue('hashedPassword');
 
@@ -53,11 +58,6 @@ describe('AuthenticationService', () => {
 
     test('Registration fails when the provided email already exists', async () => {
       // Arrange
-      const payload: SignUpPayload = {
-        email: faker.internet.email(),
-        password: faker.internet.password(),
-        name: faker.person.fullName(),
-      };
       userRepository.findByCriteria.mockResolvedValue(
         userFactory.create(
           faker.person.fullName(),
