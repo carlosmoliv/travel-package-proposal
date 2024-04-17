@@ -13,16 +13,11 @@ export class AuthenticationService {
   ) {}
 
   async signUp(payload: SignUpPayload): Promise<void> {
-    const userExists = await this.userRepository.findByCriteria({
-      email: payload.name,
-    });
+    const { name, email, password } = payload;
+    const userExists = await this.userRepository.findByCriteria({ email });
     if (userExists) throw new ConflictException();
-    const hashedPassword = await this.hashingService.hash(payload.password);
-    const user = this.userFactory.create(
-      payload.name,
-      payload.email,
-      hashedPassword,
-    );
+    const hashedPassword = await this.hashingService.hash(password);
+    const user = this.userFactory.create(name, email, hashedPassword);
     await this.userRepository.save(user);
   }
 }
