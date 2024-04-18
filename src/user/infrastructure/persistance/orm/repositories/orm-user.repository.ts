@@ -24,6 +24,6 @@ export class OrmUserRepository implements UserRepository {
     email?: string;
   }): Promise<User> {
     const user = await this.userRepository.findOne({ where: criteria });
-    return UserMapper.toDomain(user);
+    return user && UserMapper.toDomain(user);
   }
 }
