@@ -40,7 +40,7 @@ describe('Authentication (e2e)', () => {
 
   describe('POST /authentication/sign-up', () => {
     test('Sign up a User successfully', async () => {
-      const password = faker.internet.password();
+      const password = faker.internet.password({ prefix: '!Aa0' });
       const dto: SignUpDto = {
         email: faker.internet.email(),
         name: faker.person.fullName(),
@@ -48,9 +48,11 @@ describe('Authentication (e2e)', () => {
         confirmPassword: password,
       };
 
-      const { statusCode } = await request(app.getHttpServer())
+      const { statusCode, body } = await request(app.getHttpServer())
         .post('/authentication/sign-up')
         .send(dto);
+
+      console.log(body);
 
       expect(statusCode).toBe(HttpStatus.CREATED);
       const userExists = await userRepository.findByCriteria({
@@ -73,5 +75,25 @@ describe('Authentication (e2e)', () => {
 
       expect(statusCode).toBe(HttpStatus.BAD_REQUEST);
     });
+
+    test.each(['name', 'email', 'password', 'confirmPassword'])(
+      'SignUp fails when %s is not valid',
+      async (field) => {
+        const password = faker.internet.password();
+        const dto: SignUpDto = {
+          email: faker.internet.email(),
+          name: faker.person.fullName(),
+          password,
+          confirmPassword: password,
+        };
+        delete dto[field];
+
+        const { statusCode } = await request(app.getHttpServer())
+          .post('/authentication/sign-up')
+          .send(dto);
+
+        expect(statusCode).toBe(HttpStatus.BAD_REQUEST);
+      },
+    );
   });
 });

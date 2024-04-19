@@ -1,10 +1,15 @@
 import { MatchesProperty } from '../../../common/decorators/validation/matches-property';
+import { IsEmail, IsStrongPassword, MinLength } from 'class-validator';
 
 export class SignUpDto {
+  @MinLength(3)
   name: string;
 
+  @IsEmail()
   email: string;
 
+  @IsStrongPassword()
+  @MinLength(8)
   password: string;
 
   @MatchesProperty('password', { message: 'Passwords do not match.' })
