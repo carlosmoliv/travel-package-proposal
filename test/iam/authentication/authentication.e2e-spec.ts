@@ -39,15 +39,19 @@ describe('Authentication (e2e)', () => {
   });
 
   describe('POST /authentication/sign-up', () => {
-    test('Sign up a User successfully', async () => {
+    let dto: SignUpDto;
+
+    beforeEach(() => {
       const password = faker.internet.password({ prefix: '!Aa0' });
-      const dto: SignUpDto = {
+      dto = {
         email: faker.internet.email(),
         name: faker.person.fullName(),
         password,
         confirmPassword: password,
       };
+    });
 
+    test('Sign up a User successfully', async () => {
       const { statusCode } = await request(app.getHttpServer())
         .post('/authentication/sign-up')
         .send(dto);
@@ -60,13 +64,7 @@ describe('Authentication (e2e)', () => {
     });
 
     test('Password and confirm password should match', async () => {
-      const dto: SignUpDto = {
-        email: faker.internet.email(),
-        name: faker.person.fullName(),
-        password: faker.internet.password(),
-        confirmPassword: faker.internet.password(),
-      };
-
+      dto.confirmPassword = faker.internet.password({ prefix: '!Aa0' });
       const { statusCode } = await request(app.getHttpServer())
         .post('/authentication/sign-up')
         .send(dto);
@@ -77,32 +75,21 @@ describe('Authentication (e2e)', () => {
     test.each(['name', 'email', 'password', 'confirmPassword'])(
       'Invalid %s is not allowed',
       async (field) => {
-        const password = faker.internet.password();
-        const dto: SignUpDto = {
-          email: faker.internet.email(),
-          name: faker.person.fullName(),
-          password,
-          confirmPassword: password,
-        };
+        // Arrange
         delete dto[field];
 
+        // Act
         const { statusCode } = await request(app.getHttpServer())
           .post('/authentication/sign-up')
           .send(dto);
 
+        // Assert
         expect(statusCode).toBe(HttpStatus.BAD_REQUEST);
       },
     );
 
     test('User cannot register with an existent email', async () => {
       // Arrange
-      const password = faker.internet.password({ prefix: '!Aa0' });
-      const dto: SignUpDto = {
-        email: faker.internet.email(),
-        name: faker.person.fullName(),
-        password,
-        confirmPassword: password,
-      };
       await request(app.getHttpServer())
         .post('/authentication/sign-up')
         .send(dto);
