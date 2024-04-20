@@ -48,11 +48,9 @@ describe('Authentication (e2e)', () => {
         confirmPassword: password,
       };
 
-      const { statusCode, body } = await request(app.getHttpServer())
+      const { statusCode } = await request(app.getHttpServer())
         .post('/authentication/sign-up')
         .send(dto);
-
-      console.log(body);
 
       expect(statusCode).toBe(HttpStatus.CREATED);
       const userExists = await userRepository.findByCriteria({
@@ -61,7 +59,7 @@ describe('Authentication (e2e)', () => {
       expect(userExists).toBeTruthy();
     });
 
-    test('SignUp fails when password and confirm password dont match', async () => {
+    test('Password and confirm password should match', async () => {
       const dto: SignUpDto = {
         email: faker.internet.email(),
         name: faker.person.fullName(),
@@ -77,7 +75,7 @@ describe('Authentication (e2e)', () => {
     });
 
     test.each(['name', 'email', 'password', 'confirmPassword'])(
-      'SignUp fails when %s is not valid',
+      'Invalid %s is not allowed',
       async (field) => {
         const password = faker.internet.password();
         const dto: SignUpDto = {
@@ -95,5 +93,27 @@ describe('Authentication (e2e)', () => {
         expect(statusCode).toBe(HttpStatus.BAD_REQUEST);
       },
     );
+
+    test('User cannot register with an existent email', async () => {
+      // Arrange
+      const password = faker.internet.password({ prefix: '!Aa0' });
+      const dto: SignUpDto = {
+        email: faker.internet.email(),
+        name: faker.person.fullName(),
+        password,
+        confirmPassword: password,
+      };
+      await request(app.getHttpServer())
+        .post('/authentication/sign-up')
+        .send(dto);
+
+      // Act
+      const { statusCode } = await request(app.getHttpServer())
+        .post('/authentication/sign-up')
+        .send(dto);
+
+      // Assert
+      expect(statusCode).toBe(HttpStatus.CONFLICT);
+    });
   });
 });

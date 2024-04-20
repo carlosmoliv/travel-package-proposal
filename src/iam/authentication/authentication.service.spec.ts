@@ -41,7 +41,7 @@ describe('AuthenticationService', () => {
       };
     });
 
-    test('Registration a new user', async () => {
+    test('Registration of a new user', async () => {
       // Arrange
       userRepository.findByCriteria.mockResolvedValue(undefined);
       hashingService.hash.mockResolvedValue('hashedPassword');
@@ -56,7 +56,7 @@ describe('AuthenticationService', () => {
       });
     });
 
-    test('Registration fails when the provided email already exists', async () => {
+    test('Registration throws an exception when the email provided is already in use', async () => {
       // Arrange
       userRepository.findByCriteria.mockResolvedValue(
         userFactory.create(
