@@ -1,7 +1,7 @@
 import { MockProxy, mock } from 'jest-mock-extended';
 import { faker } from '@faker-js/faker';
 import { Test, TestingModule } from '@nestjs/testing';
-import { ConflictException } from '@nestjs/common';
+import { ConflictException, UnauthorizedException } from '@nestjs/common';
 
 import { AuthenticationService } from './authentication.service';
 import { UserRepository } from '../../user/application/ports/user.repository';
@@ -101,6 +101,22 @@ describe('AuthenticationService', () => {
 
       // Assert
       expect(accessToken).toBe('generated_token');
+    });
+
+    test('Returns unauthorized exception when an invalid password is provided', async () => {
+      // Arrange
+      userRepository.findByCriteria.mockResolvedValue(
+        userFactory.create(
+          'any_id',
+          'any_name',
+          payload.email,
+          'hashed_password',
+        ),
+      );
+      hashingService.compare.mockResolvedValue(false);
+
+      // Assert
+      await expect(sut.signIn(payload)).rejects.toThrow(UnauthorizedException);
     });
   });
 });

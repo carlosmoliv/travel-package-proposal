@@ -29,11 +29,18 @@ export class AuthenticationService {
   }
 
   async signIn(payload: SignInPayload) {
-    const { email } = payload;
+    const { email, password } = payload;
     const user = await this.userRepository.findByCriteria({
       email: payload.email,
     });
     if (!user) throw new UnauthorizedException('User does not exists');
+    const passwordMatch = await this.hashingService.compare(
+      password,
+      user.password,
+    );
+    if (!passwordMatch) {
+      throw new UnauthorizedException('Password does not match');
+    }
     return this.tokenService.generate({ userId: user.id, email }, 3600);
   }
 }
