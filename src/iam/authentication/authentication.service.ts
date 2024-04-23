@@ -33,13 +33,13 @@ export class AuthenticationService {
     const user = await this.userRepository.findByCriteria({
       email: payload.email,
     });
-    if (!user) throw new UnauthorizedException('User does not exists');
+    if (!user) throw new UnauthorizedException('User does not exists.');
     const passwordMatch = await this.hashingService.compare(
       password,
       user.password,
     );
     if (!passwordMatch) {
-      throw new UnauthorizedException('Password does not match');
+      throw new UnauthorizedException('Password does not match.');
     }
     return this.tokenService.generate({ userId: user.id, email }, 3600);
   }

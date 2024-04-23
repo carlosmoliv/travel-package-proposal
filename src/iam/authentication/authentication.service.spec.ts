@@ -118,5 +118,13 @@ describe('AuthenticationService', () => {
       // Assert
       await expect(sut.signIn(payload)).rejects.toThrow(UnauthorizedException);
     });
+
+    test('Returns unauthorized exception when User does not exists', async () => {
+      // Arrange
+      userRepository.findByCriteria.mockResolvedValue(undefined);
+
+      // Act and Assert
+      await expect(sut.signIn(payload)).rejects.toThrow(UnauthorizedException);
+    });
   });
 });
