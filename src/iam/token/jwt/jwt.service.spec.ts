@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { JwtModule } from '@nestjs/jwt';
 
 import { JwtService } from './jwt.service';
-import jwtConfig from './config/jwt.config';
+import jwtConfig from './jwt.config';
 
 describe('JwtService', () => {
   let service: JwtService;
