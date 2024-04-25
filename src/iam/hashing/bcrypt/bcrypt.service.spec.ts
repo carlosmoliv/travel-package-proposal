@@ -12,12 +12,23 @@ describe('BcryptService', () => {
   });
 
   describe('hash()', () => {
-    test('Generates a hashed value from the data provided', () => {
+    test('Generates a hashed value from the data provided.', async () => {
       const data = '12345678';
 
-      const hashedData = sut.hash(data);
+      const hashedData = await sut.hash(data);
 
       expect(hashedData).not.toBe(data);
+    });
+  });
+
+  describe('compare()', () => {
+    test('Returns true if the provided data matches the hashed value.', async () => {
+      const data = '12345678';
+      const hashedData = await sut.hash(data);
+
+      const dataMatch = await sut.compare(data, hashedData);
+
+      expect(dataMatch).toBe(true);
     });
   });
 });
