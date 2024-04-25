@@ -30,5 +30,14 @@ describe('BcryptService', () => {
 
       expect(dataMatch).toBe(true);
     });
+
+    test('Returns false if the provided data does not match the hashed value.', async () => {
+      const data = '12345678';
+      const hashedData = await sut.hash(data);
+
+      const dataMatch = await sut.compare('invalid_data', hashedData);
+
+      expect(dataMatch).toBe(false);
+    });
   });
 });
