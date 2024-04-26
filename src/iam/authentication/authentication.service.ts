@@ -13,6 +13,7 @@ import { UserFactory } from '../../user/domain/factories/user.factory';
 import { SignInPayload } from './payloads/sign-in.payload';
 import { TokenService } from '../ports/token.service';
 import iamConfig from '../iam.config';
+import { ActiveUserData } from '../interfaces/active-user-data.interface';
 
 @Injectable()
 export class AuthenticationService {
@@ -47,7 +48,7 @@ export class AuthenticationService {
     if (!passwordMatch) {
       throw new UnauthorizedException('Password does not match.');
     }
-    const accessToken = await this.tokenService.generate(
+    const accessToken = await this.tokenService.generate<ActiveUserData>(
       { userId: user.id, email },
       this.iamConfiguration.accessTokenTtl,
     );
