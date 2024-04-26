@@ -23,6 +23,10 @@ import iamConfig from './iam.config';
       provide: HashingService,
       useClass: BcryptService,
     },
+    {
+      provide: TokenService,
+      useClass: JwtService,
+    },
     AuthenticationService,
     JwtService,
   ],
