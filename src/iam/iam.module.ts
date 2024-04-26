@@ -1,4 +1,7 @@
 import { Module } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
+import { ConfigModule } from '@nestjs/config';
+
 import { BcryptService } from './hashing/bcrypt/bcrypt.service';
 import { HashingService } from './ports/hashing.service';
 import { AuthenticationService } from './authentication/authentication.service';
@@ -6,9 +9,7 @@ import { AuthenticationController } from './authentication/authentication.contro
 import { UserModule } from '../user/user.module';
 import { JwtService } from './token/jwt/jwt.service';
 import { TokenService } from './ports/token.service';
-import { ConfigModule } from '@nestjs/config';
 import jwtConfig from './token/jwt/jwt.config';
-import { JwtModule } from '@nestjs/jwt';
 import iamConfig from './iam.config';
 
 @Module({

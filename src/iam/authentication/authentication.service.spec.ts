@@ -10,6 +10,8 @@ import { SignUpPayload } from './payloads/sign-up.payload';
 import { UserFactory } from '../../user/domain/factories/user.factory';
 import { SignInPayload } from './payloads/sign-in.payload';
 import { TokenService } from '../ports/token.service';
+import { ConfigModule } from '@nestjs/config';
+import iamConfig from '../iam.config';
 
 describe('AuthenticationService', () => {
   let sut: AuthenticationService;
@@ -20,6 +22,7 @@ describe('AuthenticationService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [ConfigModule.forRoot({}), ConfigModule.forFeature(iamConfig)],
       providers: [
         AuthenticationService,
         UserFactory,
@@ -91,16 +94,17 @@ describe('AuthenticationService', () => {
           'any_id',
           'any_name',
           payload.email,
-          payload.password,
+          'hashed_password',
         ),
       );
+      hashingService.compare.mockResolvedValue(true);
       tokenService.generate.mockResolvedValue('generated_token');
 
       // Act
       const accessToken = await sut.signIn(payload);
 
       // Assert
-      expect(accessToken).toBe('generated_token');
+      expect(accessToken).toEqual({ accessToken: 'generated_token' });
     });
 
     test('Returns unauthorized exception when an invalid password is provided', async () => {
