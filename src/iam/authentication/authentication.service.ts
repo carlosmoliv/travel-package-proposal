@@ -16,6 +16,7 @@ import iamConfig from '../iam.config';
 import { ActiveUserData } from '../interfaces/active-user-data.interface';
 import { randomUUID } from 'crypto';
 import { RefreshTokenData } from '../interfaces/refresh-token-data.interface';
+import { User } from '../../user/domain/entities/user.entity';
 
 @Injectable()
 export class AuthenticationService {
@@ -38,26 +39,30 @@ export class AuthenticationService {
   }
 
   async signIn(payload: SignInPayload) {
-    const { email, password } = payload;
     const user = await this.userRepository.findByCriteria({
       email: payload.email,
     });
     if (!user) throw new UnauthorizedException('User does not exists.');
     const passwordMatch = await this.hashingService.compare(
-      password,
+      payload.password,
       user.password,
     );
     if (!passwordMatch) {
       throw new UnauthorizedException('Password does not match.');
     }
+    return this.generateTokens(user);
+  }
+
+  private async generateTokens(user: User) {
+    const { id, email } = user;
     const refreshTokenId = randomUUID();
     const [accessToken, refreshToken] = await Promise.all([
       this.tokenService.generate<ActiveUserData>(
-        { userId: user.id, email },
+        { userId: id, email },
         this.iamConfiguration.accessTokenTtl,
       ),
       this.tokenService.generate<RefreshTokenData>(
-        { userId: user.id, refreshTokenId },
+        { userId: id, refreshTokenId },
         this.iamConfiguration.refreshTokenTtl,
       ),
     ]);
