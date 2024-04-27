@@ -14,6 +14,8 @@ import { SignInPayload } from './payloads/sign-in.payload';
 import { TokenService } from '../ports/token.service';
 import iamConfig from '../iam.config';
 import { ActiveUserData } from '../interfaces/active-user-data.interface';
+import { randomUUID } from 'crypto';
+import { RefreshTokenData } from '../interfaces/refresh-token-data.interface';
 
 @Injectable()
 export class AuthenticationService {
@@ -48,10 +50,17 @@ export class AuthenticationService {
     if (!passwordMatch) {
       throw new UnauthorizedException('Password does not match.');
     }
-    const accessToken = await this.tokenService.generate<ActiveUserData>(
-      { userId: user.id, email },
-      this.iamConfiguration.accessTokenTtl,
-    );
-    return { accessToken };
+    const refreshTokenId = randomUUID();
+    const [accessToken, refreshToken] = await Promise.all([
+      this.tokenService.generate<ActiveUserData>(
+        { userId: user.id, email },
+        this.iamConfiguration.accessTokenTtl,
+      ),
+      this.tokenService.generate<RefreshTokenData>(
+        { userId: user.id, refreshTokenId },
+        this.iamConfiguration.refreshTokenTtl,
+      ),
+    ]);
+    return { accessToken, refreshToken };
   }
 }

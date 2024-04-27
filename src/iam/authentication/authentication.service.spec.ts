@@ -87,7 +87,7 @@ describe('AuthenticationService', () => {
       };
     });
 
-    test('Authenticate User and return the accessToken', async () => {
+    test('Authenticate User returning the accessToken and refreshToken', async () => {
       // Arrange
       userRepository.findByCriteria.mockResolvedValue(
         userFactory.create(
@@ -98,13 +98,17 @@ describe('AuthenticationService', () => {
         ),
       );
       hashingService.compare.mockResolvedValue(true);
-      tokenService.generate.mockResolvedValue('generated_token');
+      tokenService.generate.mockResolvedValueOnce('generated_access_token');
+      tokenService.generate.mockResolvedValueOnce('generated_refresh_token');
 
       // Act
-      const accessToken = await sut.signIn(payload);
+      const tokens = await sut.signIn(payload);
 
       // Assert
-      expect(accessToken).toEqual({ accessToken: 'generated_token' });
+      expect(tokens).toEqual({
+        accessToken: 'generated_access_token',
+        refreshToken: 'generated_refresh_token',
+      });
     });
 
     test('Returns unauthorized exception when an invalid password is provided', async () => {
