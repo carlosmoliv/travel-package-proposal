@@ -130,5 +130,21 @@ describe('Authentication (e2e)', () => {
       expect(body.accessToken).toBeTruthy();
       expect(body.refreshToken).toBeTruthy();
     });
+
+    test.each(['email', 'password'])(
+      'Invalid %s is required',
+      async (field) => {
+        // Arrange
+        delete dto[field];
+
+        // Act
+        const { statusCode } = await request(app.getHttpServer())
+          .post('/authentication/sign-in')
+          .send(dto);
+
+        // Assert
+        expect(statusCode).toBe(HttpStatus.BAD_REQUEST);
+      },
+    );
   });
 });
