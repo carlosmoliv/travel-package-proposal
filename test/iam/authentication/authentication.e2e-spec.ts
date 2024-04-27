@@ -2,7 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
 import { HttpStatus, INestApplication, ValidationPipe } from '@nestjs/common';
 import { faker } from '@faker-js/faker';
-import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 
@@ -10,7 +9,6 @@ import { IamModule } from '../../../src/iam/iam.module';
 import { UserRepository } from '../../../src/user/application/ports/user.repository';
 import { SignUpDto } from '../../../src/iam/authentication/dtos/sign-up.dto';
 import { SignInDto } from '../../../src/iam/authentication/dtos/sign-in.dto';
-import jwtConfig from '../../../src/iam/token/jwt/jwt.config';
 
 describe('Authentication (e2e)', () => {
   let app: INestApplication;
@@ -30,7 +28,6 @@ describe('Authentication (e2e)', () => {
           synchronize: true,
         }),
         ConfigModule.forRoot(),
-        JwtModule.registerAsync(jwtConfig.asProvider()),
         IamModule,
       ],
     }).compile();
@@ -120,7 +117,7 @@ describe('Authentication (e2e)', () => {
       };
     });
 
-    test('Sign in a User successfully returning the access token', async () => {
+    test('Sign in a User successfully returning valid access and refresh tokens', async () => {
       await request(app.getHttpServer())
         .post('/authentication/sign-up')
         .send({ ...dto, confirmPassword: dto.password, name: 'any_name' });
@@ -131,6 +128,7 @@ describe('Authentication (e2e)', () => {
 
       expect(statusCode).toBe(HttpStatus.OK);
       expect(body.accessToken).toBeTruthy();
+      expect(body.refreshToken).toBeTruthy();
     });
   });
 });
