@@ -6,6 +6,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { IamModule } from './iam/iam.module';
 import { UserModule } from './user/user.module';
+import { SharedModule } from './shared/shared.module';
 import appConfig from './config/app.config';
 
 @Module({
@@ -23,6 +24,7 @@ import appConfig from './config/app.config';
     }),
     IamModule,
     UserModule,
+    SharedModule,
   ],
   controllers: [AppController],
   providers: [AppService],

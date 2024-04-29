@@ -16,7 +16,7 @@ import iamConfig from '../iam.config';
 import { ActiveUserData } from '../interfaces/active-user-data.interface';
 import { randomUUID } from 'crypto';
 import { RefreshTokenData } from '../interfaces/refresh-token-data.interface';
-import { User } from '../../user/domain/entities/user.entity';
+import { User } from '../../user/domain/user';
 
 @Injectable()
 export class AuthenticationService {
