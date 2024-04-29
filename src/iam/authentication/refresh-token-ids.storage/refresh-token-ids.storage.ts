@@ -15,6 +15,10 @@ export class RefreshTokenIdsStorage {
     return storedId === tokenId;
   }
 
+  async invalidate(userId: string): Promise<void> {
+    await this.storageService.del(this.getKey(userId));
+  }
+
   private getKey(userId: string): string {
     return `user-${userId}`;
   }

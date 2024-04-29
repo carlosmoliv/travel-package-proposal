@@ -54,4 +54,17 @@ describe('RefreshTokenIdsStorageService', () => {
       expect(result).toBe(false);
     });
   });
+
+  describe('invalidate()', () => {
+    test('Delete the token for the specified user', async () => {
+      const userId = '123';
+      const expectedKey = 'user-123';
+      storageService.del.mockResolvedValue();
+
+      await sut.invalidate(userId);
+
+      expect(storageService.del).toHaveBeenCalledWith(expectedKey);
+      expect(storageService.del).toHaveBeenCalledTimes(1);
+    });
+  });
 });
