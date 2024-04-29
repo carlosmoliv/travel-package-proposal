@@ -5,6 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
+import { randomUUID } from 'crypto';
 
 import { SignUpPayload } from './payloads/sign-up.payload';
 import { UserRepository } from '../../user/application/ports/user.repository';
@@ -14,9 +15,9 @@ import { SignInPayload } from './payloads/sign-in.payload';
 import { TokenService } from '../ports/token.service';
 import iamConfig from '../iam.config';
 import { ActiveUserData } from '../interfaces/active-user-data.interface';
-import { randomUUID } from 'crypto';
 import { RefreshTokenData } from '../interfaces/refresh-token-data.interface';
 import { User } from '../../user/domain/user';
+import { RefreshTokenIdsStorage } from './refresh-token-ids.storage/refresh-token-ids.storage';
 
 @Injectable()
 export class AuthenticationService {
@@ -27,6 +28,7 @@ export class AuthenticationService {
     private readonly tokenService: TokenService,
     @Inject(iamConfig.KEY)
     private readonly iamConfiguration: ConfigType<typeof iamConfig>,
+    private readonly refreshTokenIdsStorage: RefreshTokenIdsStorage,
   ) {}
 
   async signUp(payload: SignUpPayload): Promise<void> {
@@ -66,6 +68,7 @@ export class AuthenticationService {
         this.iamConfiguration.refreshTokenTtl,
       ),
     ]);
+    await this.refreshTokenIdsStorage.insert(user.id, refreshTokenId);
     return { accessToken, refreshToken };
   }
 }

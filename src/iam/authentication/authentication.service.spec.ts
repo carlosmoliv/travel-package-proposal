@@ -2,6 +2,7 @@ import { MockProxy, mock } from 'jest-mock-extended';
 import { faker } from '@faker-js/faker';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConflictException, UnauthorizedException } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 
 import { AuthenticationService } from './authentication.service';
 import { UserRepository } from '../../user/application/ports/user.repository';
@@ -10,8 +11,14 @@ import { SignUpPayload } from './payloads/sign-up.payload';
 import { UserFactory } from '../../user/domain/factories/user.factory';
 import { SignInPayload } from './payloads/sign-in.payload';
 import { TokenService } from '../ports/token.service';
-import { ConfigModule } from '@nestjs/config';
 import iamConfig from '../iam.config';
+import { RefreshTokenIdsStorage } from './refresh-token-ids.storage/refresh-token-ids.storage';
+
+const mockRefreshTokenIdsStorage = {
+  insert: jest.fn(),
+  validate: jest.fn(),
+  invalidate: jest.fn(),
+};
 
 describe('AuthenticationService', () => {
   let sut: AuthenticationService;
@@ -19,6 +26,7 @@ describe('AuthenticationService', () => {
   let hashingService: MockProxy<HashingService>;
   let tokenService: MockProxy<TokenService>;
   let userFactory: UserFactory;
+  let refreshTokenIdsStorage: jest.Mocked<RefreshTokenIdsStorage>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -29,6 +37,10 @@ describe('AuthenticationService', () => {
         { provide: UserRepository, useValue: mock() },
         { provide: HashingService, useValue: mock() },
         { provide: TokenService, useValue: mock() },
+        {
+          provide: RefreshTokenIdsStorage,
+          useValue: mockRefreshTokenIdsStorage,
+        },
       ],
     }).compile();
     sut = module.get<AuthenticationService>(AuthenticationService);
@@ -36,6 +48,7 @@ describe('AuthenticationService', () => {
     hashingService = module.get<MockProxy<HashingService>>(HashingService);
     tokenService = module.get<MockProxy<TokenService>>(TokenService);
     userFactory = module.get<UserFactory>(UserFactory);
+    refreshTokenIdsStorage = module.get(RefreshTokenIdsStorage);
   });
 
   describe('signUp()', () => {
@@ -100,6 +113,7 @@ describe('AuthenticationService', () => {
       hashingService.compare.mockResolvedValue(true);
       tokenService.generate.mockResolvedValueOnce('generated_access_token');
       tokenService.generate.mockResolvedValueOnce('generated_refresh_token');
+      refreshTokenIdsStorage.insert.mockResolvedValue();
 
       // Act
       const tokens = await sut.signIn(payload);
@@ -109,6 +123,7 @@ describe('AuthenticationService', () => {
         accessToken: 'generated_access_token',
         refreshToken: 'generated_refresh_token',
       });
+      expect(refreshTokenIdsStorage.insert).toHaveBeenCalled();
     });
 
     test('Returns unauthorized exception when an invalid password is provided', async () => {
