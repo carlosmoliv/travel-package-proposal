@@ -9,10 +9,12 @@ import { IamModule } from '../../../src/iam/iam.module';
 import { UserRepository } from '../../../src/user/application/ports/user.repository';
 import { SignUpDto } from '../../../src/iam/authentication/dtos/sign-up.dto';
 import { SignInDto } from '../../../src/iam/authentication/dtos/sign-in.dto';
+import { StorageService } from '../../../src/shared/application/ports/storage.service';
 
 describe('Authentication (e2e)', () => {
   let app: INestApplication;
   let userRepository: UserRepository;
+  let storageService: StorageService;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -35,6 +37,8 @@ describe('Authentication (e2e)', () => {
     app.useGlobalPipes(new ValidationPipe());
     await app.init();
     userRepository = moduleFixture.get<UserRepository>(UserRepository);
+    userRepository = moduleFixture.get<UserRepository>(UserRepository);
+    storageService = moduleFixture.get<StorageService>(StorageService);
   });
 
   afterAll(() => {
@@ -129,6 +133,20 @@ describe('Authentication (e2e)', () => {
       expect(statusCode).toBe(HttpStatus.OK);
       expect(body.accessToken).toBeTruthy();
       expect(body.refreshToken).toBeTruthy();
+    });
+
+    test('Sign in a User successfully returning valid tokens and storing the refreshTokenId', async () => {
+      await request(app.getHttpServer())
+        .post('/authentication/sign-up')
+        .send({ ...dto, confirmPassword: dto.password, name: 'any_name' });
+
+      await request(app.getHttpServer())
+        .post('/authentication/sign-in')
+        .send(dto);
+
+      const user = await userRepository.findByCriteria({ email: dto.email });
+      const savedToStorage = await storageService.get(`user-${user.id}`);
+      expect(savedToStorage).toBeTruthy();
     });
 
     test.each(['email', 'password'])(
