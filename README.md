@@ -1,4 +1,4 @@
-<h1 align="center">Travel Package Proposal API (under construction)</h1>
+<h1 style="text-align: center;">Travel Package Proposal API (under construction)</h1>
 
 ## :bulb: About the project
 
@@ -7,15 +7,15 @@ The goal of this project is to gain a deep understanding of the features and cap
 For now, I've been considering the following approaches:
 
 - Writing unit tests for services, repositories, domain classes containing crucial logic, utility classes, etc.
-- integration/e2e tests for endpoints using real implementations as much as possible.
-- Using Docker to construct the test database environment every time an e2e test is executed.
+- Integration/e2e tests for endpoints using real implementations as much as possible.
+- Using Docker to construct the services environment every time an e2e test is executed.
 - Implementing a dedicated layer for IAM.
 - Implementing authentication using email and password, social login with Google, and also 2FA.
 - Implementing dynamic refresh tokens.
 - Implementing roles and permissions authorization.
 - Shifting the focus less on clean architecture and more on DDD for this project.
 
-## :bulb: Requirements
+## :spiral_notepad: Requirements
 
 - **I'll update here soon.**
 
