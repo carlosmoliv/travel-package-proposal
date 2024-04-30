@@ -11,6 +11,8 @@ import { JwtService } from './token/jwt/jwt.service';
 import { TokenService } from './ports/token.service';
 import jwtConfig from './token/jwt/jwt.config';
 import iamConfig from './iam.config';
+import { RefreshTokenIdsStorage } from './authentication/refresh-token-ids.storage/refresh-token-ids.storage';
+import { SharedModule } from '../shared/shared.module';
 
 @Module({
   imports: [
@@ -18,6 +20,7 @@ import iamConfig from './iam.config';
     JwtModule.registerAsync(jwtConfig.asProvider()),
     ConfigModule.forFeature(jwtConfig),
     ConfigModule.forFeature(iamConfig),
+    SharedModule,
   ],
   providers: [
     {
@@ -28,10 +31,11 @@ import iamConfig from './iam.config';
       provide: TokenService,
       useClass: JwtService,
     },
+    RefreshTokenIdsStorage,
     AuthenticationService,
     JwtService,
   ],
   controllers: [AuthenticationController],
-  exports: [AuthenticationService],
+  exports: [AuthenticationService, SharedModule],
 })
 export class IamModule {}
