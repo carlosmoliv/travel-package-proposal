@@ -18,10 +18,12 @@ export class JwtService implements TokenService {
     expirationInSeconds: number,
   ): Promise<string> {
     return this.nestJwtService.signAsync(payload, {
-      audience: this.jwtConfiguration.audience,
-      issuer: this.jwtConfiguration.issuer,
-      secret: this.jwtConfiguration.secret,
+      ...this.jwtConfiguration,
       expiresIn: expirationInSeconds,
     });
+  }
+
+  async validate<T extends Buffer | object>(token: string): Promise<T> {
+    return this.nestJwtService.verifyAsync(token, this.jwtConfiguration);
   }
 }
