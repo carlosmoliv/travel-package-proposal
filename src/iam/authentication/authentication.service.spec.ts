@@ -13,6 +13,7 @@ import { SignInPayload } from './payloads/sign-in.payload';
 import { TokenService } from '../ports/token.service';
 import iamConfig from '../iam.config';
 import { RefreshTokenIdsStorage } from './refresh-token-ids.storage/refresh-token-ids.storage';
+import { RefreshTokenPayload } from './payloads/refresh-token';
 
 const mockRefreshTokenIdsStorage = {
   insert: jest.fn(),
@@ -148,6 +149,33 @@ describe('AuthenticationService', () => {
 
       // Act and Assert
       await expect(sut.signIn(payload)).rejects.toThrow(UnauthorizedException);
+    });
+  });
+
+  describe('refreshTokens()', () => {
+    test('Regenerate tokens when refresh token provided is valid', async () => {
+      const payload: RefreshTokenPayload = { refreshToken: 'refresh_token' };
+      userRepository.findByCriteria.mockResolvedValue(
+        userFactory.create(
+          'any_id',
+          'any_email@email.com',
+          'hashed_password',
+          'any_id',
+        ),
+      );
+      tokenService.validate.mockResolvedValueOnce({
+        userId: 'any_id',
+        refreshTokenId: 'refresh_token_id',
+      });
+      tokenService.generate.mockResolvedValueOnce('regenerated_access_token');
+      tokenService.generate.mockResolvedValueOnce('regenerated_refresh_token');
+
+      const regeneratedTokens = await sut.refreshTokens(payload);
+
+      expect(regeneratedTokens).toEqual({
+        accessToken: 'regenerated_access_token',
+        refreshToken: 'regenerated_refresh_token',
+      });
     });
   });
 });

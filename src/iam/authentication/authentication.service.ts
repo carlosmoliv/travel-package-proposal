@@ -18,6 +18,7 @@ import { ActiveUserData } from '../interfaces/active-user-data.interface';
 import { RefreshTokenData } from '../interfaces/refresh-token-data.interface';
 import { User } from '../../user/domain/user';
 import { RefreshTokenIdsStorage } from './refresh-token-ids.storage/refresh-token-ids.storage';
+import { RefreshTokenPayload } from './payloads/refresh-token';
 
 @Injectable()
 export class AuthenticationService {
@@ -52,6 +53,15 @@ export class AuthenticationService {
     if (!passwordMatch) {
       throw new UnauthorizedException('Password does not match.');
     }
+    return this.generateTokens(user);
+  }
+
+  async refreshTokens(refreshTokenPayload: RefreshTokenPayload) {
+    const { userId } = await this.tokenService.validate<RefreshTokenData>(
+      refreshTokenPayload.refreshToken,
+    );
+    const user = await this.userRepository.findByCriteria({ id: userId });
+    if (!user) throw new UnauthorizedException();
     return this.generateTokens(user);
   }
 
