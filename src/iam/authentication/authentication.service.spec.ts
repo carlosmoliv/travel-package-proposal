@@ -65,8 +65,8 @@ describe('AuthenticationService', () => {
 
     test('Registration of a new user', async () => {
       // Arrange
-      userRepository.findByCriteria.mockResolvedValue(undefined);
-      hashingService.hash.mockResolvedValue('hashed_password');
+      userRepository.findByCriteria.mockResolvedValueOnce(undefined);
+      hashingService.hash.mockResolvedValueOnce('hashed_password');
 
       // Act
       await sut.signUp(payload);
@@ -81,10 +81,10 @@ describe('AuthenticationService', () => {
 
     test('Registration throws an exception when the email provided is already in use', async () => {
       // Arrange
-      userRepository.findByCriteria.mockResolvedValue(
+      userRepository.findByCriteria.mockResolvedValueOnce(
         userFactory.create('any_name', payload.email, payload.password),
       );
-      hashingService.hash.mockResolvedValue('hashed_password');
+      hashingService.hash.mockResolvedValueOnce('hashed_password');
 
       // Act and Assert
       await expect(sut.signUp(payload)).rejects.toThrow(ConflictException);
@@ -103,7 +103,7 @@ describe('AuthenticationService', () => {
 
     test('Authenticate User returning the accessToken and refreshToken', async () => {
       // Arrange
-      userRepository.findByCriteria.mockResolvedValue(
+      userRepository.findByCriteria.mockResolvedValueOnce(
         userFactory.create(
           'any_id',
           'any_name',
@@ -111,10 +111,10 @@ describe('AuthenticationService', () => {
           'hashed_password',
         ),
       );
-      hashingService.compare.mockResolvedValue(true);
+      hashingService.compare.mockResolvedValueOnce(true);
       tokenService.generate.mockResolvedValueOnce('generated_access_token');
       tokenService.generate.mockResolvedValueOnce('generated_refresh_token');
-      refreshTokenIdsStorage.insert.mockResolvedValue();
+      refreshTokenIdsStorage.insert.mockResolvedValueOnce();
 
       // Act
       const tokens = await sut.signIn(payload);
@@ -129,7 +129,7 @@ describe('AuthenticationService', () => {
 
     test('Returns unauthorized exception when an invalid password is provided', async () => {
       // Arrange
-      userRepository.findByCriteria.mockResolvedValue(
+      userRepository.findByCriteria.mockResolvedValueOnce(
         userFactory.create(
           'any_id',
           'any_name',
@@ -137,7 +137,7 @@ describe('AuthenticationService', () => {
           'hashed_password',
         ),
       );
-      hashingService.compare.mockResolvedValue(false);
+      hashingService.compare.mockResolvedValueOnce(false);
 
       // Assert
       await expect(sut.signIn(payload)).rejects.toThrow(UnauthorizedException);
@@ -145,7 +145,7 @@ describe('AuthenticationService', () => {
 
     test('Returns unauthorized exception when User does not exists', async () => {
       // Arrange
-      userRepository.findByCriteria.mockResolvedValue(undefined);
+      userRepository.findByCriteria.mockResolvedValueOnce(undefined);
 
       // Act and Assert
       await expect(sut.signIn(payload)).rejects.toThrow(UnauthorizedException);
@@ -155,7 +155,7 @@ describe('AuthenticationService', () => {
   describe('refreshTokens()', () => {
     test('Regenerate tokens when refresh token provided is valid', async () => {
       const payload: RefreshTokenPayload = { refreshToken: 'refresh_token' };
-      userRepository.findByCriteria.mockResolvedValue(
+      userRepository.findByCriteria.mockResolvedValueOnce(
         userFactory.create(
           'any_id',
           'any_email@email.com',
@@ -178,8 +178,22 @@ describe('AuthenticationService', () => {
       });
     });
 
-    test('Return unauthorized tokens when an invalid refresh token is provided', async () => {
-      userRepository.findByCriteria.mockResolvedValue(
+    test('Throw unauthorized when user is not found', async () => {
+      const payload: RefreshTokenPayload = { refreshToken: 'refresh_token' };
+      userRepository.findByCriteria.mockResolvedValueOnce(undefined);
+      tokenService.validate.mockResolvedValueOnce({
+        userId: 'any_id',
+        refreshTokenId: 'refresh_token_id',
+      });
+
+      await expect(sut.refreshTokens(payload)).rejects.toThrow(
+        UnauthorizedException,
+      );
+    });
+
+    test('Throw unauthorized when refresh token is invalid', async () => {
+      const payload: RefreshTokenPayload = { refreshToken: 'refresh_token' };
+      userRepository.findByCriteria.mockResolvedValueOnce(
         userFactory.create(
           'any_id',
           'any_email@email.com',
@@ -187,14 +201,14 @@ describe('AuthenticationService', () => {
           'any_id',
         ),
       );
-      const error = 'token_error';
-      tokenService.validate.mockRejectedValueOnce(new Error(error));
-
-      const promise = sut.refreshTokens({
-        refreshToken: 'invalid_refresh_token',
+      tokenService.validate.mockResolvedValueOnce({
+        userId: 'any_id',
+        refreshTokenId: 'invalid_refresh_token_id',
       });
 
-      await expect(promise).rejects.toThrow(UnauthorizedException);
+      await expect(sut.refreshTokens(payload)).rejects.toThrow(
+        UnauthorizedException,
+      );
     });
   });
 });
