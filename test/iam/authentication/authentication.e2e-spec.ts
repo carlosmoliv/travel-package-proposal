@@ -10,6 +10,7 @@ import { UserRepository } from '../../../src/user/application/ports/user.reposit
 import { SignUpDto } from '../../../src/iam/authentication/dtos/sign-up.dto';
 import { SignInDto } from '../../../src/iam/authentication/dtos/sign-in.dto';
 import { StorageService } from '../../../src/shared/application/ports/storage.service';
+import { RefreshTokenDto } from '../../../src/iam/authentication/dtos/refresh-token.dto';
 
 describe('Authentication (e2e)', () => {
   let app: INestApplication;
@@ -46,11 +47,11 @@ describe('Authentication (e2e)', () => {
   });
 
   describe('POST /authentication/sign-up', () => {
-    let dto: SignUpDto;
+    let signUpDto: SignUpDto;
 
     beforeEach(() => {
       const password = faker.internet.password({ prefix: '!Aa0' });
-      dto = {
+      signUpDto = {
         email: faker.internet.email(),
         name: faker.person.fullName(),
         password,
@@ -61,20 +62,20 @@ describe('Authentication (e2e)', () => {
     test('Sign up a User successfully', async () => {
       const { statusCode } = await request(app.getHttpServer())
         .post('/authentication/sign-up')
-        .send(dto);
+        .send(signUpDto);
 
       expect(statusCode).toBe(HttpStatus.CREATED);
       const userExists = await userRepository.findByCriteria({
-        email: dto.email,
+        email: signUpDto.email,
       });
       expect(userExists).toBeTruthy();
     });
 
     test('Password and confirm password should match', async () => {
-      dto.confirmPassword = faker.internet.password({ prefix: '!Aa0' });
+      signUpDto.confirmPassword = faker.internet.password({ prefix: '!Aa0' });
       const { statusCode } = await request(app.getHttpServer())
         .post('/authentication/sign-up')
-        .send(dto);
+        .send(signUpDto);
 
       expect(statusCode).toBe(HttpStatus.BAD_REQUEST);
     });
@@ -83,12 +84,12 @@ describe('Authentication (e2e)', () => {
       'Invalid %s is not allowed',
       async (field) => {
         // Arrange
-        delete dto[field];
+        delete signUpDto[field];
 
         // Act
         const { statusCode } = await request(app.getHttpServer())
           .post('/authentication/sign-up')
-          .send(dto);
+          .send(signUpDto);
 
         // Assert
         expect(statusCode).toBe(HttpStatus.BAD_REQUEST);
@@ -99,12 +100,12 @@ describe('Authentication (e2e)', () => {
       // Arrange
       await request(app.getHttpServer())
         .post('/authentication/sign-up')
-        .send(dto);
+        .send(signUpDto);
 
       // Act
       const { statusCode } = await request(app.getHttpServer())
         .post('/authentication/sign-up')
-        .send(dto);
+        .send(signUpDto);
 
       // Assert
       expect(statusCode).toBe(HttpStatus.CONFLICT);
@@ -112,10 +113,10 @@ describe('Authentication (e2e)', () => {
   });
 
   describe('POST /authentication/sign-in', () => {
-    let dto: SignInDto;
+    let signInDto: SignInDto;
 
     beforeEach(() => {
-      dto = {
+      signInDto = {
         email: faker.internet.email(),
         password: faker.internet.password({ prefix: '!Aa0' }),
       };
@@ -124,11 +125,15 @@ describe('Authentication (e2e)', () => {
     test('Sign in a User successfully returning valid access and refresh tokens', async () => {
       await request(app.getHttpServer())
         .post('/authentication/sign-up')
-        .send({ ...dto, confirmPassword: dto.password, name: 'any_name' });
+        .send({
+          ...signInDto,
+          confirmPassword: signInDto.password,
+          name: 'any_name',
+        });
 
       const { statusCode, body } = await request(app.getHttpServer())
         .post('/authentication/sign-in')
-        .send(dto);
+        .send(signInDto);
 
       expect(statusCode).toBe(HttpStatus.OK);
       expect(body.accessToken).toBeTruthy();
@@ -138,13 +143,19 @@ describe('Authentication (e2e)', () => {
     test('Sign in a User successfully returning valid tokens and storing the refreshTokenId', async () => {
       await request(app.getHttpServer())
         .post('/authentication/sign-up')
-        .send({ ...dto, confirmPassword: dto.password, name: 'any_name' });
+        .send({
+          ...signInDto,
+          confirmPassword: signInDto.password,
+          name: 'any_name',
+        });
 
       await request(app.getHttpServer())
         .post('/authentication/sign-in')
-        .send(dto);
+        .send(signInDto);
 
-      const user = await userRepository.findByCriteria({ email: dto.email });
+      const user = await userRepository.findByCriteria({
+        email: signInDto.email,
+      });
       const savedToStorage = await storageService.get(`user-${user.id}`);
       expect(savedToStorage).toBeTruthy();
     });
@@ -153,12 +164,12 @@ describe('Authentication (e2e)', () => {
       'Invalid %s is required',
       async (field) => {
         // Arrange
-        delete dto[field];
+        delete signInDto[field];
 
         // Act
         const { statusCode } = await request(app.getHttpServer())
           .post('/authentication/sign-in')
-          .send(dto);
+          .send(signInDto);
 
         // Assert
         expect(statusCode).toBe(HttpStatus.BAD_REQUEST);
@@ -190,7 +201,9 @@ describe('Authentication (e2e)', () => {
         .send(signInDto);
 
       // Act
-      const refreshTokenDto = { refreshToken: signInRequest.body.refreshToken };
+      const refreshTokenDto: RefreshTokenDto = {
+        refreshToken: signInRequest.body.refreshToken,
+      };
       const { statusCode, body } = await request(app.getHttpServer())
         .post('/authentication/refresh-tokens')
         .send(refreshTokenDto);
