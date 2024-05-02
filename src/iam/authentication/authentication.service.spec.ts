@@ -177,5 +177,24 @@ describe('AuthenticationService', () => {
         refreshToken: 'regenerated_refresh_token',
       });
     });
+
+    test('Return unauthorized tokens when an invalid refresh token is provided', async () => {
+      userRepository.findByCriteria.mockResolvedValue(
+        userFactory.create(
+          'any_id',
+          'any_email@email.com',
+          'hashed_password',
+          'any_id',
+        ),
+      );
+      const error = 'token_error';
+      tokenService.validate.mockRejectedValueOnce(new Error(error));
+
+      const promise = sut.refreshTokens({
+        refreshToken: 'invalid_refresh_token',
+      });
+
+      await expect(promise).rejects.toThrow(UnauthorizedException);
+    });
   });
 });
