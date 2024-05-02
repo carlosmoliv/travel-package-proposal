@@ -210,5 +210,25 @@ describe('AuthenticationService', () => {
         UnauthorizedException,
       );
     });
+
+    test('Invalidate refresh token before generating new tokens', async () => {
+      const payload: RefreshTokenPayload = { refreshToken: 'refresh_token' };
+      const userId = 'any_id';
+      const refreshTokenId = 'refresh_token_id';
+
+      const user = userFactory.create(
+        userId,
+        'any_email@email.com',
+        'hashed_password',
+        'any_id',
+      );
+      userRepository.findByCriteria.mockResolvedValueOnce(user);
+      tokenService.validate.mockResolvedValueOnce({ userId, refreshTokenId });
+      refreshTokenIdsStorage.validate.mockResolvedValueOnce(true);
+
+      await sut.refreshTokens(payload);
+
+      expect(refreshTokenIdsStorage.invalidate).toHaveBeenCalledWith(userId);
+    });
   });
 });
