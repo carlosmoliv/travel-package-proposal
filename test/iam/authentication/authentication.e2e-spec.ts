@@ -165,4 +165,40 @@ describe('Authentication (e2e)', () => {
       },
     );
   });
+
+  describe('POST /authentication/refresh-tokens', () => {
+    let signInDto: SignInDto;
+
+    beforeEach(() => {
+      signInDto = {
+        email: faker.internet.email(),
+        password: faker.internet.password({ prefix: '!Aa0' }),
+      };
+    });
+
+    test('Regenerate access and refresh tokens when a valid refresh token is provided', async () => {
+      // Arrange
+      await request(app.getHttpServer())
+        .post('/authentication/sign-up')
+        .send({
+          ...signInDto,
+          confirmPassword: signInDto.password,
+          name: 'any_name',
+        });
+      const signInRequest = await request(app.getHttpServer())
+        .post('/authentication/sign-in')
+        .send(signInDto);
+
+      // Act
+      const refreshTokenDto = { refreshToken: signInRequest.body.refreshToken };
+      const { statusCode, body } = await request(app.getHttpServer())
+        .post('/authentication/refresh-tokens')
+        .send(refreshTokenDto);
+
+      // Assert
+      expect(statusCode).toBe(HttpStatus.OK);
+      expect(body.accessToken).toBeTruthy();
+      expect(body.refreshToken).toBeTruthy();
+    });
+  });
 });
