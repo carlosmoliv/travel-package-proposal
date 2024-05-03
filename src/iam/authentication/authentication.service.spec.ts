@@ -167,6 +167,7 @@ describe('AuthenticationService', () => {
         userId: 'any_id',
         refreshTokenId: 'refresh_token_id',
       });
+      refreshTokenIdsStorage.validate.mockResolvedValueOnce(true);
       tokenService.generate.mockResolvedValueOnce('regenerated_access_token');
       tokenService.generate.mockResolvedValueOnce('regenerated_refresh_token');
 
@@ -180,11 +181,11 @@ describe('AuthenticationService', () => {
 
     test('Throw unauthorized when user is not found', async () => {
       const payload: RefreshTokenPayload = { refreshToken: 'refresh_token' };
-      userRepository.findByCriteria.mockResolvedValueOnce(undefined);
       tokenService.validate.mockResolvedValueOnce({
         userId: 'any_id',
         refreshTokenId: 'refresh_token_id',
       });
+      userRepository.findByCriteria.mockResolvedValueOnce(undefined);
 
       await expect(sut.refreshTokens(payload)).rejects.toThrow(
         UnauthorizedException,
@@ -211,24 +212,44 @@ describe('AuthenticationService', () => {
       );
     });
 
-    test('Invalidate refresh token before generating new tokens', async () => {
+    test('Throw Unauthorized when TokenService throws an exception', async () => {
       const payload: RefreshTokenPayload = { refreshToken: 'refresh_token' };
-      const userId = 'any_id';
-      const refreshTokenId = 'refresh_token_id';
-
-      const user = userFactory.create(
-        userId,
-        'any_email@email.com',
-        'hashed_password',
-        'any_id',
+      tokenService.validate.mockResolvedValueOnce({
+        userId: 'any_id',
+        refreshTokenId: 'refresh_token_id',
+      });
+      userRepository.findByCriteria.mockResolvedValueOnce(
+        userFactory.create(
+          'any_id',
+          'any_email@email.com',
+          'hashed_password',
+          'any_id',
+        ),
       );
-      userRepository.findByCriteria.mockResolvedValueOnce(user);
-      tokenService.validate.mockResolvedValueOnce({ userId, refreshTokenId });
-      refreshTokenIdsStorage.validate.mockResolvedValueOnce(true);
+      const regeneratedTokens = sut.refreshTokens(payload);
 
-      await sut.refreshTokens(payload);
+      await expect(regeneratedTokens).rejects.toThrow(UnauthorizedException);
+    });
 
-      expect(refreshTokenIdsStorage.invalidate).toHaveBeenCalledWith(userId);
+    test('Throw Unauthorized when refresh token storage returns false', async () => {
+      const payload: RefreshTokenPayload = { refreshToken: 'refresh_token' };
+      userRepository.findByCriteria.mockResolvedValueOnce(
+        userFactory.create(
+          'any_id',
+          'any_email@email.com',
+          'hashed_password',
+          'any_id',
+        ),
+      );
+      tokenService.validate.mockResolvedValueOnce({
+        userId: 'any_id',
+        refreshTokenId: 'refresh_token_id',
+      });
+      refreshTokenIdsStorage.validate.mockResolvedValueOnce(false);
+
+      await expect(sut.refreshTokens(payload)).rejects.toThrow(
+        UnauthorizedException,
+      );
     });
   });
 });

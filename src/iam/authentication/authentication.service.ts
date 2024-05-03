@@ -57,29 +57,29 @@ export class AuthenticationService {
   }
 
   async refreshTokens(refreshTokenPayload: RefreshTokenPayload) {
-    const { userId, refreshTokenId } =
-      await this.validateAndExtractRefreshTokenData(
-        refreshTokenPayload.refreshToken,
-      );
-    const user = await this.userRepository.findByCriteria({ id: userId });
-    if (!user) throw new UnauthorizedException('User not found.');
-    const isValid = await this.refreshTokenIdsStorage.validate(
-      user.id,
-      refreshTokenId,
-    );
-    if (isValid) {
-      await this.refreshTokenIdsStorage.invalidate(user.id);
-    } else {
-      throw new UnauthorizedException('Refresh token is invalid.');
-    }
-    return this.generateTokens(user);
-  }
-
-  private async validateAndExtractRefreshTokenData(refreshToken: string) {
     try {
-      return this.tokenService.validate<RefreshTokenData>(refreshToken);
+      const { userId, refreshTokenId } =
+        await this.tokenService.validate<RefreshTokenData>(
+          refreshTokenPayload.refreshToken,
+        );
+
+      const user = await this.userRepository.findByCriteria({ id: userId });
+      if (!user) throw new Error('User not found.');
+
+      const isValid = await this.refreshTokenIdsStorage.validate(
+        user.id,
+        refreshTokenId,
+      );
+
+      if (isValid) {
+        await this.refreshTokenIdsStorage.invalidate(user.id);
+      } else {
+        throw new Error('Invalid refresh token.');
+      }
+
+      return this.generateTokens(user);
     } catch {
-      throw new UnauthorizedException('Invalid refresh token.');
+      throw new UnauthorizedException();
     }
   }
 
