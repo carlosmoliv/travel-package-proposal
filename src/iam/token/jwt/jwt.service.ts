@@ -23,7 +23,9 @@ export class JwtService implements TokenService {
     });
   }
 
-  async validate<T extends Buffer | object>(token: string): Promise<T> {
+  async validateAndDecode<T extends Buffer | object>(
+    token: string,
+  ): Promise<T> {
     return this.nestJwtService.verifyAsync(token, this.jwtConfiguration);
   }
 }

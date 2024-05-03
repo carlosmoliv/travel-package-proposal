@@ -163,7 +163,7 @@ describe('AuthenticationService', () => {
           'any_id',
         ),
       );
-      tokenService.validate.mockResolvedValueOnce({
+      tokenService.validateAndDecode.mockResolvedValueOnce({
         userId: 'any_id',
         refreshTokenId: 'refresh_token_id',
       });
@@ -181,7 +181,7 @@ describe('AuthenticationService', () => {
 
     test('Throw unauthorized when user is not found', async () => {
       const payload: RefreshTokenPayload = { refreshToken: 'refresh_token' };
-      tokenService.validate.mockResolvedValueOnce({
+      tokenService.validateAndDecode.mockResolvedValueOnce({
         userId: 'any_id',
         refreshTokenId: 'refresh_token_id',
       });
@@ -202,7 +202,7 @@ describe('AuthenticationService', () => {
           'any_id',
         ),
       );
-      tokenService.validate.mockResolvedValueOnce({
+      tokenService.validateAndDecode.mockResolvedValueOnce({
         userId: 'any_id',
         refreshTokenId: 'invalid_refresh_token_id',
       });
@@ -214,7 +214,7 @@ describe('AuthenticationService', () => {
 
     test('Throw Unauthorized when TokenService throws an exception', async () => {
       const payload: RefreshTokenPayload = { refreshToken: 'refresh_token' };
-      tokenService.validate.mockResolvedValueOnce({
+      tokenService.validateAndDecode.mockResolvedValueOnce({
         userId: 'any_id',
         refreshTokenId: 'refresh_token_id',
       });
@@ -241,7 +241,7 @@ describe('AuthenticationService', () => {
           'any_id',
         ),
       );
-      tokenService.validate.mockResolvedValueOnce({
+      tokenService.validateAndDecode.mockResolvedValueOnce({
         userId: 'any_id',
         refreshTokenId: 'refresh_token_id',
       });

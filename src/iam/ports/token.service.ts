@@ -3,5 +3,7 @@ export abstract class TokenService {
     payload: T,
     expirationInSeconds: number,
   ): Promise<string>;
-  abstract validate<T extends Buffer | object>(token: string): Promise<T>;
+  abstract validateAndDecode<T extends Buffer | object>(
+    token: string,
+  ): Promise<T>;
 }

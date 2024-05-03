@@ -58,25 +58,23 @@ export class AuthenticationService {
 
   async refreshTokens(refreshTokenPayload: RefreshTokenPayload) {
     try {
-      const { userId, refreshTokenId } =
-        await this.tokenService.validate<RefreshTokenData>(
+      const decodedToken =
+        await this.tokenService.validateAndDecode<RefreshTokenData>(
           refreshTokenPayload.refreshToken,
         );
-
-      const user = await this.userRepository.findByCriteria({ id: userId });
+      const user = await this.userRepository.findByCriteria({
+        id: decodedToken.userId,
+      });
       if (!user) throw new Error('User not found.');
-
       const isValid = await this.refreshTokenIdsStorage.validate(
         user.id,
-        refreshTokenId,
+        decodedToken.refreshTokenId,
       );
-
       if (isValid) {
         await this.refreshTokenIdsStorage.invalidate(user.id);
       } else {
         throw new Error('Invalid refresh token.');
       }
-
       return this.generateTokens(user);
     } catch {
       throw new UnauthorizedException();

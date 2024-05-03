@@ -1,12 +1,14 @@
 import Redis from 'ioredis';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 
 import { StorageService } from '../../application/ports/storage.service';
 import redisConfig from './redis.config';
 
 @Injectable()
-export class RedisService implements StorageService {
+export class RedisService
+  implements StorageService, OnApplicationBootstrap, OnApplicationBootstrap
+{
   private redisClient: Redis;
 
   constructor(
@@ -14,14 +16,14 @@ export class RedisService implements StorageService {
     private readonly redisConfiguration: ConfigType<typeof redisConfig>,
   ) {}
 
-  onApplicationBootstrap(): void {
+  onApplicationBootstrap() {
     this.redisClient = new Redis({
       host: this.redisConfiguration.host,
       port: this.redisConfiguration.port,
     });
   }
 
-  onApplicationShutdown(): Promise<'OK'> {
+  onApplicationShutdown() {
     return this.redisClient.quit();
   }
 
