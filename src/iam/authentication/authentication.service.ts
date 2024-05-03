@@ -19,6 +19,7 @@ import { RefreshTokenData } from '../interfaces/refresh-token-data.interface';
 import { User } from '../../user/domain/user';
 import { RefreshTokenIdsStorage } from './refresh-token-ids.storage/refresh-token-ids.storage';
 import { RefreshTokenPayload } from './payloads/refresh-token';
+import { InvalidateRefreshTokenError } from './refresh-token-ids.storage/invalidate-refresh-token.error';
 
 @Injectable()
 export class AuthenticationService {
@@ -66,17 +67,16 @@ export class AuthenticationService {
         id: decodedToken.userId,
       });
       if (!user) throw new Error('User not found.');
-      const isValid = await this.refreshTokenIdsStorage.validate(
+      await this.refreshTokenIdsStorage.validate(
         user.id,
         decodedToken.refreshTokenId,
       );
-      if (isValid) {
-        await this.refreshTokenIdsStorage.invalidate(user.id);
-      } else {
-        throw new Error('Invalid refresh token.');
-      }
+      await this.refreshTokenIdsStorage.invalidate(user.id);
       return this.generateTokens(user);
-    } catch {
+    } catch (err) {
+      if (err instanceof InvalidateRefreshTokenError) {
+        throw new UnauthorizedException('Access Denied');
+      }
       throw new UnauthorizedException();
     }
   }

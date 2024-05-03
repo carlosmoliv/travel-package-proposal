@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { StorageService } from '../../../shared/application/ports/storage.service';
+import { InvalidateRefreshTokenError } from './invalidate-refresh-token.error';
 
 @Injectable()
 export class RefreshTokenIdsStorage {
@@ -10,9 +11,9 @@ export class RefreshTokenIdsStorage {
     await this.storageService.set(this.getKey(userId), tokenId);
   }
 
-  async validate(userId: string, tokenId: string): Promise<boolean> {
+  async validate(userId: string, tokenId: string): Promise<void> {
     const storedId = await this.storageService.get(this.getKey(userId));
-    return storedId === tokenId;
+    if (storedId !== tokenId) throw new InvalidateRefreshTokenError();
   }
 
   async invalidate(userId: string): Promise<void> {

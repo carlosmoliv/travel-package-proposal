@@ -3,6 +3,7 @@ import { MockProxy, mock } from 'jest-mock-extended';
 
 import { RefreshTokenIdsStorage } from './refresh-token-ids.storage';
 import { StorageService } from '../../../shared/application/ports/storage.service';
+import { InvalidateRefreshTokenError } from './invalidate-refresh-token.error';
 
 describe('RefreshTokenIdsStorageService', () => {
   let sut: RefreshTokenIdsStorage;
@@ -38,20 +39,18 @@ describe('RefreshTokenIdsStorageService', () => {
       const tokenId = 'abc123';
       storageService.get.mockResolvedValue(tokenId);
 
-      const result = await sut.validate(userId, tokenId);
-
-      expect(result).toBe(true);
+      await expect(sut.validate(userId, tokenId)).resolves.not.toThrow();
     });
 
-    test('Validate returns false if token is invalid', async () => {
+    test('Throw InvalidateRefreshTokenError when token does not match', async () => {
       const userId = '123';
       const tokenId = 'abc123';
       const invalidTokenId = 'invalid_token';
       storageService.get.mockResolvedValue(tokenId);
 
-      const result = await sut.validate(userId, invalidTokenId);
+      const promise = sut.validate(userId, invalidTokenId);
 
-      expect(result).toBe(false);
+      await expect(promise).rejects.toThrow(InvalidateRefreshTokenError);
     });
   });
 

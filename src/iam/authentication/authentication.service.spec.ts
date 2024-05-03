@@ -167,7 +167,7 @@ describe('AuthenticationService', () => {
         userId: 'any_id',
         refreshTokenId: 'refresh_token_id',
       });
-      refreshTokenIdsStorage.validate.mockResolvedValueOnce(true);
+      refreshTokenIdsStorage.validate.mockResolvedValueOnce();
       tokenService.generate.mockResolvedValueOnce('regenerated_access_token');
       tokenService.generate.mockResolvedValueOnce('regenerated_refresh_token');
 
@@ -192,32 +192,9 @@ describe('AuthenticationService', () => {
       );
     });
 
-    test('Throw unauthorized when refresh token is invalid', async () => {
-      const payload: RefreshTokenPayload = { refreshToken: 'refresh_token' };
-      userRepository.findByCriteria.mockResolvedValueOnce(
-        userFactory.create(
-          'any_id',
-          'any_email@email.com',
-          'hashed_password',
-          'any_id',
-        ),
-      );
-      tokenService.validateAndDecode.mockResolvedValueOnce({
-        userId: 'any_id',
-        refreshTokenId: 'invalid_refresh_token_id',
-      });
-
-      await expect(sut.refreshTokens(payload)).rejects.toThrow(
-        UnauthorizedException,
-      );
-    });
-
     test('Throw Unauthorized when TokenService throws an exception', async () => {
       const payload: RefreshTokenPayload = { refreshToken: 'refresh_token' };
-      tokenService.validateAndDecode.mockResolvedValueOnce({
-        userId: 'any_id',
-        refreshTokenId: 'refresh_token_id',
-      });
+      tokenService.validateAndDecode.mockRejectedValueOnce(new Error());
       userRepository.findByCriteria.mockResolvedValueOnce(
         userFactory.create(
           'any_id',
@@ -231,7 +208,7 @@ describe('AuthenticationService', () => {
       await expect(regeneratedTokens).rejects.toThrow(UnauthorizedException);
     });
 
-    test('Throw Unauthorized when refresh token storage returns false', async () => {
+    test('', async () => {
       const payload: RefreshTokenPayload = { refreshToken: 'refresh_token' };
       userRepository.findByCriteria.mockResolvedValueOnce(
         userFactory.create(
@@ -245,7 +222,9 @@ describe('AuthenticationService', () => {
         userId: 'any_id',
         refreshTokenId: 'refresh_token_id',
       });
-      refreshTokenIdsStorage.validate.mockResolvedValueOnce(false);
+      refreshTokenIdsStorage.validate.mockRejectedValueOnce(
+        UnauthorizedException,
+      );
 
       await expect(sut.refreshTokens(payload)).rejects.toThrow(
         UnauthorizedException,
