@@ -1,4 +1,4 @@
-import { MockProxy, mock } from 'jest-mock-extended';
+import { mock, MockProxy } from 'jest-mock-extended';
 import { faker } from '@faker-js/faker';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConflictException, UnauthorizedException } from '@nestjs/common';
@@ -14,6 +14,7 @@ import { TokenService } from '../ports/token.service';
 import iamConfig from '../iam.config';
 import { RefreshTokenIdsStorage } from './refresh-token-ids.storage/refresh-token-ids.storage';
 import { RefreshTokenPayload } from './payloads/refresh-token';
+import { RoleName } from '../../user/role-name.enum';
 
 const mockRefreshTokenIdsStorage = {
   insert: jest.fn(),
@@ -103,14 +104,19 @@ describe('AuthenticationService', () => {
 
     test('Authenticate User returning the accessToken and refreshToken', async () => {
       // Arrange
-      userRepository.findByCriteria.mockResolvedValueOnce(
-        userFactory.create(
-          'any_id',
-          'any_name',
-          payload.email,
-          'hashed_password',
-        ),
+      const user = userFactory.create(
+        'any_id',
+        'any_name',
+        payload.email,
+        'hashed_password',
       );
+      user.roles = [
+        {
+          id: 'role_id_1',
+          name: RoleName.Client,
+        },
+      ];
+      userRepository.findByCriteria.mockResolvedValueOnce(user);
       hashingService.compare.mockResolvedValueOnce(true);
       tokenService.generate.mockResolvedValueOnce('generated_access_token');
       tokenService.generate.mockResolvedValueOnce('generated_refresh_token');
@@ -125,6 +131,14 @@ describe('AuthenticationService', () => {
         refreshToken: 'generated_refresh_token',
       });
       expect(refreshTokenIdsStorage.insert).toHaveBeenCalled();
+      expect(tokenService.generate).toHaveBeenCalledWith(
+        {
+          userId: user.id,
+          email: user.email,
+          roles: user.roles,
+        },
+        expect.any(Number),
+      );
     });
 
     test('Returns unauthorized exception when an invalid password is provided', async () => {
