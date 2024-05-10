@@ -79,5 +79,23 @@ describe('AuthenticationGuard', () => {
       // Assert
       await expect(promise).rejects.toThrow(UnauthorizedException);
     });
+
+    it('should return Unauthorized if token is missing', async () => {
+      // Arrange
+      const mockRequest = {
+        headers: {},
+      };
+      const mockExecutionContext = createMock<ExecutionContext>({
+        switchToHttp: () => ({
+          getRequest: () => mockRequest,
+        }),
+      });
+
+      // Act
+      const promise = sut.canActivate(mockExecutionContext);
+
+      // Assert
+      await expect(promise).rejects.toThrow(UnauthorizedException);
+    });
   });
 });
