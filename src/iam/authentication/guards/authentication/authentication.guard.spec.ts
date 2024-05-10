@@ -23,7 +23,7 @@ describe('AuthenticationGuard', () => {
   });
 
   describe('canActivate()', () => {
-    it('should set user property on request if token is valid', async () => {
+    test('Set user property on request if token is valid', async () => {
       // Arrange
       const mockRequest = {
         headers: {
@@ -57,7 +57,7 @@ describe('AuthenticationGuard', () => {
       );
     });
 
-    it('should return Unauthorized for invalid token', async () => {
+    test('Return Unauthorized for invalid token', async () => {
       // Arrange
       const mockRequest = {
         headers: {
@@ -80,10 +80,30 @@ describe('AuthenticationGuard', () => {
       await expect(promise).rejects.toThrow(UnauthorizedException);
     });
 
-    it('should return Unauthorized if token is missing', async () => {
+    test('Return Unauthorized if token is missing', async () => {
       // Arrange
       const mockRequest = {
         headers: {},
+      };
+      const mockExecutionContext = createMock<ExecutionContext>({
+        switchToHttp: () => ({
+          getRequest: () => mockRequest,
+        }),
+      });
+
+      // Act
+      const promise = sut.canActivate(mockExecutionContext);
+
+      // Assert
+      await expect(promise).rejects.toThrow(UnauthorizedException);
+    });
+
+    it('Return Unauthorized for invalid token format', async () => {
+      // Arrange
+      const mockRequest = {
+        headers: {
+          authorization: 'invalid_token',
+        },
       };
       const mockExecutionContext = createMock<ExecutionContext>({
         switchToHttp: () => ({
