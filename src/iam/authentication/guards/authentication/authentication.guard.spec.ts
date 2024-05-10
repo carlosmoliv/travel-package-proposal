@@ -4,7 +4,7 @@ import { createMock } from '@golevelup/ts-jest';
 
 import { AuthenticationGuard } from './authentication.guard';
 import { TokenService } from '../../../ports/token.service';
-import { ExecutionContext } from '@nestjs/common';
+import { ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { RoleName } from '../../../../user/role-name.enum';
 
 describe('AuthenticationGuard', () => {
@@ -55,6 +55,29 @@ describe('AuthenticationGuard', () => {
       expect(mockExecutionContext.switchToHttp().getRequest()['user']).toEqual(
         user,
       );
+    });
+
+    it('should return Unauthorized for invalid token', async () => {
+      // Arrange
+      const mockRequest = {
+        headers: {
+          authorization: 'Bearer invalid_token',
+        },
+      };
+      const mockExecutionContext = createMock<ExecutionContext>({
+        switchToHttp: () => ({
+          getRequest: () => mockRequest,
+        }),
+      });
+      tokenService.validateAndDecode.mockRejectedValueOnce(
+        new Error('Token service error'),
+      );
+
+      // Act
+      const promise = sut.canActivate(mockExecutionContext);
+
+      // Assert
+      await expect(promise).rejects.toThrow(UnauthorizedException);
     });
   });
 });
