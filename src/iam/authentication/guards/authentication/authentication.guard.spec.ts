@@ -1,6 +1,7 @@
 import { mock, MockProxy } from 'jest-mock-extended';
 import { Test, TestingModule } from '@nestjs/testing';
 import { createMock } from '@golevelup/ts-jest';
+import { Reflector } from '@nestjs/core';
 
 import { AuthenticationGuard } from './authentication.guard';
 import { TokenService } from '../../../ports/token.service';
@@ -10,16 +11,19 @@ import { RoleName } from '../../../../user/role-name.enum';
 describe('AuthenticationGuard', () => {
   let sut: AuthenticationGuard;
   let tokenService: MockProxy<TokenService>;
+  let reflectorMock: jest.Mocked<Reflector>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AuthenticationGuard,
         { provide: TokenService, useValue: mock() },
+        { provide: Reflector, useValue: { getAllAndOverride: jest.fn() } },
       ],
     }).compile();
     sut = module.get<AuthenticationGuard>(AuthenticationGuard);
     tokenService = module.get<MockProxy<TokenService>>(TokenService);
+    reflectorMock = module.get(Reflector);
   });
 
   describe('canActivate()', () => {
@@ -55,6 +59,25 @@ describe('AuthenticationGuard', () => {
       expect(mockExecutionContext.switchToHttp().getRequest()['user']).toEqual(
         user,
       );
+    });
+
+    test('Return true for public requests', async () => {
+      // Arrange
+      const mockRequest = {
+        headers: {},
+      };
+      const mockExecutionContext = createMock<ExecutionContext>({
+        switchToHttp: () => ({
+          getRequest: () => mockRequest,
+        }),
+      });
+      reflectorMock.getAllAndOverride.mockReturnValueOnce(true);
+
+      // Act
+      const result = await sut.canActivate(mockExecutionContext);
+
+      // Assert
+      expect(result).toBe(true);
     });
 
     test('Return Unauthorized for invalid token', async () => {
