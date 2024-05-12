@@ -38,7 +38,6 @@ describe('Authentication (e2e)', () => {
     app.useGlobalPipes(new ValidationPipe());
     await app.init();
     userRepository = moduleFixture.get<UserRepository>(UserRepository);
-    userRepository = moduleFixture.get<UserRepository>(UserRepository);
     storageService = moduleFixture.get<StorageService>(StorageService);
   });
 
