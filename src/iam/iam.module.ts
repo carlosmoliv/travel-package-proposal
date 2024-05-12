@@ -13,6 +13,8 @@ import jwtConfig from './token/jwt/jwt.config';
 import iamConfig from './iam.config';
 import { RefreshTokenIdsStorage } from './authentication/refresh-token-ids.storage/refresh-token-ids.storage';
 import { SharedModule } from '../shared/shared.module';
+import { AuthenticationGuard } from './authentication/guards/authentication/authentication.guard';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -34,6 +36,10 @@ import { SharedModule } from '../shared/shared.module';
     RefreshTokenIdsStorage,
     AuthenticationService,
     JwtService,
+    {
+      provide: APP_GUARD,
+      useClass: AuthenticationGuard,
+    },
   ],
   controllers: [AuthenticationController],
   exports: [AuthenticationService, SharedModule],
