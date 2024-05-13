@@ -46,7 +46,7 @@ export class AuthenticationService {
     const user = await this.userRepository.findByCriteria({
       email: payload.email,
     });
-    if (!user) throw new UnauthorizedException('User does not exists.');
+    if (!user) throw new UnauthorizedException('User does not exist.');
     const passwordMatch = await this.hashingService.compare(
       payload.password,
       user.password,
