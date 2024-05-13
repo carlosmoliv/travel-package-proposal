@@ -19,6 +19,11 @@ For now, I've been considering the following approaches:
 
 - **I'll update here soon.**
 
+## ::page_facing_up: Documentation
+
+- You can access the Swagger documentation at http://localhost:3000/api.
+
+
 ## :shipit: Contributing
 
 If you would like to contribute to the project, please follow these steps:
