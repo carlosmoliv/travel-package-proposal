@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { UserRepository } from './ports/user.repository';
 import { User } from '../domain/user';
 
@@ -7,6 +7,8 @@ export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
 
   async getById(id: string): Promise<User> {
-    return this.userRepository.findByCriteria({ id });
+    const user = await this.userRepository.findByCriteria({ id });
+    if (!user) throw new NotFoundException('User does not exist.');
+    return user;
   }
 }

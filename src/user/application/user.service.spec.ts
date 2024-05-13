@@ -5,6 +5,7 @@ import { UserService } from './user.service';
 import { UserRepository } from './ports/user.repository';
 import { mock, MockProxy } from 'jest-mock-extended';
 import { UserFactory } from '../domain/factories/user.factory';
+import { NotFoundException } from '@nestjs/common';
 
 describe('UserService', () => {
   let sut: UserService;
@@ -39,6 +40,14 @@ describe('UserService', () => {
       const result = await sut.getById('any_id');
 
       expect(result).toEqual(user);
+    });
+
+    test('Fails when User does not exists', async () => {
+      userRepository.findByCriteria.mockResolvedValueOnce(undefined);
+
+      const promise = sut.getById('any_id');
+
+      await expect(promise).rejects.toThrow(NotFoundException);
     });
   });
 });
