@@ -19,14 +19,42 @@ For now, I've been considering the following approaches:
 
 - **I'll update here soon.**
 
-## ::page_facing_up: Documentation
+## :page_facing_up: Documentation
 
 - You can access the Swagger documentation at http://localhost:3000/api.
 
+## :white_square_button: How to Run
+
+### Installation
+1. Install dependencies:
+   ```bash
+   npm install
+
+### Running the application
+1. You can use Docker to set up the necessary environment before running the application.
+   ```bash
+   docker compose up -d db storage-redis
+   
+2. To start the application in development mode:
+   ```bash
+   npm run start:dev
+
+### Running the tests
+1. To run unit tests:
+   ```bash
+   npm run test
+
+2. To run unit tests in watch mode:
+   ```bash
+   npm run test:watch
+   
+3. Before running e2e tests, ensure Docker is installed and running on your machine. To run e2e tests:
+   ```bash
+   npm run test:e2e
 
 ## :shipit: Contributing
 
-If you would like to contribute to the project, please follow these steps:
+If you're interested in helping with the project, here's what you can do:
 
 - Fork the repository.
 - Create a new branch for your changes.
