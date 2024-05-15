@@ -82,11 +82,11 @@ export class AuthenticationService {
   }
 
   private async generateTokens(user: User) {
-    const { id, email, roles } = user;
+    const { id, email } = user;
     const refreshTokenId = randomUUID();
     const [accessToken, refreshToken] = await Promise.all([
       this.tokenService.generate<ActiveUserData>(
-        { userId: id, email, roles },
+        { userId: id, email },
         this.iamConfiguration.accessTokenTtl,
       ),
       this.tokenService.generate<RefreshTokenData>(

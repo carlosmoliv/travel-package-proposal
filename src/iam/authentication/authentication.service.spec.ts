@@ -14,7 +14,6 @@ import { TokenService } from '../ports/token.service';
 import iamConfig from '../iam.config';
 import { RefreshTokenIdsStorage } from './refresh-token-ids.storage/refresh-token-ids.storage';
 import { RefreshTokenPayload } from './payloads/refresh-token';
-import { RoleName } from '../../user/role-name.enum';
 
 const mockRefreshTokenIdsStorage = {
   insert: jest.fn(),
@@ -110,12 +109,6 @@ describe('AuthenticationService', () => {
         payload.email,
         'hashed_password',
       );
-      user.roles = [
-        {
-          id: 'role_id_1',
-          name: RoleName.Client,
-        },
-      ];
       userRepository.findByCriteria.mockResolvedValueOnce(user);
       hashingService.compare.mockResolvedValueOnce(true);
       tokenService.generate.mockResolvedValueOnce('generated_access_token');
