@@ -15,13 +15,17 @@ import { RefreshTokenIdsStorage } from './authentication/refresh-token-ids.stora
 import { SharedModule } from '../shared/shared.module';
 import { AuthenticationGuard } from './authentication/guards/authentication/authentication.guard';
 import { APP_GUARD } from '@nestjs/core';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { OrmPermission } from './authorization/persistence/orm/entities/permission.entity';
+import { OrmRole } from '../user/infrastructure/persistance/orm/entities/orm-role.entity';
 
 @Module({
   imports: [
-    UserModule,
     JwtModule.registerAsync(jwtConfig.asProvider()),
     ConfigModule.forFeature(jwtConfig),
     ConfigModule.forFeature(iamConfig),
+    TypeOrmModule.forFeature([OrmRole, OrmPermission]),
+    UserModule,
     SharedModule,
   ],
   providers: [

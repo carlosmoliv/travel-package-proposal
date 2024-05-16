@@ -1,4 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { OrmRole } from './orm-role.entity';
 
 @Entity('users')
 export class OrmUser {
@@ -13,4 +20,8 @@ export class OrmUser {
 
   @Column()
   password: string;
+
+  @ManyToMany(() => OrmRole)
+  @JoinTable()
+  roles: OrmRole[];
 }
