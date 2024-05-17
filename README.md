@@ -31,7 +31,7 @@ For now, I've been considering the following approaches:
    npm install
 
 ### Running the application
-1. You can use Docker to set up the necessary environment before running the application.
+1. You can use Docker to set up the necessary environment before running the application:
    ```bash
    docker compose up -d db storage-redis
    
