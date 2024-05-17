@@ -54,6 +54,13 @@ describe('UserService', () => {
 
   describe('getPermissions()', () => {
     test('Return the User permissions', async () => {
+      const user = userFactory.create(
+        faker.person.firstName(),
+        faker.internet.email(),
+        'any_id',
+      );
+      userRepository.findByCriteria.mockResolvedValueOnce(user);
+
       const userPermissions = await sut.getPermissions('any_id');
 
       expect(userPermissions).toEqual(
