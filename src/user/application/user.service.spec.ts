@@ -6,6 +6,7 @@ import { UserRepository } from './ports/user.repository';
 import { mock, MockProxy } from 'jest-mock-extended';
 import { UserFactory } from '../domain/factories/user.factory';
 import { NotFoundException } from '@nestjs/common';
+import { ExamplePermission } from '../../iam/authorization/example-permission.enum';
 
 describe('UserService', () => {
   let sut: UserService;
@@ -48,6 +49,23 @@ describe('UserService', () => {
       const promise = sut.getById('any_id');
 
       await expect(promise).rejects.toThrow(NotFoundException);
+    });
+  });
+
+  describe('getPermissions()', () => {
+    test('Return the User permissions', async () => {
+      const userPermissions = await sut.getPermissions('any_id');
+
+      expect(userPermissions).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            type: ExamplePermission.CanCreateResource,
+          }),
+          expect.objectContaining({
+            type: ExamplePermission.CanUpdateResource,
+          }),
+        ]),
+      );
     });
   });
 });
