@@ -1,6 +1,10 @@
 import { PermissionType } from './permission.type';
 
 export class Permission {
-  public name: string;
-  public type: PermissionType;
+  public id: string;
+
+  constructor(
+    public type: PermissionType,
+    public description?: string,
+  ) {}
 }

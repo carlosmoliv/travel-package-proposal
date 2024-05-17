@@ -1,7 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 import { PermissionType } from '../../../permission.type';
-import { OrmRole } from '../../../../../user/infrastructure/persistance/orm/entities/orm-role.entity';
 
 @Entity('permissions')
 export class OrmPermission {
@@ -13,6 +12,4 @@ export class OrmPermission {
 
   @Column({ nullable: true })
   description: string;
-
-  roles: OrmRole[];
 }
