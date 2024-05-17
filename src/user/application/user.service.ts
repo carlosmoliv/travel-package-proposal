@@ -15,6 +15,7 @@ export class UserService {
   }
 
   async getPermissions(userId: string): Promise<Permission[]> {
+    await this.getById(userId);
     return [
       new Permission(ExamplePermission.CanUpdateResource),
       new Permission(ExamplePermission.CanCreateResource),

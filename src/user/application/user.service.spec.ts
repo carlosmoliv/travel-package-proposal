@@ -67,5 +67,13 @@ describe('UserService', () => {
         ]),
       );
     });
+
+    test('Fails when User does not exists', async () => {
+      userRepository.findByCriteria.mockResolvedValueOnce(undefined);
+
+      const promise = sut.getPermissions('any_id');
+
+      await expect(promise).rejects.toThrow(NotFoundException);
+    });
   });
 });
