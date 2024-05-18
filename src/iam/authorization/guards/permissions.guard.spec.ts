@@ -66,5 +66,27 @@ describe('PermissionsGuard', () => {
       // Assert
       expect(result).toBeTruthy();
     });
+
+    test('Return true if there are no context permissions to check', async () => {
+      // Arrange
+      const mockRequest = {
+        headers: { authorization: 'Bearer valid_token' },
+        user: {
+          email: faker.internet.email(),
+          userId: 'any_id',
+        } as ActiveUserData,
+      };
+      const mockExecutionContext = createMock<ExecutionContext>({
+        switchToHttp: () => ({
+          getRequest: () => mockRequest,
+        }),
+      });
+
+      // Act
+      const result = await sut.canActivate(mockExecutionContext);
+
+      // Assert
+      expect(result).toBe(true);
+    });
   });
 });
