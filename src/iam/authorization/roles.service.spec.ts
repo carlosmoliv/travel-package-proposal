@@ -21,7 +21,6 @@ describe('RolesService', () => {
         },
       ],
     }).compile();
-
     sut = module.get<RolesService>(RolesService);
     rolesRepository = module.get<MockProxy<RolesRepository>>(RolesRepository);
   });
