@@ -16,6 +16,7 @@ import { SharedModule } from '../shared/shared.module';
 import { AuthenticationGuard } from './authentication/guards/authentication/authentication.guard';
 import { OrmPermission } from './authorization/persistence/orm/entities/permission.entity';
 import { OrmRole } from '../user/infrastructure/persistance/orm/entities/orm-role.entity';
+import { RolesService } from './authorization/roles.service';
 import jwtConfig from './token/jwt/jwt.config';
 import iamConfig from './iam.config';
 
@@ -44,6 +45,7 @@ import iamConfig from './iam.config';
       provide: APP_GUARD,
       useClass: AuthenticationGuard,
     },
+    RolesService,
   ],
   controllers: [AuthenticationController],
   exports: [AuthenticationService, SharedModule],
