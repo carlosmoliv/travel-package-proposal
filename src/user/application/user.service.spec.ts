@@ -9,6 +9,8 @@ import { NotFoundException } from '@nestjs/common';
 import { ExamplePermission } from '../../iam/authorization/example-permission.enum';
 import { RolesService } from '../../iam/authorization/roles.service';
 import { NoRolesException } from './exceptions/node-roles.exception';
+import { RoleName } from '../role-name.enum';
+import { Role } from '../domain/role';
 
 describe('UserService', () => {
   let sut: UserService;
@@ -68,17 +70,16 @@ describe('UserService', () => {
         'any_id',
       );
       userRepository.findByCriteria.mockResolvedValueOnce(user);
+      rolesService.getUserRoles.mockResolvedValueOnce([
+        new Role(RoleName.Client),
+      ]);
 
       const userPermissions = await sut.getPermissions('any_id');
 
       expect(userPermissions).toEqual(
         expect.arrayContaining([
-          expect.objectContaining({
-            type: ExamplePermission.CanCreateResource,
-          }),
-          expect.objectContaining({
-            type: ExamplePermission.CanUpdateResource,
-          }),
+          ExamplePermission.CanCreateResource,
+          ExamplePermission.CanUpdateResource,
         ]),
       );
     });

@@ -3,14 +3,14 @@ import { createMock } from '@golevelup/ts-jest';
 import { mock, MockProxy } from 'jest-mock-extended';
 
 import { Reflector } from '@nestjs/core';
-import { Test, TestingModule } from '@nestjs/testing';
-
 import { ExecutionContext } from '@nestjs/common';
+
+import { Test, TestingModule } from '@nestjs/testing';
 import { ActiveUserData } from '../../interfaces/active-user-data.interface';
 import { PermissionsGuard } from './permissions.guard';
 import { ExamplePermission } from '../example-permission.enum';
 import { UserService } from '../../../user/application/user.service';
-import { Permission } from '../permission';
+import { PermissionType } from '../permission.type';
 
 describe('PermissionsGuard', () => {
   let sut: PermissionsGuard;
@@ -31,16 +31,16 @@ describe('PermissionsGuard', () => {
   });
 
   describe('canActivate()', () => {
-    let permissions: Permission[];
+    let permissionsTypes: PermissionType[];
 
     beforeAll(async () => {
-      permissions = [
-        new Permission(ExamplePermission.CanUpdateResource),
-        new Permission(ExamplePermission.CanCreateResource),
+      permissionsTypes = [
+        ExamplePermission.CanCreateResource,
+        ExamplePermission.CanUpdateResource,
       ];
     });
 
-    test('Return true if permissions are satisfied', () => {
+    test('Return true if permissions are satisfied', async () => {
       // Arrange
       const mockRequest = {
         headers: { authorization: 'Bearer valid_token' },
@@ -58,13 +58,13 @@ describe('PermissionsGuard', () => {
         ExamplePermission.CanCreateResource,
         ExamplePermission.CanUpdateResource,
       ]);
-      userService.getPermissions.mockResolvedValueOnce(permissions);
+      userService.getPermissions.mockResolvedValueOnce(permissionsTypes);
 
       // Act
-      const result = sut.canActivate(mockExecutionContext);
+      const result = await sut.canActivate(mockExecutionContext);
 
       // Assert
-      expect(result).toBeTruthy();
+      expect(result).toBe(true);
     });
 
     test('Return true if there are no context permissions to check', async () => {
