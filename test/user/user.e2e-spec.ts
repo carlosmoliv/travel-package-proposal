@@ -6,13 +6,10 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 
-import { SignInDto } from '../../../src/iam/authentication/dtos/sign-in.dto';
-import { User } from '../../../src/user/domain/user';
-import { UserModule } from '../../../src/user/user.module';
-import { IamModule } from '../../../src/iam/iam.module';
-import { Role } from '../../../src/user/domain/role';
-import { anyString } from 'jest-mock-extended';
-import { RoleName } from '../../../src/user/role-name.enum';
+import { SignInDto } from '../../src/iam/authentication/dtos/sign-in.dto';
+import { User } from '../../src/user/domain/user';
+import { UserModule } from '../../src/user/user.module';
+import { IamModule } from '../../src/iam/iam.module';
 
 describe('Authentication (e2e)', () => {
   let app: INestApplication;
