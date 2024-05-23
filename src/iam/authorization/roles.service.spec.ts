@@ -6,6 +6,7 @@ import { RolesService } from './roles.service';
 import { RolesRepository } from './ports/rolesRepository';
 import { Role } from '../../user/domain/role';
 import { RoleName } from '../../user/role-name.enum';
+import { NoRolesException } from '../../user/application/exceptions/node-roles.exception';
 
 describe('RolesService', () => {
   let sut: RolesService;
@@ -33,6 +34,14 @@ describe('RolesService', () => {
       const userRoles = await sut.getUserRoles('any_id');
 
       expect(userRoles).toEqual([role]);
+    });
+
+    test('Fails when user does not have roles', async () => {
+      rolesRepository.findRolesByUserId.mockResolvedValueOnce([]);
+
+      const promise = sut.getUserRoles('any_id');
+
+      await expect(promise).rejects.toThrow(NoRolesException);
     });
   });
 });
