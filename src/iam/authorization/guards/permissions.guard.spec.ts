@@ -4,8 +4,8 @@ import { mock, MockProxy } from 'jest-mock-extended';
 
 import { Reflector } from '@nestjs/core';
 import { ExecutionContext } from '@nestjs/common';
-
 import { Test, TestingModule } from '@nestjs/testing';
+
 import { ActiveUserData } from '../../interfaces/active-user-data.interface';
 import { PermissionsGuard } from './permissions.guard';
 import { ExamplePermission } from '../example-permission.enum';

@@ -1,11 +1,12 @@
 import { mock, MockProxy } from 'jest-mock-extended';
-import { Test, TestingModule } from '@nestjs/testing';
 import { createMock } from '@golevelup/ts-jest';
+
+import { Test, TestingModule } from '@nestjs/testing';
 import { Reflector } from '@nestjs/core';
+import { ExecutionContext, UnauthorizedException } from '@nestjs/common';
 
 import { AuthenticationGuard } from './authentication.guard';
 import { TokenService } from '../../../ports/token.service';
-import { ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { RoleName } from '../../../../user/role-name.enum';
 
 describe('AuthenticationGuard', () => {

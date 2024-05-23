@@ -1,4 +1,5 @@
 import Redis from 'ioredis';
+
 import { Inject, Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 

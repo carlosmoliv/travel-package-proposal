@@ -1,10 +1,12 @@
-import { OrmUserRepository } from './orm-user.repository';
-import { Test, TestingModule } from '@nestjs/testing';
-import { UserFactory } from '../../../../domain/factories/user.factory';
 import { Repository } from 'typeorm';
-import { OrmUser } from '../entities/orm-user.entity';
-import { getRepositoryToken } from '@nestjs/typeorm';
+
 import { faker } from '@faker-js/faker';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { Test, TestingModule } from '@nestjs/testing';
+
+import { OrmUserRepository } from './orm-user.repository';
+import { UserFactory } from '../../../../domain/factories/user.factory';
+import { OrmUser } from '../entities/orm-user.entity';
 
 type MockRepository<T = any> = Partial<Record<keyof Repository<T>, jest.Mock>>;
 const createMockRepository = <T = any>(): MockRepository<T> => ({

@@ -1,9 +1,9 @@
 import { Controller, Get } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 
 import { ActiveUser } from '../../../iam/decorators/active-user';
 import { ActiveUserData } from '../../../iam/interfaces/active-user-data.interface';
 import { UserService } from '../../application/user.service';
-import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('User')
 @Controller('users')

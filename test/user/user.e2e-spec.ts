@@ -1,6 +1,6 @@
-import { faker } from '@faker-js/faker';
 import * as request from 'supertest';
 
+import { faker } from '@faker-js/faker';
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';

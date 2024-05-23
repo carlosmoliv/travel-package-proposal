@@ -5,6 +5,7 @@ import {
   ManyToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+
 import { OrmRole } from './orm-role.entity';
 
 @Entity('users')

@@ -1,7 +1,8 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
-import { HttpStatus, INestApplication, ValidationPipe } from '@nestjs/common';
 import { faker } from '@faker-js/faker';
+
+import { Test, TestingModule } from '@nestjs/testing';
+import { HttpStatus, INestApplication, ValidationPipe } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 

@@ -1,3 +1,5 @@
+import { randomUUID } from 'crypto';
+
 import {
   ConflictException,
   Inject,
@@ -5,7 +7,6 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
-import { randomUUID } from 'crypto';
 
 import { SignUpPayload } from './payloads/sign-up.payload';
 import { UserRepository } from '../../user/application/ports/user.repository';
