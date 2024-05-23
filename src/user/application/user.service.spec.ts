@@ -1,21 +1,24 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { mock, MockProxy } from 'jest-mock-extended';
 import { faker } from '@faker-js/faker';
+
+import { Test, TestingModule } from '@nestjs/testing';
+import { NotFoundException } from '@nestjs/common';
 
 import { UserService } from './user.service';
 import { UserRepository } from './ports/user.repository';
-import { mock, MockProxy } from 'jest-mock-extended';
 import { UserFactory } from '../domain/factories/user.factory';
-import { NotFoundException } from '@nestjs/common';
 import { ExamplePermission } from '../../iam/authorization/example-permission.enum';
 import { RolesService } from '../../iam/authorization/roles.service';
-import { NoRolesException } from './exceptions/node-roles.exception';
 import { RoleName } from '../role-name.enum';
 import { Role } from '../domain/role';
+import { PermissionsService } from '../../iam/authorization/permissions.service';
+import { Permission } from '../../iam/authorization/permission';
 
 describe('UserService', () => {
   let sut: UserService;
   let userRepository: MockProxy<UserRepository>;
   let rolesService: MockProxy<RolesService>;
+  let permissionsService: MockProxy<PermissionsService>;
   let userFactory: MockProxy<UserFactory>;
 
   beforeEach(async () => {
@@ -30,12 +33,18 @@ describe('UserService', () => {
           provide: RolesService,
           useValue: mock(),
         },
+        {
+          provide: PermissionsService,
+          useValue: mock(),
+        },
         UserFactory,
       ],
     }).compile();
     userRepository = module.get<MockProxy<UserRepository>>(UserRepository);
     userFactory = module.get<MockProxy<UserFactory>>(UserFactory);
     rolesService = module.get<MockProxy<RolesService>>(RolesService);
+    permissionsService =
+      module.get<MockProxy<PermissionsService>>(PermissionsService);
     sut = module.get<UserService>(UserService);
   });
 
@@ -62,8 +71,12 @@ describe('UserService', () => {
     });
   });
 
-  describe('getPermissions()', () => {
+  describe('getPermissionsTypes()', () => {
     test('Return the User permissions', async () => {
+      const permissions = [
+        new Permission(ExamplePermission.CanCreateResource),
+        new Permission(ExamplePermission.CanUpdateResource),
+      ];
       const user = userFactory.create(
         faker.person.firstName(),
         faker.internet.email(),
@@ -73,37 +86,21 @@ describe('UserService', () => {
       rolesService.getUserRoles.mockResolvedValueOnce([
         new Role(RoleName.Client),
       ]);
+      permissionsService.getByRoles.mockResolvedValueOnce(permissions);
 
-      const userPermissions = await sut.getPermissions('any_id');
+      const userPermissions = await sut.getPermissionTypes('any_id');
 
       expect(userPermissions).toEqual(
-        expect.arrayContaining([
-          ExamplePermission.CanCreateResource,
-          ExamplePermission.CanUpdateResource,
-        ]),
+        expect.arrayContaining([permissions[0].type, permissions[1].type]),
       );
     });
 
     test('Fails when User does not exists', async () => {
       userRepository.findByCriteria.mockResolvedValueOnce(undefined);
 
-      const promise = sut.getPermissions('any_id');
+      const promise = sut.getPermissionTypes('any_id');
 
       await expect(promise).rejects.toThrow(NotFoundException);
-    });
-
-    test('Fails if User does not have roles', async () => {
-      const user = userFactory.create(
-        faker.person.firstName(),
-        faker.internet.email(),
-        'any_id',
-      );
-      userRepository.findByCriteria.mockResolvedValueOnce(user);
-      rolesService.getUserRoles.mockResolvedValueOnce([]);
-
-      const promise = sut.getPermissions('any_id');
-
-      await expect(promise).rejects.toThrow(NoRolesException);
     });
   });
 });

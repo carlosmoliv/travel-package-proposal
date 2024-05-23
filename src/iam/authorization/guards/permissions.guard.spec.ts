@@ -58,7 +58,7 @@ describe('PermissionsGuard', () => {
         ExamplePermission.CanCreateResource,
         ExamplePermission.CanUpdateResource,
       ]);
-      userService.getPermissions.mockResolvedValueOnce(permissionsTypes);
+      userService.getPermissionTypes.mockResolvedValueOnce(permissionsTypes);
 
       // Act
       const result = await sut.canActivate(mockExecutionContext);

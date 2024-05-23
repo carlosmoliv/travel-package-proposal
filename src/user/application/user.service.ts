@@ -1,28 +1,25 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+
 import { UserRepository } from './ports/user.repository';
 import { User } from '../domain/user';
-import { ExamplePermission } from '../../iam/authorization/example-permission.enum';
 import { RolesService } from '../../iam/authorization/roles.service';
-import { NoRolesException } from './exceptions/node-roles.exception';
 import { PermissionType } from '../../iam/authorization/permission.type';
+import { PermissionsService } from '../../iam/authorization/permissions.service';
 
 @Injectable()
 export class UserService {
   constructor(
     private readonly userRepository: UserRepository,
     private readonly rolesService: RolesService,
+    private readonly permissionsService: PermissionsService,
   ) {}
 
-  async getPermissions(userId: string): Promise<PermissionType[]> {
+  async getPermissionTypes(userId: string): Promise<PermissionType[]> {
     await this.getById(userId);
     const roles = await this.rolesService.getUserRoles(userId);
-    if (roles.length === 0) throw new NoRolesException();
-
-    // TODO: Get the user permissions from the PermissionsService
-    return [
-      ExamplePermission.CanUpdateResource,
-      ExamplePermission.CanCreateResource,
-    ];
+    const rolesIds = roles.map((role) => role.id);
+    const permissions = await this.permissionsService.getByRoles(rolesIds);
+    return permissions.map((permission) => permission.type);
   }
 
   async getById(id: string): Promise<User> {
