@@ -9,15 +9,14 @@ import { UserRepository } from './ports/user.repository';
 import { UserFactory } from '../domain/factories/user.factory';
 import { ExamplePermission } from '../../iam/authorization/example-permission.enum';
 import { RolesService } from '../../iam/authorization/roles.service';
-import { RoleName } from '../role-name.enum';
-import { Role } from '../domain/role';
 import { PermissionsService } from '../../iam/authorization/permissions.service';
 import { Permission } from '../../iam/authorization/permission';
+import { RoleName } from '../role-name.enum';
+import { Role } from '../domain/role';
 
 describe('UserService', () => {
   let sut: UserService;
   let userRepository: MockProxy<UserRepository>;
-  let rolesService: MockProxy<RolesService>;
   let permissionsService: MockProxy<PermissionsService>;
   let userFactory: MockProxy<UserFactory>;
 
@@ -42,7 +41,6 @@ describe('UserService', () => {
     }).compile();
     userRepository = module.get<MockProxy<UserRepository>>(UserRepository);
     userFactory = module.get<MockProxy<UserFactory>>(UserFactory);
-    rolesService = module.get<MockProxy<RolesService>>(RolesService);
     permissionsService =
       module.get<MockProxy<PermissionsService>>(PermissionsService);
     sut = module.get<UserService>(UserService);
@@ -82,10 +80,8 @@ describe('UserService', () => {
         faker.internet.email(),
         'any_id',
       );
+      user.roles = [new Role(RoleName.Admin)];
       userRepository.findByCriteria.mockResolvedValueOnce(user);
-      rolesService.getUserRoles.mockResolvedValueOnce([
-        new Role(RoleName.Client),
-      ]);
       permissionsService.getByRoles.mockResolvedValueOnce(permissions);
 
       const userPermissions = await sut.getPermissionTypes('any_id');

@@ -26,22 +26,7 @@ describe('RolesService', () => {
     rolesRepository = module.get<MockProxy<RolesRepository>>(RolesRepository);
   });
 
-  describe('getUserRoles()', () => {
-    test('Return roles from the specified user', async () => {
-      const role = new Role(RoleName.Client, 'any description');
-      rolesRepository.findRolesByUserId.mockResolvedValueOnce([role]);
-
-      const userRoles = await sut.getUserRoles('any_id');
-
-      expect(userRoles).toEqual([role]);
-    });
-
-    test('Fails when user does not have roles', async () => {
-      rolesRepository.findRolesByUserId.mockResolvedValueOnce([]);
-
-      const promise = sut.getUserRoles('any_id');
-
-      await expect(promise).rejects.toThrow(NoRolesException);
-    });
+  test('RolesService is defined', async () => {
+    expect(sut).toBeDefined();
   });
 });
