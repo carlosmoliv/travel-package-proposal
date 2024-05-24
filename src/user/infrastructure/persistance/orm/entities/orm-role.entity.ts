@@ -6,7 +6,7 @@ import {
   JoinTable,
 } from 'typeorm';
 
-import { OrmPermission } from '../../../../../iam/authorization/persistence/orm/entities/permission.entity';
+import { OrmPermission } from '../../../../../iam/authorization/persistence/orm/entities/orm-permission.entity';
 import { RoleName } from '../../../../role-name.enum';
 
 @Entity('roles')

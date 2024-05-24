@@ -14,7 +14,7 @@ import { TokenService } from './ports/token.service';
 import { RefreshTokenIdsStorage } from './authentication/refresh-token-ids.storage/refresh-token-ids.storage';
 import { SharedModule } from '../shared/shared.module';
 import { AuthenticationGuard } from './authentication/guards/authentication/authentication.guard';
-import { OrmPermission } from './authorization/persistence/orm/entities/permission.entity';
+import { OrmPermission } from './authorization/persistence/orm/entities/orm-permission.entity';
 import { OrmRole } from '../user/infrastructure/persistance/orm/entities/orm-role.entity';
 import { RolesService } from './authorization/roles.service';
 import { PermissionsService } from './authorization/permissions.service';

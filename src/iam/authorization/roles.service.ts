@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { RolesRepository } from './ports/rolesRepository';
+import { RolesRepository } from './ports/roles.repository';
 import { Role } from '../../user/domain/role';
 import { NoRolesException } from '../../user/application/exceptions/node-roles.exception';
 

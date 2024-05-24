@@ -3,7 +3,7 @@ import { MockProxy, mock } from 'jest-mock-extended';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { RolesService } from './roles.service';
-import { RolesRepository } from './ports/rolesRepository';
+import { RolesRepository } from './ports/roles.repository';
 import { Role } from '../../user/domain/role';
 import { RoleName } from '../../user/role-name.enum';
 import { NoRolesException } from '../../user/application/exceptions/node-roles.exception';
