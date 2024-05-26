@@ -19,6 +19,30 @@ For now, I've been considering the following approaches:
 
 - **I'll update here soon.**
 
+## :hammer_and_wrench: Tools
+
+- NestJS
+- TypeScript
+- Express
+- Security 
+  - JWT
+  - BCrypt
+- Docs
+  - Swagger
+- Class validation
+  - class-validator
+  - class-transformer
+- In-memory storage
+  - Redis
+- Relational database
+  - Postgres
+  - typeorm
+- Testing
+  - jest
+  - jest-mock-extended
+  - supertest
+  - faker-js
+
 ## :page_facing_up: Documentation
 
 - You can access the Swagger documentation at http://localhost:3000/api.

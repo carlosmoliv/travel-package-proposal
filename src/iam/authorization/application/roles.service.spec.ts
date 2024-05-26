@@ -4,7 +4,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { RolesService } from './roles.service';
 import { RolesRepository } from './ports/roles.repository';
-import { RoleName } from './role-name.enum';
+import { RoleName } from '../domain/enums/role-name.enum';
 import { CreateRoleInput } from './inputs/create-role.input';
 
 describe('RolesService', () => {

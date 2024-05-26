@@ -14,17 +14,17 @@ import { TokenService } from './ports/token.service';
 import { RefreshTokenIdsStorage } from './authentication/refresh-token-ids.storage/refresh-token-ids.storage';
 import { SharedModule } from '../shared/shared.module';
 import { AuthenticationGuard } from './authentication/guards/authentication/authentication.guard';
-import { OrmPermission } from './authorization/persistence/orm/entities/orm-permission.entity';
+import { OrmPermission } from './authorization/infrastructure/persistence/orm/entities/orm-permission.entity';
 import { OrmRole } from '../user/infrastructure/persistance/orm/entities/orm-role.entity';
-import { RolesService } from './authorization/roles.service';
-import { PermissionsService } from './authorization/permissions.service';
-import { RolesController } from './authorization/roles.controller';
+import { RolesService } from './authorization/application/roles.service';
+import { PermissionsService } from './authorization/application/permissions.service';
+import { RolesController } from './authorization/presenters/controllers/roles.controller';
 import jwtConfig from './token/jwt/jwt.config';
 import iamConfig from './iam.config';
-import { RolesRepository } from './authorization/ports/roles.repository';
-import { OrmRolesRepository } from './authorization/persistence/orm/repositories/orm-roles.repository';
-import { PermissionsRepository } from './authorization/ports/permissions.repository';
-import { Permission } from './authorization/permission';
+import { RolesRepository } from './authorization/application/ports/roles.repository';
+import { OrmRolesRepository } from './authorization/infrastructure/persistence/orm/repositories/orm-roles.repository';
+import { PermissionsRepository } from './authorization/application/ports/permissions.repository';
+import { Permission } from './authorization/domain/permission';
 
 class DummyPermissionsRepository implements PermissionsRepository {
   findByRoles(roleIds: string[]): Promise<Permission[]> {

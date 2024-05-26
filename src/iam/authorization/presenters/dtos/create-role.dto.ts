@@ -1,6 +1,6 @@
 import { IsEnum } from 'class-validator';
 
-import { RoleName } from '../role-name.enum';
+import { RoleName } from '../../domain/enums/role-name.enum';
 
 export class CreateRoleDto {
   @IsEnum(RoleName)

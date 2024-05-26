@@ -7,7 +7,7 @@ import { ExecutionContext, UnauthorizedException } from '@nestjs/common';
 
 import { AuthenticationGuard } from './authentication.guard';
 import { TokenService } from '../../../ports/token.service';
-import { RoleName } from '../../../authorization/role-name.enum';
+import { RoleName } from '../../../authorization/domain/enums/role-name.enum';
 
 describe('AuthenticationGuard', () => {
   let sut: AuthenticationGuard;

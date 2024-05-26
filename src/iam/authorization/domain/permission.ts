@@ -1,4 +1,4 @@
-import { PermissionType } from './permission.type';
+import { PermissionType } from './types/permission.type';
 
 export class Permission {
   public id: string;

@@ -7,8 +7,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { ConfigModule } from '@nestjs/config';
 import { IamModule } from '../../src/iam/iam.module';
-import { CreateRoleDto } from '../../src/iam/authorization/dtos/create-role.dto';
-import { RoleName } from '../../src/iam/authorization/role-name.enum';
+import { CreateRoleDto } from '../../src/iam/authorization/presenters/dtos/create-role.dto';
+import { RoleName } from '../../src/iam/authorization/domain/enums/role-name.enum';
 
 describe('Roles (e2e)', () => {
   let app: INestApplication;

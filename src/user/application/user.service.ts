@@ -2,8 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { UserRepository } from './ports/user.repository';
 import { User } from '../domain/user';
-import { PermissionType } from '../../iam/authorization/permission.type';
-import { PermissionsService } from '../../iam/authorization/permissions.service';
+import { PermissionType } from '../../iam/authorization/domain/types/permission.type';
+import { PermissionsService } from '../../iam/authorization/application/permissions.service';
 
 @Injectable()
 export class UserService {

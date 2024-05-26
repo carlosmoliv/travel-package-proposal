@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PermissionsService } from './permissions.service';
-import { ExamplePermission } from './example-permission.enum';
+import { ExamplePermission } from '../domain/enums/example-permission.enum';
 import { PermissionsRepository } from './ports/permissions.repository';
 import { mock, MockProxy } from 'jest-mock-extended';
-import { Permission } from './permission';
+import { Permission } from '../domain/permission';
 
 describe('PermissionsService', () => {
   let sut: PermissionsService;
