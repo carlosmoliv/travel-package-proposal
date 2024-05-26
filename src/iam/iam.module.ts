@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -18,8 +18,19 @@ import { OrmPermission } from './authorization/persistence/orm/entities/orm-perm
 import { OrmRole } from '../user/infrastructure/persistance/orm/entities/orm-role.entity';
 import { RolesService } from './authorization/roles.service';
 import { PermissionsService } from './authorization/permissions.service';
+import { RolesController } from './authorization/roles.controller';
 import jwtConfig from './token/jwt/jwt.config';
 import iamConfig from './iam.config';
+import { RolesRepository } from './authorization/ports/roles.repository';
+import { OrmRolesRepository } from './authorization/persistence/orm/repositories/orm-roles.repository';
+import { PermissionsRepository } from './authorization/ports/permissions.repository';
+import { Permission } from './authorization/permission';
+
+class DummyPermissionsRepository implements PermissionsRepository {
+  findByRoles(roleIds: string[]): Promise<Permission[]> {
+    return Promise.resolve([]);
+  }
+}
 
 @Module({
   imports: [
@@ -27,8 +38,8 @@ import iamConfig from './iam.config';
     ConfigModule.forFeature(jwtConfig),
     ConfigModule.forFeature(iamConfig),
     TypeOrmModule.forFeature([OrmRole, OrmPermission]),
-    UserModule,
     SharedModule,
+    forwardRef(() => UserModule),
   ],
   providers: [
     {
@@ -48,8 +59,22 @@ import iamConfig from './iam.config';
     },
     RolesService,
     PermissionsService,
+    {
+      provide: RolesRepository,
+      useClass: OrmRolesRepository,
+    },
+    {
+      provide: PermissionsRepository,
+      useClass: DummyPermissionsRepository,
+    },
   ],
-  controllers: [AuthenticationController],
-  exports: [AuthenticationService, SharedModule],
+  controllers: [AuthenticationController, RolesController],
+  exports: [
+    AuthenticationService,
+    PermissionsService,
+    RolesRepository,
+    PermissionsRepository,
+    SharedModule,
+  ],
 })
 export class IamModule {}
