@@ -11,7 +11,7 @@ import { AuthenticationController } from './authentication/presenters/controller
 import { UserModule } from '../user/user.module';
 import { JwtService } from './token/jwt/jwt.service';
 import { TokenService } from './ports/token.service';
-import { RefreshTokenIdsStorage } from './authentication/infrastructure/refresh-token-ids.storage/refresh-token-ids.storage';
+import { RefreshTokenIdsStorage } from './authentication/infrastructure/refresh-token-ids/refresh-token-ids.storage';
 import { SharedModule } from '../shared/shared.module';
 import { AuthenticationGuard } from './authentication/application/guards/authentication/authentication.guard';
 import { OrmPermission } from './authorization/infrastructure/persistence/orm/entities/orm-permission.entity';

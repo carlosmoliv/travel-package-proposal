@@ -18,9 +18,9 @@ import iamConfig from '../../iam.config';
 import { ActiveUserData } from '../../interfaces/active-user-data.interface';
 import { RefreshTokenData } from '../../interfaces/refresh-token-data.interface';
 import { User } from '../../../user/domain/user';
-import { RefreshTokenIdsStorage } from '../infrastructure/refresh-token-ids.storage/refresh-token-ids.storage';
+import { RefreshTokenIdsStorage } from '../infrastructure/refresh-token-ids/refresh-token-ids.storage';
 import { RefreshTokenPayload } from './payloads/refresh-token';
-import { InvalidateRefreshTokenError } from '../infrastructure/refresh-token-ids.storage/invalidate-refresh-token.error';
+import { InvalidateRefreshTokenError } from '../infrastructure/refresh-token-ids/invalidate-refresh-token.error';
 
 @Injectable()
 export class AuthenticationService {

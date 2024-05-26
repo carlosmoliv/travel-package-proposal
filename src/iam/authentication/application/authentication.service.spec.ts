@@ -12,7 +12,7 @@ import { UserFactory } from '../../../user/domain/factories/user.factory';
 import { SignInPayload } from './payloads/sign-in.payload';
 import { TokenService } from '../../ports/token.service';
 import iamConfig from '../../iam.config';
-import { RefreshTokenIdsStorage } from '../infrastructure/refresh-token-ids.storage/refresh-token-ids.storage';
+import { RefreshTokenIdsStorage } from '../infrastructure/refresh-token-ids/refresh-token-ids.storage';
 import { RefreshTokenPayload } from './payloads/refresh-token';
 
 const mockRefreshTokenIdsStorage = {
