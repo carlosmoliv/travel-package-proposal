@@ -1,4 +1,4 @@
-import { Role } from './role';
+import { Role } from '../../iam/authorization/role';
 
 export class User {
   public name: string;

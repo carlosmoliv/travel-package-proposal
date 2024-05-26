@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { RolesRepository } from '../../../ports/roles.repository';
-import { Role } from '../../../../../user/domain/role';
+import { Role } from '../../../role';
 import { OrmRole } from '../../../../../user/infrastructure/persistance/orm/entities/orm-role.entity';
 
 @Injectable()

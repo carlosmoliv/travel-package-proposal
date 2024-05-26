@@ -11,8 +11,8 @@ import { ExamplePermission } from '../../iam/authorization/example-permission.en
 import { RolesService } from '../../iam/authorization/roles.service';
 import { PermissionsService } from '../../iam/authorization/permissions.service';
 import { Permission } from '../../iam/authorization/permission';
-import { RoleName } from '../role-name.enum';
-import { Role } from '../domain/role';
+import { RoleName } from '../../iam/authorization/role-name.enum';
+import { Role } from '../../iam/authorization/role';
 
 describe('UserService', () => {
   let sut: UserService;

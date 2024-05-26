@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 
 import { OrmPermission } from '../../../../../iam/authorization/persistence/orm/entities/orm-permission.entity';
-import { RoleName } from '../../../../role-name.enum';
+import { RoleName } from '../../../../../iam/authorization/role-name.enum';
 
 @Entity('roles')
 export class OrmRole {

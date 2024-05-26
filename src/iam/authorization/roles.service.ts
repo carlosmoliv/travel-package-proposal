@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import { RolesRepository } from './ports/roles.repository';
 import { CreateRoleInput } from './inputs/create-role.input';
-import { Role } from '../../user/domain/role';
+import { Role } from './role';
 
 @Injectable()
 export class RolesService {
