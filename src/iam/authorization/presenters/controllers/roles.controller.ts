@@ -2,7 +2,7 @@ import { Body, Controller, Post } from '@nestjs/common';
 
 import { CreateRoleDto } from '../dtos/create-role.dto';
 import { RolesService } from '../../application/roles.service';
-import { Public } from '../../../authentication/decorators/public.decorator';
+import { Public } from '../../../authentication/application/decorators/public.decorator';
 
 @Controller('roles')
 export class RolesController {

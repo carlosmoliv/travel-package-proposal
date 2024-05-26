@@ -5,14 +5,14 @@ import { ConflictException, UnauthorizedException } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
 import { AuthenticationService } from './authentication.service';
-import { UserRepository } from '../../user/application/ports/user.repository';
-import { HashingService } from '../ports/hashing.service';
+import { UserRepository } from '../../../user/application/ports/user.repository';
+import { HashingService } from '../../ports/hashing.service';
 import { SignUpPayload } from './payloads/sign-up.payload';
-import { UserFactory } from '../../user/domain/factories/user.factory';
+import { UserFactory } from '../../../user/domain/factories/user.factory';
 import { SignInPayload } from './payloads/sign-in.payload';
-import { TokenService } from '../ports/token.service';
-import iamConfig from '../iam.config';
-import { RefreshTokenIdsStorage } from './refresh-token-ids.storage/refresh-token-ids.storage';
+import { TokenService } from '../../ports/token.service';
+import iamConfig from '../../iam.config';
+import { RefreshTokenIdsStorage } from '../infrastructure/refresh-token-ids.storage/refresh-token-ids.storage';
 import { RefreshTokenPayload } from './payloads/refresh-token';
 
 const mockRefreshTokenIdsStorage = {

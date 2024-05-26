@@ -1,11 +1,11 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
-import { SignUpDto } from './dtos/sign-up.dto';
-import { AuthenticationService } from './authentication.service';
-import { SignInDto } from './dtos/sign-in.dto';
-import { RefreshTokenDto } from './dtos/refresh-token.dto';
-import { Public } from './decorators/public.decorator';
+import { SignUpDto } from '../dtos/sign-up.dto';
+import { AuthenticationService } from '../../application/authentication.service';
+import { SignInDto } from '../dtos/sign-in.dto';
+import { RefreshTokenDto } from '../dtos/refresh-token.dto';
+import { Public } from '../../application/decorators/public.decorator';
 
 @Public()
 @ApiTags('Authentication')

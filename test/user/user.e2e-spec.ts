@@ -6,7 +6,7 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 
-import { SignInDto } from '../../src/iam/authentication/dtos/sign-in.dto';
+import { SignInDto } from '../../src/iam/authentication/presenters/dtos/sign-in.dto';
 import { User } from '../../src/user/domain/user';
 import { UserModule } from '../../src/user/user.module';
 import { IamModule } from '../../src/iam/iam.module';

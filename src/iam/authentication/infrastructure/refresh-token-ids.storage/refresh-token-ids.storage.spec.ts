@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { MockProxy, mock } from 'jest-mock-extended';
 
 import { RefreshTokenIdsStorage } from './refresh-token-ids.storage';
-import { StorageService } from '../../../shared/application/ports/storage.service';
+import { StorageService } from '../../../../shared/application/ports/storage.service';
 import { InvalidateRefreshTokenError } from './invalidate-refresh-token.error';
 
 describe('RefreshTokenIdsStorageService', () => {

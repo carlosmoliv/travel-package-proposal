@@ -9,18 +9,18 @@ import {
 import { ConfigType } from '@nestjs/config';
 
 import { SignUpPayload } from './payloads/sign-up.payload';
-import { UserRepository } from '../../user/application/ports/user.repository';
-import { HashingService } from '../ports/hashing.service';
-import { UserFactory } from '../../user/domain/factories/user.factory';
+import { UserRepository } from '../../../user/application/ports/user.repository';
+import { HashingService } from '../../ports/hashing.service';
+import { UserFactory } from '../../../user/domain/factories/user.factory';
 import { SignInPayload } from './payloads/sign-in.payload';
-import { TokenService } from '../ports/token.service';
-import iamConfig from '../iam.config';
-import { ActiveUserData } from '../interfaces/active-user-data.interface';
-import { RefreshTokenData } from '../interfaces/refresh-token-data.interface';
-import { User } from '../../user/domain/user';
-import { RefreshTokenIdsStorage } from './refresh-token-ids.storage/refresh-token-ids.storage';
+import { TokenService } from '../../ports/token.service';
+import iamConfig from '../../iam.config';
+import { ActiveUserData } from '../../interfaces/active-user-data.interface';
+import { RefreshTokenData } from '../../interfaces/refresh-token-data.interface';
+import { User } from '../../../user/domain/user';
+import { RefreshTokenIdsStorage } from '../infrastructure/refresh-token-ids.storage/refresh-token-ids.storage';
 import { RefreshTokenPayload } from './payloads/refresh-token';
-import { InvalidateRefreshTokenError } from './refresh-token-ids.storage/invalidate-refresh-token.error';
+import { InvalidateRefreshTokenError } from '../infrastructure/refresh-token-ids.storage/invalidate-refresh-token.error';
 
 @Injectable()
 export class AuthenticationService {

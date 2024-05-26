@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { StorageService } from '../../../shared/application/ports/storage.service';
+import { StorageService } from '../../../../shared/application/ports/storage.service';
 import { InvalidateRefreshTokenError } from './invalidate-refresh-token.error';
 
 @Injectable()

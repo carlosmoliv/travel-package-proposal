@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 
-import { TokenService } from '../../../ports/token.service';
+import { TokenService } from '../../../../ports/token.service';
 import { IS_PUBLIC_KEY } from '../../decorators/public.decorator';
 
 @Injectable()

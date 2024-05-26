@@ -8,10 +8,10 @@ import { ConfigModule } from '@nestjs/config';
 
 import { IamModule } from '../../../src/iam/iam.module';
 import { UserRepository } from '../../../src/user/application/ports/user.repository';
-import { SignUpDto } from '../../../src/iam/authentication/dtos/sign-up.dto';
-import { SignInDto } from '../../../src/iam/authentication/dtos/sign-in.dto';
+import { SignUpDto } from '../../../src/iam/authentication/presenters/dtos/sign-up.dto';
+import { SignInDto } from '../../../src/iam/authentication/presenters/dtos/sign-in.dto';
 import { StorageService } from '../../../src/shared/application/ports/storage.service';
-import { RefreshTokenDto } from '../../../src/iam/authentication/dtos/refresh-token.dto';
+import { RefreshTokenDto } from '../../../src/iam/authentication/presenters/dtos/refresh-token.dto';
 
 describe('Authentication (e2e)', () => {
   let app: INestApplication;
