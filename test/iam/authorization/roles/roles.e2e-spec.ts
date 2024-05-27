@@ -3,15 +3,18 @@ import { faker } from '@faker-js/faker';
 
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-
+import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+
 import { IamModule } from '../../../../src/iam/iam.module';
 import { CreateRoleDto } from '../../../../src/iam/authorization/presenters/dtos/create-role.dto';
 import { RoleName } from '../../../../src/iam/authorization/domain/enums/role-name.enum';
+import { Repository } from 'typeorm';
+import { OrmRole } from '../../../../src/user/infrastructure/persistance/orm/entities/orm-role.entity';
 
 describe('Roles (e2e)', () => {
   let app: INestApplication;
+  let roleRepository: Repository<OrmRole>;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -32,7 +35,10 @@ describe('Roles (e2e)', () => {
       ],
     }).compile();
     app = moduleFixture.createNestApplication();
-    app.useGlobalPipes(new ValidationPipe());
+    app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+    roleRepository = moduleFixture.get<Repository<OrmRole>>(
+      getRepositoryToken(OrmRole),
+    );
     await app.init();
   });
 
@@ -55,6 +61,10 @@ describe('Roles (e2e)', () => {
 
       // Assert
       expect(status).toEqual(201);
+      const findRole = await roleRepository.findOne({
+        where: { name: RoleName.Admin },
+      });
+      expect(findRole).toMatchObject(createRoleDto);
     });
   });
 });
