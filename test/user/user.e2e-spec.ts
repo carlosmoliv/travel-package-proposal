@@ -3,34 +3,20 @@ import * as request from 'supertest';
 import { faker } from '@faker-js/faker';
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 
 import { SignInDto } from '../../src/iam/authentication/presenters/dtos/sign-in.dto';
 import { User } from '../../src/user/domain/user';
 import { UserModule } from '../../src/user/user.module';
 import { IamModule } from '../../src/iam/iam.module';
+import { AppModule } from '../../src/app.module';
 
 describe('Authentication (e2e)', () => {
   let app: INestApplication;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [
-        TypeOrmModule.forRoot({
-          type: 'postgres',
-          host: 'localhost',
-          port: 5433,
-          username: 'postgres',
-          password: 'pass123',
-          database: 'travel-package-proposal-db',
-          autoLoadEntities: true,
-          synchronize: true,
-        }),
-        ConfigModule.forRoot(),
-        IamModule,
-        UserModule,
-      ],
+      imports: [AppModule, ConfigModule.forRoot(), IamModule, UserModule],
     }).compile();
     app = moduleFixture.createNestApplication();
     app.useGlobalPipes(new ValidationPipe());

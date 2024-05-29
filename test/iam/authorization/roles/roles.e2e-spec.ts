@@ -1,16 +1,16 @@
+import { Repository } from 'typeorm';
 import * as request from 'supertest';
 import { faker } from '@faker-js/faker';
 
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
-import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule } from '@nestjs/config';
+import { getRepositoryToken } from '@nestjs/typeorm';
 
 import { IamModule } from '../../../../src/iam/iam.module';
 import { CreateRoleDto } from '../../../../src/iam/authorization/presenters/dtos/create-role.dto';
 import { RoleName } from '../../../../src/iam/authorization/domain/enums/role-name.enum';
-import { Repository } from 'typeorm';
 import { OrmRole } from '../../../../src/user/infrastructure/persistance/orm/entities/orm-role.entity';
+import { AppModule } from '../../../../src/app.module';
 
 describe('Roles (e2e)', () => {
   let app: INestApplication;
@@ -18,21 +18,7 @@ describe('Roles (e2e)', () => {
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [
-        TypeOrmModule.forRoot({
-          type: 'postgres',
-          host: 'localhost',
-          port: 5433,
-          username: 'postgres',
-          password: 'pass123',
-          database: 'travel-package-proposal-db',
-          autoLoadEntities: true,
-          synchronize: true,
-          dropSchema: true,
-        }),
-        ConfigModule.forRoot(),
-        IamModule,
-      ],
+      imports: [AppModule, IamModule],
     }).compile();
     app = moduleFixture.createNestApplication();
     app.useGlobalPipes(new ValidationPipe({ whitelist: true }));

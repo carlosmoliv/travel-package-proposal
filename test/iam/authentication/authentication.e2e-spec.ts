@@ -3,8 +3,6 @@ import { faker } from '@faker-js/faker';
 
 import { Test, TestingModule } from '@nestjs/testing';
 import { HttpStatus, INestApplication, ValidationPipe } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule } from '@nestjs/config';
 
 import { IamModule } from '../../../src/iam/iam.module';
 import { UserRepository } from '../../../src/user/application/ports/user.repository';
@@ -12,6 +10,7 @@ import { SignUpDto } from '../../../src/iam/authentication/presenters/dtos/sign-
 import { SignInDto } from '../../../src/iam/authentication/presenters/dtos/sign-in.dto';
 import { StorageService } from '../../../src/shared/application/ports/storage.service';
 import { RefreshTokenDto } from '../../../src/iam/authentication/presenters/dtos/refresh-token.dto';
+import { AppModule } from '../../../src/app.module';
 
 describe('Authentication (e2e)', () => {
   let app: INestApplication;
@@ -20,20 +19,7 @@ describe('Authentication (e2e)', () => {
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [
-        TypeOrmModule.forRoot({
-          type: 'postgres',
-          host: 'localhost',
-          port: 5433,
-          username: 'postgres',
-          password: 'pass123',
-          database: 'travel-package-proposal-db',
-          autoLoadEntities: true,
-          synchronize: true,
-        }),
-        ConfigModule.forRoot(),
-        IamModule,
-      ],
+      imports: [AppModule, IamModule],
     }).compile();
     app = moduleFixture.createNestApplication();
     app.useGlobalPipes(new ValidationPipe());
