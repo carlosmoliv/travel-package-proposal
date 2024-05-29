@@ -13,7 +13,11 @@ services:
     environment:
       POSTGRES_PASSWORD: pass123
       POSTGRES_DB: travel-package-proposal-db
-  storage-redis:
+  redis:
     image: redis
     ports:
       - "6379:6379"
+  test-redis:
+    image: redis
+    ports:
+      - "6380:6379"
