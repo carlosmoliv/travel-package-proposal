@@ -1,18 +1,10 @@
-import {
-  Column,
-  Entity,
-  JoinTable,
-  ManyToMany,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany } from 'typeorm';
 
 import { OrmRole } from './orm-role.entity';
+import { OrmBaseEntity } from '../../../../../shared/infrastructure/persistence/orm/entities/orm-base.entity';
 
 @Entity('users')
-export class OrmUser {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-
+export class OrmUser extends OrmBaseEntity {
   @Column()
   name: string;
 
