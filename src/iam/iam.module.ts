@@ -15,7 +15,7 @@ import { RefreshTokenIdsStorage } from './authentication/infrastructure/refresh-
 import { SharedModule } from '../shared/shared.module';
 import { AuthenticationGuard } from './authentication/application/guards/authentication/authentication.guard';
 import { OrmPermission } from './authorization/infrastructure/persistence/orm/entities/orm-permission.entity';
-import { OrmRole } from '../user/infrastructure/persistance/orm/entities/orm-role.entity';
+import { OrmRole } from './authorization/infrastructure/persistence/orm/entities/orm-role.entity';
 import { RolesService } from './authorization/application/roles.service';
 import { PermissionsService } from './authorization/application/permissions.service';
 import { RolesController } from './authorization/presenters/controllers/roles.controller';
