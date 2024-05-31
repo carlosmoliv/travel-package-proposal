@@ -1,16 +1,19 @@
 import * as request from 'supertest';
-import { faker } from '@faker-js/faker';
+import { DataSource } from 'typeorm';
 
+import { faker } from '@faker-js/faker';
 import { Test, TestingModule } from '@nestjs/testing';
 import { HttpStatus, INestApplication, ValidationPipe } from '@nestjs/common';
 
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { IamModule } from '../../../src/iam/iam.module';
 import { UserRepository } from '../../../src/user/application/ports/user.repository';
 import { SignUpDto } from '../../../src/iam/authentication/presenters/dtos/sign-up.dto';
 import { SignInDto } from '../../../src/iam/authentication/presenters/dtos/sign-in.dto';
 import { StorageService } from '../../../src/shared/application/ports/storage.service';
 import { RefreshTokenDto } from '../../../src/iam/authentication/presenters/dtos/refresh-token.dto';
-import { AppModule } from '../../../src/app.module';
+import { OrmHelper } from '../../shared/infrastructure/persistence/orm/helpers/orm.helper';
+import { OrmUser } from '../../../src/user/infrastructure/persistance/orm/entities/orm-user.entity';
 
 describe('Authentication (e2e)', () => {
   let app: INestApplication;
@@ -19,11 +22,27 @@ describe('Authentication (e2e)', () => {
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule, IamModule],
+      imports: [
+        TypeOrmModule.forRoot({
+          type: 'postgres',
+          host: process.env.DATABASE_HOST,
+          port: +process.env.DATABASE_PORT,
+          username: process.env.DATABASE_USER,
+          password: process.env.DATABASE_PASSWORD,
+          database: process.env.DATABASE_NAME,
+          autoLoadEntities: true,
+          synchronize: true,
+        }),
+        IamModule,
+      ],
     }).compile();
     app = moduleFixture.createNestApplication();
     app.useGlobalPipes(new ValidationPipe());
     await app.init();
+
+    const dataSource = app.get<DataSource>(DataSource);
+    await OrmHelper.clearTables(dataSource, [OrmUser]);
+
     userRepository = moduleFixture.get<UserRepository>(UserRepository);
     storageService = moduleFixture.get<StorageService>(StorageService);
   });

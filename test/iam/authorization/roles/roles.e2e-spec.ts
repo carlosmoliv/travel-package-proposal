@@ -1,16 +1,17 @@
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import * as request from 'supertest';
 import { faker } from '@faker-js/faker';
 
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
-import { getRepositoryToken } from '@nestjs/typeorm';
+import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
 
 import { IamModule } from '../../../../src/iam/iam.module';
 import { CreateRoleDto } from '../../../../src/iam/authorization/presenters/dtos/create-role.dto';
 import { RoleName } from '../../../../src/iam/authorization/domain/enums/role-name.enum';
-import { OrmRole } from '../../../../src/user/infrastructure/persistance/orm/entities/orm-role.entity';
-import { AppModule } from '../../../../src/app.module';
+import { OrmRole } from '../../../../src/iam/authorization/infrastructure/persistence/orm/entities/orm-role.entity';
+import { OrmHelper } from '../../../shared/infrastructure/persistence/orm/helpers/orm.helper';
+import { OrmUser } from '../../../../src/user/infrastructure/persistance/orm/entities/orm-user.entity';
 
 describe('Roles (e2e)', () => {
   let app: INestApplication;
@@ -18,7 +19,19 @@ describe('Roles (e2e)', () => {
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule, IamModule],
+      imports: [
+        TypeOrmModule.forRoot({
+          type: 'postgres',
+          host: process.env.DATABASE_HOST,
+          port: +process.env.DATABASE_PORT,
+          username: process.env.DATABASE_USER,
+          password: process.env.DATABASE_PASSWORD,
+          database: process.env.DATABASE_NAME,
+          autoLoadEntities: true,
+          synchronize: true,
+        }),
+        IamModule,
+      ],
     }).compile();
     app = moduleFixture.createNestApplication();
     app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
@@ -26,6 +39,9 @@ describe('Roles (e2e)', () => {
       getRepositoryToken(OrmRole),
     );
     await app.init();
+
+    const dataSource = app.get<DataSource>(DataSource);
+    await OrmHelper.clearTables(dataSource, [OrmRole]);
   });
 
   afterAll(() => {
