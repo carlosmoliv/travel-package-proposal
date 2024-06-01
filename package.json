@@ -19,7 +19,12 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "pretest:e2e": "docker compose up -d test-db test-redis",
     "test:e2e": "DOTENV_CONFIG_PATH=./.env.test jest --config ./test/jest-e2e.json",
-    "posttest:e2e": "docker compose stop test-db test-redis && docker compose rm -f test-db test-redis"
+    "posttest:e2e": "docker compose stop test-db test-redis && docker compose rm -f test-db test-redis",
+    "typeorm": "ts-node -r dotenv/config -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d ./src/config/orm.config.ts",
+    "migration:generate": "npm run build && npm run typeorm -- migration:generate ./src/migrations/$npm_config_name",
+    "migration:create": "npm run typeorm -- migration:create ./src/migrations/$npm_config_name",
+    "migration:run": "npm run typeorm -- migration:run",
+    "migration:revert": "npm run typeorm -- migration:revert"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
