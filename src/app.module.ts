@@ -8,28 +8,17 @@ import { IamModule } from './iam/iam.module';
 import { UserModule } from './user/user.module';
 import { SharedModule } from './shared/shared.module';
 import appConfig from './config/app.config';
+import { typeOrmAsyncConfig } from './config/orm.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       load: [appConfig],
-      envFilePath: !process.env.NODE_ENV
-        ? '.env'
-        : `.env.${process.env.NODE_ENV}`,
+      envFilePath: process.env.NODE_ENV
+        ? `.env.${process.env.NODE_ENV}`
+        : '.env',
     }),
-    TypeOrmModule.forRootAsync({
-      useFactory: () => ({
-        type: 'postgres',
-        host: process.env.DATABASE_HOST,
-        port: +process.env.DATABASE_PORT,
-        username: process.env.DATABASE_USER,
-        password: process.env.DATABASE_PASSWORD,
-        database: process.env.DATABASE_NAME,
-        autoLoadEntities: true,
-        synchronize: true,
-        dropSchema: process.env.NODE_ENV === 'test',
-      }),
-    }),
+    TypeOrmModule.forRootAsync(typeOrmAsyncConfig),
     IamModule,
     UserModule,
     SharedModule,
