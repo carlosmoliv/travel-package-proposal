@@ -34,8 +34,12 @@ For now, I've been considering the following approaches:
 1. You can use Docker to set up the necessary environment before running the application:
    ```bash
    docker compose up -d db storage-redis
-   
-2. To start the application in development mode:
+
+2. Run the migrations
+   ```bash
+   npm run migration:run
+
+3. To start the application in development mode:
    ```bash
    npm run start:dev
 
