@@ -2,8 +2,6 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { IamModule } from './iam/iam.module';
 import { UserModule } from './user/user.module';
 import { SharedModule } from './shared/shared.module';
@@ -23,7 +21,5 @@ import { typeOrmAsyncConfig } from './config/orm.config';
     UserModule,
     SharedModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}

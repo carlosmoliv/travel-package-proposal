@@ -11,7 +11,6 @@ export const ormConfig = {
   username: process.env.DATABASE_USER,
   password: process.env.DATABASE_PASSWORD,
   database: process.env.DATABASE_NAME,
-  autoLoadEntities: true,
   synchronize: false,
   logging: true,
   migrationsTableName: 'typeorm_migrations',
