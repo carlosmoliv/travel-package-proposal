@@ -6,12 +6,12 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
 
-import { IamModule } from '../../../../src/iam/iam.module';
-import { CreateRoleDto } from '../../../../src/iam/authorization/presenters/dtos/create-role.dto';
-import { RoleName } from '../../../../src/iam/authorization/domain/enums/role-name.enum';
-import { OrmRole } from '../../../../src/iam/authorization/infrastructure/persistence/orm/entities/orm-role.entity';
-import { OrmHelper } from '../../../shared/infrastructure/persistence/orm/helpers/orm.helper';
-import { OrmUser } from '../../../../src/user/infrastructure/persistance/orm/entities/orm-user.entity';
+import { IamModule } from '../../../src/iam/iam.module';
+import { CreateRoleDto } from '../../../src/iam/authorization/presenters/dtos/create-role.dto';
+import { RoleName } from '../../../src/iam/authorization/domain/enums/role-name.enum';
+import { OrmRole } from '../../../src/iam/authorization/infrastructure/persistence/orm/entities/orm-role.entity';
+import { OrmHelper } from '../../shared/infrastructure/persistence/orm/helpers/orm.helper';
+import { OrmUser } from '../../../src/user/infrastructure/persistance/orm/entities/orm-user.entity';
 
 describe('Roles (e2e)', () => {
   let app: INestApplication;
