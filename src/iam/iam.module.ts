@@ -24,13 +24,8 @@ import iamConfig from './iam.config';
 import { RolesRepository } from './authorization/application/ports/roles.repository';
 import { OrmRolesRepository } from './authorization/infrastructure/persistence/orm/repositories/orm-roles.repository';
 import { PermissionsRepository } from './authorization/application/ports/permissions.repository';
-import { Permission } from './authorization/domain/permission';
-
-class DummyPermissionsRepository implements PermissionsRepository {
-  findByRoles(roleIds: string[]): Promise<Permission[]> {
-    return Promise.resolve([]);
-  }
-}
+import { PermissionsController } from './authorization/presenters/controllers/permissions.controller';
+import { OrmPermissionsRepository } from './authorization/infrastructure/persistence/orm/repositories/orm-permissions.repository';
 
 @Module({
   imports: [
@@ -65,10 +60,14 @@ class DummyPermissionsRepository implements PermissionsRepository {
     },
     {
       provide: PermissionsRepository,
-      useClass: DummyPermissionsRepository,
+      useClass: OrmPermissionsRepository,
     },
   ],
-  controllers: [AuthenticationController, RolesController],
+  controllers: [
+    AuthenticationController,
+    RolesController,
+    PermissionsController,
+  ],
   exports: [
     AuthenticationService,
     PermissionsService,
