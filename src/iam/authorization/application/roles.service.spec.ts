@@ -6,10 +6,16 @@ import { RolesService } from './roles.service';
 import { RolesRepository } from './ports/roles.repository';
 import { RoleName } from '../domain/enums/role-name.enum';
 import { CreateRoleInput } from './inputs/create-role.input';
+import { AddPermissionToRoleInput } from './inputs/add-role-to-permission.input';
+import { Role } from '../domain/role';
+import { Permission } from '../domain/permission';
+import { ExamplePermission } from '../domain/enums/example-permission.enum';
+import { PermissionsService } from './permissions.service';
 
 describe('RolesService', () => {
   let sut: RolesService;
   let rolesRepository: MockProxy<RolesRepository>;
+  let permissionsService: MockProxy<PermissionsService>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -19,10 +25,16 @@ describe('RolesService', () => {
           provide: RolesRepository,
           useValue: mock(),
         },
+        {
+          provide: PermissionsService,
+          useValue: mock(),
+        },
       ],
     }).compile();
     sut = module.get<RolesService>(RolesService);
     rolesRepository = module.get<MockProxy<RolesRepository>>(RolesRepository);
+    permissionsService =
+      module.get<MockProxy<PermissionsService>>(PermissionsService);
   });
 
   describe('create()', () => {
@@ -36,6 +48,38 @@ describe('RolesService', () => {
       await sut.create(createRoleInput);
 
       expect(rolesRepository.save).toHaveBeenCalled();
+    });
+  });
+
+  describe('addPermissionsToRole()', () => {
+    let role: Role;
+    let permissions: Permission[];
+
+    beforeEach(() => {
+      role = new Role(RoleName.Admin, 'any_description');
+      permissions = [
+        new Permission(ExamplePermission.CanUpdateResource, 'any description'),
+        new Permission(ExamplePermission.CanDeleteResource, 'any description'),
+        new Permission(ExamplePermission.CanCreateResource, 'any description'),
+      ];
+    });
+
+    test('Attach a Permission to a Role', async () => {
+      const addPermissionToRole: AddPermissionToRoleInput = {
+        permissionIds: [
+          'any_permission_id_1',
+          'any_permission_id_2',
+          'any_permission_id_3',
+        ],
+        roleId: 'any_role_id',
+      };
+      rolesRepository.findById.mockResolvedValueOnce(role);
+      permissionsService.findByIds.mockResolvedValueOnce(permissions);
+      role.permissions = permissions;
+
+      await sut.addPermissionToRole(addPermissionToRole);
+
+      expect(rolesRepository.save).toHaveBeenCalledWith(role);
     });
   });
 });
