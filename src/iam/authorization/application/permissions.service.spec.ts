@@ -56,4 +56,20 @@ describe('PermissionsService', () => {
       expect(permissionRepository.save).toHaveBeenCalled();
     });
   });
+
+  describe('getRolesPermissions()', () => {
+    it('Return all permissions from the provided Ids', async () => {
+      const permissionIds = ['any_id_1', 'any_id_2', 'any_id_3'];
+      const permissions = [
+        new Permission(ExamplePermission.CanUpdateResource, 'any description'),
+        new Permission(ExamplePermission.CanDeleteResource, 'any description'),
+        new Permission(ExamplePermission.CanCreateResource, 'any description'),
+      ];
+      permissionRepository.findByIds.mockResolvedValueOnce(permissions);
+
+      const result = await sut.findByIds(permissionIds);
+
+      expect(result).toEqual(expect.arrayContaining(permissions));
+    });
+  });
 });

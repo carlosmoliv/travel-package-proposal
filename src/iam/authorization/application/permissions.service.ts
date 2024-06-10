@@ -8,11 +8,15 @@ import { CreatePermissionInput } from './inputs/create-permission.input';
 export class PermissionsService {
   constructor(private readonly permissionsRepository: PermissionsRepository) {}
 
+  async create(permission: CreatePermissionInput): Promise<void> {
+    await this.permissionsRepository.save(permission);
+  }
+
   async getByRoles(roleIds: string[]): Promise<Permission[]> {
     return this.permissionsRepository.findByRoles(roleIds);
   }
 
-  async create(permission: CreatePermissionInput): Promise<void> {
-    await this.permissionsRepository.save(permission);
+  async findByIds(permissionIds: string[]): Promise<Permission[]> {
+    return this.permissionsRepository.findByIds(permissionIds);
   }
 }
