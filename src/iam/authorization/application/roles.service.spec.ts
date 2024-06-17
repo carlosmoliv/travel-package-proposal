@@ -81,5 +81,20 @@ describe('RolesService', () => {
 
       expect(rolesRepository.save).toHaveBeenCalledWith(role);
     });
+
+    describe('findByIds()', () => {
+      it('Return all roles from the provided Ids', async () => {
+        const roleIds = ['any_id_1', 'any_id_2'];
+        const roles = [
+          new Role(RoleName.Admin, 'any_description'),
+          new Role(RoleName.TravelAgent, 'any_description'),
+        ];
+        rolesRepository.findByIds.mockResolvedValueOnce(roles);
+
+        const result = await sut.findByIds(roleIds);
+
+        expect(result).toEqual(expect.arrayContaining(roles));
+      });
+    });
   });
 });

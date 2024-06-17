@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 
+import { Role } from '../domain/role';
 import { RolesRepository } from './ports/roles.repository';
 import { CreateRoleInput } from './inputs/create-role.input';
-import { Role } from '../domain/role';
 import { AddPermissionToRoleInput } from './inputs/add-role-to-permission.input';
 import { PermissionsService } from './permissions.service';
 
@@ -24,5 +24,9 @@ export class RolesService {
     const role = await this.rolesRepository.findById(roleId);
     role.permissions = await this.permissionsService.findByIds(permissionIds);
     await this.rolesRepository.save(role);
+  }
+
+  async findByIds(roleIds: string[]): Promise<Role[]> {
+    return this.rolesRepository.findByIds(roleIds);
   }
 }
