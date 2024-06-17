@@ -12,7 +12,9 @@ export class OrmRole extends OrmBaseEntity {
   @Column({ nullable: true })
   description: string;
 
-  @ManyToMany(() => OrmPermission)
+  @ManyToMany(() => OrmPermission, {
+    cascade: true,
+  })
   @JoinTable({
     name: 'role_permissions',
   })
