@@ -57,7 +57,7 @@ describe('PermissionsService', () => {
     });
   });
 
-  describe('getRolesPermissions()', () => {
+  describe('findByIds()', () => {
     it('Return all permissions from the provided Ids', async () => {
       const permissionIds = ['any_id_1', 'any_id_2', 'any_id_3'];
       const permissions = [
