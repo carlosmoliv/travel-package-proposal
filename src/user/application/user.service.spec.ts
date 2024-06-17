@@ -13,11 +13,13 @@ import { PermissionsService } from '../../iam/authorization/application/permissi
 import { Permission } from '../../iam/authorization/domain/permission';
 import { RoleName } from '../../iam/authorization/domain/enums/role-name.enum';
 import { Role } from '../../iam/authorization/domain/role';
+import { AddRolesToUserInput } from './inputs/add-roles-to-user.input';
 
 describe('UserService', () => {
   let sut: UserService;
   let userRepository: MockProxy<UserRepository>;
   let permissionsService: MockProxy<PermissionsService>;
+  let rolesService: MockProxy<RolesService>;
   let userFactory: MockProxy<UserFactory>;
 
   beforeEach(async () => {
@@ -43,6 +45,7 @@ describe('UserService', () => {
     userFactory = module.get<MockProxy<UserFactory>>(UserFactory);
     permissionsService =
       module.get<MockProxy<PermissionsService>>(PermissionsService);
+    rolesService = module.get<MockProxy<RolesService>>(RolesService);
     sut = module.get<UserService>(UserService);
   });
 
@@ -97,6 +100,36 @@ describe('UserService', () => {
       const promise = sut.getPermissionTypes('any_id');
 
       await expect(promise).rejects.toThrow(NotFoundException);
+    });
+  });
+
+  describe('addPermissions()', () => {
+    let roles: Role[];
+
+    beforeEach(() => {
+      roles = [
+        new Role(RoleName.Admin, 'any_description'),
+        new Role(RoleName.TravelAgent, 'any_description'),
+      ];
+    });
+
+    test('Attach a set of Roles to a User', async () => {
+      const addRolesToUser: AddRolesToUserInput = {
+        roleIds: ['any_role_id_1', 'any_role_id_2'],
+        userId: 'any_user_id',
+      };
+      const user = userFactory.create(
+        faker.person.firstName(),
+        faker.internet.email(),
+        'any_id',
+      );
+      userRepository.findByCriteria.mockResolvedValueOnce(user);
+      rolesService.findByIds.mockResolvedValueOnce(roles);
+      user.roles = roles;
+
+      await sut.addRolesToUser(addRolesToUser);
+
+      expect(userRepository.save).toHaveBeenCalledWith(user);
     });
   });
 });
