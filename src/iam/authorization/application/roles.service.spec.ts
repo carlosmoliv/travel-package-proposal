@@ -77,7 +77,7 @@ describe('RolesService', () => {
       permissionsService.findByIds.mockResolvedValueOnce(permissions);
       role.permissions = permissions;
 
-      await sut.addPermissionToRole(addPermissionToRole);
+      await sut.addPermissionsToRole(addPermissionToRole);
 
       expect(rolesRepository.save).toHaveBeenCalledWith(role);
     });

@@ -29,7 +29,7 @@ export class RolesController {
     @Param('roleId') roleId: string,
     @Body() dto: AddPermissionsToRoleDto,
   ): Promise<void> {
-    await this.rolesService.addPermissionToRole({
+    await this.rolesService.addPermissionsToRole({
       roleId,
       permissionIds: dto.permissionIds,
     });
