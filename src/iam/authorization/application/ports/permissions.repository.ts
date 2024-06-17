@@ -3,5 +3,5 @@ import { Permission } from '../../domain/permission';
 export abstract class PermissionsRepository {
   abstract findByRoles(roleIds: string[]): Promise<Permission[] | []>;
   abstract save(permission: Permission): Promise<void>;
-  abstract findByIds(id: string[]): Promise<Permission[] | []>;
+  abstract findByIds(ids: string[]): Promise<Permission[] | []>;
 }
