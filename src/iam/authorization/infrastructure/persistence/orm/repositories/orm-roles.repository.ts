@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -20,5 +20,13 @@ export class OrmRolesRepository implements RolesRepository {
 
   async findById(id: string): Promise<Role> {
     return this.rolesRepository.findOne({ where: { id: id } });
+  }
+
+  async findByIds(id: string[]): Promise<Role[]> {
+    return this.rolesRepository.find({
+      where: {
+        id: In(id),
+      },
+    });
   }
 }
