@@ -71,6 +71,7 @@ import { OrmPermissionsRepository } from './authorization/infrastructure/persist
   exports: [
     AuthenticationService,
     PermissionsService,
+    RolesService,
     RolesRepository,
     PermissionsRepository,
     SharedModule,
