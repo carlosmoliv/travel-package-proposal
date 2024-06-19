@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
 
 import { Role } from '../domain/role';
-import { RolesRepository } from './ports/roles.repository';
+import { RoleRepository } from './ports/role.repository';
 import { CreateRoleInput } from './inputs/create-role.input';
 import { AddPermissionsToRoleInput } from './inputs/add-permissions-to-role.input';
-import { PermissionsService } from './permissions.service';
+import { PermissionService } from './permission.service';
 
 @Injectable()
-export class RolesService {
+export class RoleService {
   constructor(
-    private readonly rolesRepository: RolesRepository,
-    private readonly permissionsService: PermissionsService,
+    private readonly rolesRepository: RoleRepository,
+    private readonly permissionsService: PermissionService,
   ) {}
 
   async create(input: CreateRoleInput): Promise<void> {

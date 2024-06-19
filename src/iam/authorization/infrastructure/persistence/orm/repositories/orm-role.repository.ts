@@ -3,12 +3,12 @@ import { In, Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { RolesRepository } from '../../../../application/ports/roles.repository';
+import { RoleRepository } from '../../../../application/ports/role.repository';
 import { Role } from '../../../../domain/role';
 import { OrmRole } from '../entities/orm-role.entity';
 
 @Injectable()
-export class OrmRolesRepository implements RolesRepository {
+export class OrmRoleRepository implements RoleRepository {
   constructor(
     @InjectRepository(OrmRole)
     private readonly rolesRepository: Repository<OrmRole>,

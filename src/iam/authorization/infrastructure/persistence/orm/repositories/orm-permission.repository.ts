@@ -3,13 +3,13 @@ import { In, Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { PermissionsRepository } from '../../../../application/ports/permissions.repository';
+import { PermissionRepository } from '../../../../application/ports/permission.repository';
 import { OrmPermission } from '../entities/orm-permission.entity';
 import { Permission } from '../../../../domain/permission';
 import { PermissionMapper } from '../mappers/permission.mapper';
 
 @Injectable()
-export class OrmPermissionsRepository implements PermissionsRepository {
+export class OrmPermissionRepository implements PermissionRepository {
   constructor(
     @InjectRepository(OrmPermission)
     private readonly permissionRepository: Repository<OrmPermission>,

@@ -2,39 +2,39 @@ import { mock, MockProxy } from 'jest-mock-extended';
 
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { RolesService } from './roles.service';
-import { RolesRepository } from './ports/roles.repository';
+import { RoleService } from './role.service';
+import { RoleRepository } from './ports/role.repository';
 import { RoleName } from '../domain/enums/role-name.enum';
 import { CreateRoleInput } from './inputs/create-role.input';
 import { AddPermissionsToRoleInput } from './inputs/add-permissions-to-role.input';
 import { Role } from '../domain/role';
 import { Permission } from '../domain/permission';
 import { ExamplePermission } from '../domain/enums/example-permission.enum';
-import { PermissionsService } from './permissions.service';
+import { PermissionService } from './permission.service';
 
 describe('RolesService', () => {
-  let sut: RolesService;
-  let rolesRepository: MockProxy<RolesRepository>;
-  let permissionsService: MockProxy<PermissionsService>;
+  let sut: RoleService;
+  let rolesRepository: MockProxy<RoleRepository>;
+  let permissionsService: MockProxy<PermissionService>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        RolesService,
+        RoleService,
         {
-          provide: RolesRepository,
+          provide: RoleRepository,
           useValue: mock(),
         },
         {
-          provide: PermissionsService,
+          provide: PermissionService,
           useValue: mock(),
         },
       ],
     }).compile();
-    sut = module.get<RolesService>(RolesService);
-    rolesRepository = module.get<MockProxy<RolesRepository>>(RolesRepository);
+    sut = module.get<RoleService>(RoleService);
+    rolesRepository = module.get<MockProxy<RoleRepository>>(RoleRepository);
     permissionsService =
-      module.get<MockProxy<PermissionsService>>(PermissionsService);
+      module.get<MockProxy<PermissionService>>(PermissionService);
   });
 
   describe('create()', () => {

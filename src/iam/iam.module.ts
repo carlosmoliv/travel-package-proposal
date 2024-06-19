@@ -16,16 +16,16 @@ import { SharedModule } from '../shared/shared.module';
 import { AuthenticationGuard } from './authentication/application/guards/authentication/authentication.guard';
 import { OrmPermission } from './authorization/infrastructure/persistence/orm/entities/orm-permission.entity';
 import { OrmRole } from './authorization/infrastructure/persistence/orm/entities/orm-role.entity';
-import { RolesService } from './authorization/application/roles.service';
-import { PermissionsService } from './authorization/application/permissions.service';
-import { RolesController } from './authorization/presenters/controllers/roles.controller';
+import { RoleService } from './authorization/application/role.service';
+import { PermissionService } from './authorization/application/permission.service';
+import { RoleController } from './authorization/presenters/controllers/role.controller';
 import jwtConfig from './token/jwt/jwt.config';
 import iamConfig from './iam.config';
-import { RolesRepository } from './authorization/application/ports/roles.repository';
-import { OrmRolesRepository } from './authorization/infrastructure/persistence/orm/repositories/orm-roles.repository';
-import { PermissionsRepository } from './authorization/application/ports/permissions.repository';
-import { PermissionsController } from './authorization/presenters/controllers/permissions.controller';
-import { OrmPermissionsRepository } from './authorization/infrastructure/persistence/orm/repositories/orm-permissions.repository';
+import { RoleRepository } from './authorization/application/ports/role.repository';
+import { OrmRoleRepository } from './authorization/infrastructure/persistence/orm/repositories/orm-role.repository';
+import { PermissionRepository } from './authorization/application/ports/permission.repository';
+import { PermissionController } from './authorization/presenters/controllers/permission.controller';
+import { OrmPermissionRepository } from './authorization/infrastructure/persistence/orm/repositories/orm-permission.repository';
 
 @Module({
   imports: [
@@ -52,28 +52,24 @@ import { OrmPermissionsRepository } from './authorization/infrastructure/persist
       provide: APP_GUARD,
       useClass: AuthenticationGuard,
     },
-    RolesService,
-    PermissionsService,
+    RoleService,
+    PermissionService,
     {
-      provide: RolesRepository,
-      useClass: OrmRolesRepository,
+      provide: RoleRepository,
+      useClass: OrmRoleRepository,
     },
     {
-      provide: PermissionsRepository,
-      useClass: OrmPermissionsRepository,
+      provide: PermissionRepository,
+      useClass: OrmPermissionRepository,
     },
   ],
-  controllers: [
-    AuthenticationController,
-    RolesController,
-    PermissionsController,
-  ],
+  controllers: [AuthenticationController, RoleController, PermissionController],
   exports: [
     AuthenticationService,
-    PermissionsService,
-    RolesService,
-    RolesRepository,
-    PermissionsRepository,
+    PermissionService,
+    RoleService,
+    RoleRepository,
+    PermissionRepository,
     SharedModule,
   ],
 })

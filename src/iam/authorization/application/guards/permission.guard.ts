@@ -8,7 +8,7 @@ import { REQUEST_USER_KEY } from '../../../iam.constants';
 import { UserService } from '../../../../user/application/user.service';
 
 @Injectable()
-export class PermissionsGuard implements CanActivate {
+export class PermissionGuard implements CanActivate {
   constructor(
     private readonly reflector: Reflector,
     private readonly userService: UserService,

@@ -3,29 +3,28 @@ import { mock, MockProxy } from 'jest-mock-extended';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { Permission } from '../domain/permission';
-import { PermissionsService } from './permissions.service';
+import { PermissionService } from './permission.service';
 import { ExamplePermission } from '../domain/enums/example-permission.enum';
-import { PermissionsRepository } from './ports/permissions.repository';
+import { PermissionRepository } from './ports/permission.repository';
 import { CreatePermissionInput } from './inputs/create-permission.input';
 
 describe('PermissionsService', () => {
-  let sut: PermissionsService;
-  let permissionRepository: MockProxy<PermissionsRepository>;
+  let sut: PermissionService;
+  let permissionRepository: MockProxy<PermissionRepository>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        PermissionsService,
+        PermissionService,
         {
-          provide: PermissionsRepository,
+          provide: PermissionRepository,
           useValue: mock(),
         },
       ],
     }).compile();
-    sut = module.get<PermissionsService>(PermissionsService);
-    permissionRepository = module.get<MockProxy<PermissionsRepository>>(
-      PermissionsRepository,
-    );
+    sut = module.get<PermissionService>(PermissionService);
+    permissionRepository =
+      module.get<MockProxy<PermissionRepository>>(PermissionRepository);
   });
 
   describe('getRolesPermissions()', () => {

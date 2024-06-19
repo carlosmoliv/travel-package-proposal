@@ -2,7 +2,7 @@ import { Repository } from 'typeorm';
 
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
-import { OrmRolesRepository } from './orm-roles.repository';
+import { OrmRoleRepository } from './orm-role.repository';
 import { OrmRole } from '../entities/orm-role.entity';
 import { Role } from '../../../../domain/role';
 import { RoleName } from '../../../../domain/enums/role-name.enum';
@@ -13,21 +13,21 @@ const createMockRepository = <T = any>(): MockRepository<T> => ({
 });
 
 describe('OrmRolesRepository', () => {
-  let sut: OrmRolesRepository;
+  let sut: OrmRoleRepository;
   let typeOrmRepository: MockRepository;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [],
       providers: [
-        OrmRolesRepository,
+        OrmRoleRepository,
         {
           provide: getRepositoryToken(OrmRole),
           useValue: createMockRepository(),
         },
       ],
     }).compile();
-    sut = module.get<OrmRolesRepository>(OrmRolesRepository);
+    sut = module.get<OrmRoleRepository>(OrmRoleRepository);
     typeOrmRepository = module.get<MockRepository>(getRepositoryToken(OrmRole));
   });
 

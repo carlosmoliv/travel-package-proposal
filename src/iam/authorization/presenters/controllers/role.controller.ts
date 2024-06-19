@@ -8,13 +8,13 @@ import {
 } from '@nestjs/common';
 
 import { CreateRoleDto } from '../dtos/create-role.dto';
-import { RolesService } from '../../application/roles.service';
+import { RoleService } from '../../application/role.service';
 import { Public } from '../../../authentication/application/decorators/public.decorator';
 import { AddPermissionsToRoleDto } from '../dtos/add-permissions-to-role.dto';
 
 @Controller('roles')
-export class RolesController {
-  constructor(private readonly rolesService: RolesService) {}
+export class RoleController {
+  constructor(private readonly rolesService: RoleService) {}
 
   @Public()
   @Post()

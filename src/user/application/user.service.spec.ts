@@ -8,8 +8,8 @@ import { UserService } from './user.service';
 import { UserRepository } from './ports/user.repository';
 import { UserFactory } from '../domain/factories/user.factory';
 import { ExamplePermission } from '../../iam/authorization/domain/enums/example-permission.enum';
-import { RolesService } from '../../iam/authorization/application/roles.service';
-import { PermissionsService } from '../../iam/authorization/application/permissions.service';
+import { RoleService } from '../../iam/authorization/application/role.service';
+import { PermissionService } from '../../iam/authorization/application/permission.service';
 import { Permission } from '../../iam/authorization/domain/permission';
 import { RoleName } from '../../iam/authorization/domain/enums/role-name.enum';
 import { Role } from '../../iam/authorization/domain/role';
@@ -18,8 +18,8 @@ import { AddRolesToUserInput } from './inputs/add-roles-to-user.input';
 describe('UserService', () => {
   let sut: UserService;
   let userRepository: MockProxy<UserRepository>;
-  let permissionsService: MockProxy<PermissionsService>;
-  let rolesService: MockProxy<RolesService>;
+  let permissionsService: MockProxy<PermissionService>;
+  let rolesService: MockProxy<RoleService>;
   let userFactory: MockProxy<UserFactory>;
 
   beforeEach(async () => {
@@ -31,11 +31,11 @@ describe('UserService', () => {
           useValue: mock(),
         },
         {
-          provide: RolesService,
+          provide: RoleService,
           useValue: mock(),
         },
         {
-          provide: PermissionsService,
+          provide: PermissionService,
           useValue: mock(),
         },
         UserFactory,
@@ -44,8 +44,8 @@ describe('UserService', () => {
     userRepository = module.get<MockProxy<UserRepository>>(UserRepository);
     userFactory = module.get<MockProxy<UserFactory>>(UserFactory);
     permissionsService =
-      module.get<MockProxy<PermissionsService>>(PermissionsService);
-    rolesService = module.get<MockProxy<RolesService>>(RolesService);
+      module.get<MockProxy<PermissionService>>(PermissionService);
+    rolesService = module.get<MockProxy<RoleService>>(RoleService);
     sut = module.get<UserService>(UserService);
   });
 

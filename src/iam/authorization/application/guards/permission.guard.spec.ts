@@ -7,27 +7,27 @@ import { ExecutionContext } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ActiveUserData } from '../../../interfaces/active-user-data.interface';
-import { PermissionsGuard } from './permissions.guard';
+import { PermissionGuard } from './permission.guard';
 import { ExamplePermission } from '../../domain/enums/example-permission.enum';
 import { UserService } from '../../../../user/application/user.service';
 import { PermissionType } from '../../domain/types/permission.type';
 
 describe('PermissionsGuard', () => {
-  let sut: PermissionsGuard;
+  let sut: PermissionGuard;
   let reflectorMock: jest.Mocked<Reflector>;
   let userService: MockProxy<UserService>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        PermissionsGuard,
+        PermissionGuard,
         { provide: Reflector, useValue: { getAllAndOverride: jest.fn() } },
         { provide: UserService, useValue: mock() },
       ],
     }).compile();
     reflectorMock = module.get<jest.Mocked<Reflector>>(Reflector);
     userService = module.get<MockProxy<UserService>>(UserService);
-    sut = module.get<PermissionsGuard>(PermissionsGuard);
+    sut = module.get<PermissionGuard>(PermissionGuard);
   });
 
   describe('canActivate()', () => {

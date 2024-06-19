@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 
-import { PermissionsRepository } from './ports/permissions.repository';
+import { PermissionRepository } from './ports/permission.repository';
 import { Permission } from '../domain/permission';
 import { CreatePermissionInput } from './inputs/create-permission.input';
 
 @Injectable()
-export class PermissionsService {
-  constructor(private readonly permissionsRepository: PermissionsRepository) {}
+export class PermissionService {
+  constructor(private readonly permissionsRepository: PermissionRepository) {}
 
   async create(permission: CreatePermissionInput): Promise<void> {
     await this.permissionsRepository.save(permission);
