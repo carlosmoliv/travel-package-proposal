@@ -1,4 +1,4 @@
-export interface AddPermissionToRoleInput {
+export interface AddPermissionsToRoleInput {
   roleId: string;
   permissionIds: string[];
 }

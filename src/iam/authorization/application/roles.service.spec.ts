@@ -6,7 +6,7 @@ import { RolesService } from './roles.service';
 import { RolesRepository } from './ports/roles.repository';
 import { RoleName } from '../domain/enums/role-name.enum';
 import { CreateRoleInput } from './inputs/create-role.input';
-import { AddPermissionToRoleInput } from './inputs/add-role-to-permission.input';
+import { AddPermissionsToRoleInput } from './inputs/add-permissions-to-role.input';
 import { Role } from '../domain/role';
 import { Permission } from '../domain/permission';
 import { ExamplePermission } from '../domain/enums/example-permission.enum';
@@ -65,7 +65,7 @@ describe('RolesService', () => {
     });
 
     test('Attach a Permission to a Role', async () => {
-      const addPermissionToRole: AddPermissionToRoleInput = {
+      const addPermissionToRole: AddPermissionsToRoleInput = {
         permissionIds: [
           'any_permission_id_1',
           'any_permission_id_2',
