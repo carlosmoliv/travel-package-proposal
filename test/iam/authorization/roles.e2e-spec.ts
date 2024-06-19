@@ -14,7 +14,6 @@ import { OrmHelper } from '../../shared/infrastructure/persistence/orm/helpers/o
 import { AddPermissionsToRoleDto } from '../../../src/iam/authorization/presenters/dtos/add-permissions-to-role.dto';
 import { ExamplePermission } from '../../../src/iam/authorization/domain/enums/example-permission.enum';
 import { OrmPermission } from '../../../src/iam/authorization/infrastructure/persistence/orm/entities/orm-permission.entity';
-import { Permission } from '../../../src/iam/authorization/domain/permission';
 
 describe('Roles (e2e)', () => {
   let app: INestApplication;

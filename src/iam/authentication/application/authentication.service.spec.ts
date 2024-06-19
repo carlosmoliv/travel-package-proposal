@@ -7,13 +7,13 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthenticationService } from './authentication.service';
 import { UserRepository } from '../../../user/application/ports/user.repository';
 import { HashingService } from '../../ports/hashing.service';
-import { SignUpPayload } from './payloads/sign-up.payload';
+import { SignUpInput } from './inputs/sign-up.input';
 import { UserFactory } from '../../../user/domain/factories/user.factory';
-import { SignInPayload } from './payloads/sign-in.payload';
+import { SignInInput } from './inputs/sign-in.input';
 import { TokenService } from '../../ports/token.service';
 import iamConfig from '../../iam.config';
 import { RefreshTokenIdsStorage } from '../infrastructure/refresh-token-ids/refresh-token-ids.storage';
-import { RefreshTokenPayload } from './payloads/refresh-token';
+import { RefreshTokenPayload } from './inputs/refresh-token.input';
 
 const mockRefreshTokenIdsStorage = {
   insert: jest.fn(),
@@ -53,7 +53,7 @@ describe('AuthenticationService', () => {
   });
 
   describe('signUp()', () => {
-    let payload: SignUpPayload;
+    let payload: SignUpInput;
 
     beforeEach(() => {
       payload = {
@@ -92,7 +92,7 @@ describe('AuthenticationService', () => {
   });
 
   describe('signIn()', () => {
-    let payload: SignInPayload;
+    let payload: SignInInput;
 
     beforeEach(() => {
       payload = {

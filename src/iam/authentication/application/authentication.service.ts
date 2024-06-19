@@ -8,18 +8,18 @@ import {
 } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 
-import { SignUpPayload } from './payloads/sign-up.payload';
+import { SignUpInput } from './inputs/sign-up.input';
 import { UserRepository } from '../../../user/application/ports/user.repository';
 import { HashingService } from '../../ports/hashing.service';
 import { UserFactory } from '../../../user/domain/factories/user.factory';
-import { SignInPayload } from './payloads/sign-in.payload';
+import { SignInInput } from './inputs/sign-in.input';
 import { TokenService } from '../../ports/token.service';
 import iamConfig from '../../iam.config';
 import { ActiveUserData } from '../../interfaces/active-user-data.interface';
 import { RefreshTokenData } from '../../interfaces/refresh-token-data.interface';
 import { User } from '../../../user/domain/user';
 import { RefreshTokenIdsStorage } from '../infrastructure/refresh-token-ids/refresh-token-ids.storage';
-import { RefreshTokenPayload } from './payloads/refresh-token';
+import { RefreshTokenPayload } from './inputs/refresh-token.input';
 import { InvalidateRefreshTokenError } from '../infrastructure/refresh-token-ids/invalidate-refresh-token.error';
 
 @Injectable()
@@ -34,7 +34,7 @@ export class AuthenticationService {
     private readonly refreshTokenIdsStorage: RefreshTokenIdsStorage,
   ) {}
 
-  async signUp(payload: SignUpPayload): Promise<void> {
+  async signUp(payload: SignUpInput): Promise<void> {
     const { name, email, password } = payload;
     const userExists = await this.userRepository.findByCriteria({ email });
     if (userExists) throw new ConflictException();
@@ -43,7 +43,7 @@ export class AuthenticationService {
     await this.userRepository.save(user);
   }
 
-  async signIn(payload: SignInPayload) {
+  async signIn(payload: SignInInput) {
     const user = await this.userRepository.findByCriteria({
       email: payload.email,
     });
