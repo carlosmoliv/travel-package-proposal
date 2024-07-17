@@ -15,6 +15,8 @@ export class OrmUser extends OrmBaseEntity {
   password: string;
 
   @ManyToMany(() => OrmRole)
-  @JoinTable()
+  @JoinTable({
+    name: 'user_roles',
+  })
   roles?: OrmRole[];
 }
