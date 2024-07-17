@@ -17,6 +17,9 @@ import { Role } from '../../src/iam/authorization/domain/role';
 import { RoleName } from '../../src/iam/authorization/domain/enums/role-name.enum';
 import { AddRolesToUserDto } from '../../src/user/presenters/dtos/add-roles-to-user.dto';
 import { UserFactory } from '../../src/user/domain/factories/user.factory';
+import { AuthHelper } from '../shared/helpers/auth.helper';
+import { UserPermission } from '../../src/user/user.permissions';
+import { OrmPermission } from '../../src/iam/authorization/infrastructure/persistence/orm/entities/orm-permission.entity';
 
 describe('User (e2e)', () => {
   let app: INestApplication;
@@ -24,6 +27,7 @@ describe('User (e2e)', () => {
   let userRepository: Repository<OrmUser>;
   let userFactory: UserFactory;
   let dataSource: DataSource;
+  let authHelper: AuthHelper;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -45,10 +49,10 @@ describe('User (e2e)', () => {
     }).compile();
     app = moduleFixture.createNestApplication();
     app.useGlobalPipes(new ValidationPipe());
+
     await app.init();
 
     dataSource = app.get<DataSource>(DataSource);
-
     roleRepository = moduleFixture.get<Repository<OrmRole>>(
       getRepositoryToken(OrmRole),
     );
@@ -56,10 +60,12 @@ describe('User (e2e)', () => {
       getRepositoryToken(OrmUser),
     );
     userFactory = moduleFixture.get<UserFactory>(UserFactory);
+
+    authHelper = new AuthHelper(app);
   });
 
   beforeEach(async () => {
-    await OrmHelper.clearTables(dataSource, [OrmUser]);
+    await OrmHelper.clearTables(dataSource, [OrmUser, OrmRole, OrmPermission]);
   });
 
   afterAll(() => {
@@ -81,7 +87,7 @@ describe('User (e2e)', () => {
       };
     });
 
-    test('Return the current active user data', async () => {
+    test('Return the current active user info', async () => {
       // Arrange
       await request(app.getHttpServer())
         .post('/authentication/sign-up')
@@ -108,11 +114,19 @@ describe('User (e2e)', () => {
     });
   });
 
-  describe('POST /roles/roleId/permissions', () => {
+  describe('POST /users/:id/roleId', () => {
+    let accessToken: string;
+
+    beforeAll(async () => {
+      accessToken = await authHelper.getAccessToken(RoleName.Admin, [
+        UserPermission.AddRolesToUser,
+      ]);
+    });
+
     test('Add a set of Roles to an User', async () => {
       // Arrange
       const createdRole1 = await roleRepository.save(
-        new Role(RoleName.Admin, 'any_description'),
+        new Role(RoleName.Client, 'any_description'),
       );
       const createdRole2 = await roleRepository.save(
         new Role(RoleName.TravelAgent, 'any_description'),
@@ -127,6 +141,7 @@ describe('User (e2e)', () => {
       // Act
       const { status } = await request(app.getHttpServer())
         .post(`/users/${user.id}/roles`)
+        .set('Authorization', `Bearer ${accessToken}`)
         .send({
           roleIds: [createdRole1.id, createdRole2.id],
         } as AddRolesToUserDto);
@@ -139,12 +154,8 @@ describe('User (e2e)', () => {
       });
       expect(findUser).toMatchObject({
         roles: expect.arrayContaining([
-          expect.objectContaining({
-            id: createdRole1.id,
-          }),
-          expect.objectContaining({
-            id: createdRole2.id,
-          }),
+          expect.objectContaining({ id: createdRole1.id }),
+          expect.objectContaining({ id: createdRole2.id }),
         ]),
       });
     });
