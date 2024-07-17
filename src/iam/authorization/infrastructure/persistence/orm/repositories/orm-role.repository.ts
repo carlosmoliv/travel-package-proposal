@@ -14,8 +14,8 @@ export class OrmRoleRepository implements RoleRepository {
     private readonly rolesRepository: Repository<OrmRole>,
   ) {}
 
-  async save(role: Role): Promise<void> {
-    await this.rolesRepository.save(role);
+  async save(role: Role): Promise<Role> {
+    return this.rolesRepository.save(role);
   }
 
   async findById(id: string): Promise<Role> {

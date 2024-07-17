@@ -13,7 +13,7 @@ export class RoleService {
     private readonly permissionsService: PermissionService,
   ) {}
 
-  async create(input: CreateRoleInput): Promise<void> {
+  async create(input: CreateRoleInput): Promise<Role> {
     const role = new Role(input.name);
     role.description = input.description;
     return this.rolesRepository.save(role);
