@@ -7,7 +7,7 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
 
 import { IamModule } from '../../../src/iam/iam.module';
-import { OrmHelper } from '../../shared/infrastructure/persistence/orm/helpers/orm.helper';
+import { OrmHelper } from '../../helpers/orm.helper';
 import { OrmPermission } from '../../../src/iam/authorization/infrastructure/persistence/orm/entities/orm-permission.entity';
 import { ExamplePermission } from '../../../src/iam/authorization/domain/enums/example-permission.enum';
 import { CreatePermissionDto } from '../../../src/iam/authorization/presenters/dtos/create-permission.dto';

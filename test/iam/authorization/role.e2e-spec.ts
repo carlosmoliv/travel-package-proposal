@@ -10,7 +10,7 @@ import { IamModule } from '../../../src/iam/iam.module';
 import { CreateRoleDto } from '../../../src/iam/authorization/presenters/dtos/create-role.dto';
 import { RoleName } from '../../../src/iam/authorization/domain/enums/role-name.enum';
 import { OrmRole } from '../../../src/iam/authorization/infrastructure/persistence/orm/entities/orm-role.entity';
-import { OrmHelper } from '../../shared/infrastructure/persistence/orm/helpers/orm.helper';
+import { OrmHelper } from '../../helpers/orm.helper';
 import { AddPermissionsToRoleDto } from '../../../src/iam/authorization/presenters/dtos/add-permissions-to-role.dto';
 import { ExamplePermission } from '../../../src/iam/authorization/domain/enums/example-permission.enum';
 import { OrmPermission } from '../../../src/iam/authorization/infrastructure/persistence/orm/entities/orm-permission.entity';

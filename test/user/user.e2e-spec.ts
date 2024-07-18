@@ -10,14 +10,14 @@ import { SignInDto } from '../../src/iam/authentication/presenters/dtos/sign-in.
 import { User } from '../../src/user/domain/user';
 import { UserModule } from '../../src/user/user.module';
 import { IamModule } from '../../src/iam/iam.module';
-import { OrmHelper } from '../shared/infrastructure/persistence/orm/helpers/orm.helper';
+import { OrmHelper } from '../helpers/orm.helper';
 import { OrmUser } from '../../src/user/infrastructure/persistance/orm/entities/orm-user.entity';
 import { OrmRole } from '../../src/iam/authorization/infrastructure/persistence/orm/entities/orm-role.entity';
 import { Role } from '../../src/iam/authorization/domain/role';
 import { RoleName } from '../../src/iam/authorization/domain/enums/role-name.enum';
 import { AddRolesToUserDto } from '../../src/user/presenters/dtos/add-roles-to-user.dto';
 import { UserFactory } from '../../src/user/domain/factories/user.factory';
-import { AuthHelper } from '../shared/helpers/auth.helper';
+import { AuthHelper } from '../helpers/auth.helper';
 import { UserPermission } from '../../src/user/user.permissions';
 import { OrmPermission } from '../../src/iam/authorization/infrastructure/persistence/orm/entities/orm-permission.entity';
 

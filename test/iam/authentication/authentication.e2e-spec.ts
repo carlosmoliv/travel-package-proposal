@@ -12,7 +12,7 @@ import { SignUpDto } from '../../../src/iam/authentication/presenters/dtos/sign-
 import { SignInDto } from '../../../src/iam/authentication/presenters/dtos/sign-in.dto';
 import { StorageService } from '../../../src/shared/application/ports/storage.service';
 import { RefreshTokenDto } from '../../../src/iam/authentication/presenters/dtos/refresh-token.dto';
-import { OrmHelper } from '../../shared/infrastructure/persistence/orm/helpers/orm.helper';
+import { OrmHelper } from '../../helpers/orm.helper';
 import { OrmUser } from '../../../src/user/infrastructure/persistance/orm/entities/orm-user.entity';
 
 describe('Authentication (e2e)', () => {
