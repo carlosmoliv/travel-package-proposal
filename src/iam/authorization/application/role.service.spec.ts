@@ -43,7 +43,9 @@ describe('RolesService', () => {
         name: RoleName.Client,
         description: 'any description',
       };
-      rolesRepository.save.mockResolvedValueOnce();
+      rolesRepository.save.mockResolvedValueOnce(
+        new Role(createRoleInput.name, createRoleInput.description),
+      );
 
       await sut.create(createRoleInput);
 
