@@ -1,6 +1,5 @@
 import * as request from 'supertest';
 
-import { faker } from '@faker-js/faker';
 import { INestApplication } from '@nestjs/common';
 
 import { SignUpDto } from '../../src/iam/authentication/presenters/dtos/sign-up.dto';
@@ -12,6 +11,7 @@ import { PermissionType } from '../../src/iam/authorization/domain/types/permiss
 import { RoleRepository } from '../../src/iam/authorization/application/ports/role.repository';
 import { Role } from '../../src/iam/authorization/domain/role';
 import { UserService } from '../../src/user/application/user.service';
+import { fakeSignUpDto } from '../fakes/dtos/make-fake-signup-dto';
 
 export class AuthHelper {
   private accessToken: string;
@@ -32,36 +32,23 @@ export class AuthHelper {
     roleName: RoleName,
     permissionTypes: PermissionType[],
   ) {
-    const password = faker.internet.password({ prefix: '!Aa0' });
-    const signUpDto: SignUpDto = {
-      email: faker.internet.email(),
-      name: faker.internet.userName(),
-      password,
-      confirmPassword: password,
-    };
-
+    const signUpDto = fakeSignUpDto();
     await this.signUp(signUpDto);
 
     const user = await this.app
       .get<UserRepository>(UserRepository)
-      .findByCriteria({
-        email: signUpDto.email,
-      });
+      .findByCriteria({ email: signUpDto.email });
 
     const role = await this.createRoleWithPermissions(
       roleName,
       permissionTypes,
     );
-
     await this.app.get<UserService>(UserService).addRolesToUser({
       userId: user.id,
       roleIds: [role.id],
     });
 
-    await this.signIn({
-      email: signUpDto.email,
-      password,
-    });
+    await this.signIn({ email: signUpDto.email, password: signUpDto.password });
   }
 
   private async signIn({ email, password }: SignInDto): Promise<void> {

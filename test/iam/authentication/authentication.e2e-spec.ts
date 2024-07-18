@@ -4,8 +4,8 @@ import { DataSource } from 'typeorm';
 import { faker } from '@faker-js/faker';
 import { Test, TestingModule } from '@nestjs/testing';
 import { HttpStatus, INestApplication, ValidationPipe } from '@nestjs/common';
-
 import { TypeOrmModule } from '@nestjs/typeorm';
+
 import { IamModule } from '../../../src/iam/iam.module';
 import { UserRepository } from '../../../src/user/application/ports/user.repository';
 import { SignUpDto } from '../../../src/iam/authentication/presenters/dtos/sign-up.dto';
@@ -14,6 +14,7 @@ import { StorageService } from '../../../src/shared/application/ports/storage.se
 import { RefreshTokenDto } from '../../../src/iam/authentication/presenters/dtos/refresh-token.dto';
 import { OrmHelper } from '../../helpers/orm.helper';
 import { OrmUser } from '../../../src/user/infrastructure/persistance/orm/entities/orm-user.entity';
+import { fakeSignUpDto } from '../../fakes/dtos/make-fake-signup-dto';
 
 describe('Authentication (e2e)', () => {
   let app: INestApplication;
@@ -55,13 +56,7 @@ describe('Authentication (e2e)', () => {
     let signUpDto: SignUpDto;
 
     beforeEach(() => {
-      const password = faker.internet.password({ prefix: '!Aa0' });
-      signUpDto = {
-        email: faker.internet.email(),
-        name: faker.person.fullName(),
-        password,
-        confirmPassword: password,
-      };
+      signUpDto = fakeSignUpDto();
     });
 
     test('Sign up a User successfully', async () => {
