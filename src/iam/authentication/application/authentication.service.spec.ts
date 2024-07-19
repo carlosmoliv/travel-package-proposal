@@ -1,9 +1,11 @@
 import { mock, MockProxy } from 'jest-mock-extended';
+
 import { faker } from '@faker-js/faker';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConflictException, UnauthorizedException } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
+import iamConfig from '../../iam.config';
 import { AuthenticationService } from './authentication.service';
 import { UserRepository } from '../../../user/application/ports/user.repository';
 import { HashingService } from '../../ports/hashing.service';
@@ -11,9 +13,8 @@ import { SignUpInput } from './inputs/sign-up.input';
 import { UserFactory } from '../../../user/domain/factories/user.factory';
 import { SignInInput } from './inputs/sign-in.input';
 import { TokenService } from '../../ports/token.service';
-import iamConfig from '../../iam.config';
 import { RefreshTokenIdsStorage } from '../infrastructure/refresh-token-ids/refresh-token-ids.storage';
-import { RefreshTokenPayload } from './inputs/refresh-token.input';
+import { RefreshTokenInput } from './inputs/refresh-token.input';
 
 const mockRefreshTokenIdsStorage = {
   insert: jest.fn(),
@@ -161,7 +162,7 @@ describe('AuthenticationService', () => {
 
   describe('refreshTokens()', () => {
     test('Regenerate tokens when refresh token provided is valid', async () => {
-      const payload: RefreshTokenPayload = { refreshToken: 'refresh_token' };
+      const payload: RefreshTokenInput = { refreshToken: 'refresh_token' };
       userRepository.findById.mockResolvedValueOnce(
         userFactory.create(
           'any_id',
@@ -187,7 +188,7 @@ describe('AuthenticationService', () => {
     });
 
     test('Throw unauthorized when user is not found', async () => {
-      const payload: RefreshTokenPayload = { refreshToken: 'refresh_token' };
+      const payload: RefreshTokenInput = { refreshToken: 'refresh_token' };
       tokenService.validateAndDecode.mockResolvedValueOnce({
         userId: 'any_id',
         refreshTokenId: 'refresh_token_id',
@@ -200,7 +201,7 @@ describe('AuthenticationService', () => {
     });
 
     test('Throw Unauthorized when TokenService throws an exception', async () => {
-      const payload: RefreshTokenPayload = { refreshToken: 'refresh_token' };
+      const payload: RefreshTokenInput = { refreshToken: 'refresh_token' };
       tokenService.validateAndDecode.mockRejectedValueOnce(new Error());
       userRepository.findById.mockResolvedValueOnce(
         userFactory.create(
@@ -216,7 +217,7 @@ describe('AuthenticationService', () => {
     });
 
     test('', async () => {
-      const payload: RefreshTokenPayload = { refreshToken: 'refresh_token' };
+      const payload: RefreshTokenInput = { refreshToken: 'refresh_token' };
       userRepository.findById.mockResolvedValueOnce(
         userFactory.create(
           'any_id',

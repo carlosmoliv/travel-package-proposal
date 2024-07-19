@@ -19,7 +19,7 @@ import { ActiveUserData } from '../../interfaces/active-user-data.interface';
 import { RefreshTokenData } from '../../interfaces/refresh-token-data.interface';
 import { User } from '../../../user/domain/user';
 import { RefreshTokenIdsStorage } from '../infrastructure/refresh-token-ids/refresh-token-ids.storage';
-import { RefreshTokenPayload } from './inputs/refresh-token.input';
+import { RefreshTokenInput } from './inputs/refresh-token.input';
 import { InvalidateRefreshTokenError } from '../infrastructure/refresh-token-ids/invalidate-refresh-token.error';
 
 @Injectable()
@@ -34,8 +34,8 @@ export class AuthenticationService {
     private readonly refreshTokenIdsStorage: RefreshTokenIdsStorage,
   ) {}
 
-  async signUp(payload: SignUpInput): Promise<void> {
-    const { name, email, password } = payload;
+  async signUp(signUpInput: SignUpInput): Promise<void> {
+    const { name, email, password } = signUpInput;
 
     const userExists = await this.userRepository.findByEmail(email);
     if (userExists) throw new ConflictException();
@@ -46,32 +46,37 @@ export class AuthenticationService {
     await this.userRepository.save(user);
   }
 
-  async signIn(payload: SignInInput) {
-    const user = await this.userRepository.findByEmail(payload.email);
+  async signIn(signInInput: SignInInput) {
+    const user = await this.userRepository.findByEmail(signInInput.email);
     if (!user) throw new UnauthorizedException('User does not exist.');
+
     const passwordMatch = await this.hashingService.compare(
-      payload.password,
+      signInInput.password,
       user.password,
     );
     if (!passwordMatch) {
       throw new UnauthorizedException('Password does not match.');
     }
+
     return this.generateTokens(user);
   }
 
-  async refreshTokens(refreshTokenPayload: RefreshTokenPayload) {
+  async refreshTokens(refreshTokenInput: RefreshTokenInput) {
     try {
       const decodedToken =
         await this.tokenService.validateAndDecode<RefreshTokenData>(
-          refreshTokenPayload.refreshToken,
+          refreshTokenInput.refreshToken,
         );
+
       const user = await this.userRepository.findById(decodedToken.userId);
       if (!user) throw new Error('User not found.');
+
       await this.refreshTokenIdsStorage.validate(
         user.id,
         decodedToken.refreshTokenId,
       );
       await this.refreshTokenIdsStorage.invalidate(user.id);
+
       return this.generateTokens(user);
     } catch (err) {
       if (err instanceof InvalidateRefreshTokenError) {
@@ -84,6 +89,7 @@ export class AuthenticationService {
   private async generateTokens(user: User) {
     const { id, email } = user;
     const refreshTokenId = randomUUID();
+
     const [accessToken, refreshToken] = await Promise.all([
       this.tokenService.generate<ActiveUserData>(
         { userId: id, email },
@@ -94,7 +100,9 @@ export class AuthenticationService {
         this.iamConfiguration.refreshTokenTtl,
       ),
     ]);
+
     await this.refreshTokenIdsStorage.insert(user.id, refreshTokenId);
+
     return { accessToken, refreshToken };
   }
 }

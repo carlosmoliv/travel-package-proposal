@@ -1,3 +1,3 @@
-export class RefreshTokenPayload {
+export class RefreshTokenInput {
   refreshToken: string;
 }
