@@ -15,7 +15,6 @@ For now, I've been considering the following approaches:
 - Implementing authentication using email and password, social login with Google, and also 2FA feature.
 - Implementing dynamic refresh tokens including in-memory token storage.
 - Implementing a more robust authorization flow with permissions and roles.
-- Shifting the focus less on clean architecture and more on DDD for this project.
 
 ## :spiral_notepad: Requirements
 
