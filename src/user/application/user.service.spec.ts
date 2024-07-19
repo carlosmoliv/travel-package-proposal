@@ -49,7 +49,7 @@ describe('UserService', () => {
     sut = module.get<UserService>(UserService);
   });
 
-  describe('getById()', () => {
+  describe('findById()', () => {
     test('Return a User that matches with the provided id', async () => {
       const user = userFactory.create(
         faker.person.firstName(),
@@ -67,6 +67,29 @@ describe('UserService', () => {
       userRepository.findById.mockResolvedValueOnce(undefined);
 
       const promise = sut.findById('any_id');
+
+      await expect(promise).rejects.toThrow(NotFoundException);
+    });
+  });
+
+  describe('findByEmail()', () => {
+    test('Return a User that matches with the provided email', async () => {
+      const user = userFactory.create(
+        faker.person.firstName(),
+        faker.internet.email(),
+        'any_id',
+      );
+      userRepository.findByEmail.mockResolvedValueOnce(user);
+
+      const result = await sut.findByEmail(user.email);
+
+      expect(result).toEqual(user);
+    });
+
+    test('Fails when User does not exists', async () => {
+      userRepository.findById.mockResolvedValueOnce(undefined);
+
+      const promise = sut.findByEmail('any_email@email.com');
 
       await expect(promise).rejects.toThrow(NotFoundException);
     });
