@@ -2,12 +2,11 @@ import { mock, MockProxy } from 'jest-mock-extended';
 
 import { faker } from '@faker-js/faker';
 import { Test, TestingModule } from '@nestjs/testing';
-import { ConflictException, UnauthorizedException } from '@nestjs/common';
+import { UnauthorizedException } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
 import iamConfig from '../../iam.config';
 import { AuthenticationService } from './authentication.service';
-import { UserRepository } from '../../../user/application/ports/user.repository';
 import { HashingService } from '../../ports/hashing.service';
 import { SignUpInput } from './inputs/sign-up.input';
 import { UserFactory } from '../../../user/domain/factories/user.factory';
@@ -15,6 +14,7 @@ import { SignInInput } from './inputs/sign-in.input';
 import { TokenService } from '../../ports/token.service';
 import { RefreshTokenIdsStorage } from '../infrastructure/refresh-token-ids/refresh-token-ids.storage';
 import { RefreshTokenInput } from './inputs/refresh-token.input';
+import { UserService } from '../../../user/application/user.service';
 
 const mockRefreshTokenIdsStorage = {
   insert: jest.fn(),
@@ -24,9 +24,9 @@ const mockRefreshTokenIdsStorage = {
 
 describe('AuthenticationService', () => {
   let sut: AuthenticationService;
-  let userRepository: MockProxy<UserRepository>;
   let hashingService: MockProxy<HashingService>;
   let tokenService: MockProxy<TokenService>;
+  let userService: MockProxy<UserService>;
   let userFactory: UserFactory;
   let refreshTokenIdsStorage: jest.Mocked<RefreshTokenIdsStorage>;
 
@@ -36,7 +36,7 @@ describe('AuthenticationService', () => {
       providers: [
         AuthenticationService,
         UserFactory,
-        { provide: UserRepository, useValue: mock() },
+        { provide: UserService, useValue: mock() },
         { provide: HashingService, useValue: mock() },
         { provide: TokenService, useValue: mock() },
         {
@@ -46,7 +46,7 @@ describe('AuthenticationService', () => {
       ],
     }).compile();
     sut = module.get<AuthenticationService>(AuthenticationService);
-    userRepository = module.get<MockProxy<UserRepository>>(UserRepository);
+    userService = module.get<MockProxy<UserService>>(UserService);
     hashingService = module.get<MockProxy<HashingService>>(HashingService);
     tokenService = module.get<MockProxy<TokenService>>(TokenService);
     userFactory = module.get<UserFactory>(UserFactory);
@@ -64,31 +64,19 @@ describe('AuthenticationService', () => {
       };
     });
 
-    test('Registration of a new user', async () => {
+    test('Sign up of a new user', async () => {
       // Arrange
-      userRepository.findByEmail.mockResolvedValueOnce(undefined);
+      userService.findByEmail.mockResolvedValueOnce(undefined);
       hashingService.hash.mockResolvedValueOnce('hashed_password');
 
       // Act
       await sut.signUp(payload);
 
       // Assert
-      expect(userRepository.save).toHaveBeenCalledWith({
+      expect(userService.create).toHaveBeenCalledWith({
         ...payload,
-        id: expect.any(String),
         password: 'hashed_password',
       });
-    });
-
-    test('Registration throws an exception when the email provided is already in use', async () => {
-      // Arrange
-      userRepository.findByEmail.mockResolvedValueOnce(
-        userFactory.create('any_name', payload.email, payload.password),
-      );
-      hashingService.hash.mockResolvedValueOnce('hashed_password');
-
-      // Act and Assert
-      await expect(sut.signUp(payload)).rejects.toThrow(ConflictException);
     });
   });
 
@@ -110,7 +98,7 @@ describe('AuthenticationService', () => {
         payload.email,
         'hashed_password',
       );
-      userRepository.findByEmail.mockResolvedValueOnce(user);
+      userService.findByEmail.mockResolvedValueOnce(user);
       hashingService.compare.mockResolvedValueOnce(true);
       tokenService.generate.mockResolvedValueOnce('generated_access_token');
       tokenService.generate.mockResolvedValueOnce('generated_refresh_token');
@@ -137,7 +125,7 @@ describe('AuthenticationService', () => {
 
     test('Returns unauthorized exception when an invalid password is provided', async () => {
       // Arrange
-      userRepository.findByEmail.mockResolvedValueOnce(
+      userService.findByEmail.mockResolvedValueOnce(
         userFactory.create(
           'any_id',
           'any_name',
@@ -153,7 +141,7 @@ describe('AuthenticationService', () => {
 
     test('Returns unauthorized exception when User does not exists', async () => {
       // Arrange
-      userRepository.findByEmail.mockResolvedValueOnce(undefined);
+      userService.findByEmail.mockResolvedValueOnce(undefined);
 
       // Act and Assert
       await expect(sut.signIn(payload)).rejects.toThrow(UnauthorizedException);
@@ -163,7 +151,7 @@ describe('AuthenticationService', () => {
   describe('refreshTokens()', () => {
     test('Regenerate tokens when refresh token provided is valid', async () => {
       const payload: RefreshTokenInput = { refreshToken: 'refresh_token' };
-      userRepository.findById.mockResolvedValueOnce(
+      userService.findById.mockResolvedValueOnce(
         userFactory.create(
           'any_id',
           'any_email@email.com',
@@ -193,7 +181,7 @@ describe('AuthenticationService', () => {
         userId: 'any_id',
         refreshTokenId: 'refresh_token_id',
       });
-      userRepository.findById.mockResolvedValueOnce(undefined);
+      userService.findById.mockResolvedValueOnce(undefined);
 
       await expect(sut.refreshTokens(payload)).rejects.toThrow(
         UnauthorizedException,
@@ -203,7 +191,7 @@ describe('AuthenticationService', () => {
     test('Throw Unauthorized when TokenService throws an exception', async () => {
       const payload: RefreshTokenInput = { refreshToken: 'refresh_token' };
       tokenService.validateAndDecode.mockRejectedValueOnce(new Error());
-      userRepository.findById.mockResolvedValueOnce(
+      userService.findById.mockResolvedValueOnce(
         userFactory.create(
           'any_id',
           'any_email@email.com',
@@ -218,7 +206,7 @@ describe('AuthenticationService', () => {
 
     test('', async () => {
       const payload: RefreshTokenInput = { refreshToken: 'refresh_token' };
-      userRepository.findById.mockResolvedValueOnce(
+      userService.findById.mockResolvedValueOnce(
         userFactory.create(
           'any_id',
           'any_email@email.com',

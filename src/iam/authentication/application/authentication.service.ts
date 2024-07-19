@@ -1,17 +1,10 @@
 import { randomUUID } from 'crypto';
 
-import {
-  ConflictException,
-  Inject,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 
 import { SignUpInput } from './inputs/sign-up.input';
-import { UserRepository } from '../../../user/application/ports/user.repository';
 import { HashingService } from '../../ports/hashing.service';
-import { UserFactory } from '../../../user/domain/factories/user.factory';
 import { SignInInput } from './inputs/sign-in.input';
 import { TokenService } from '../../ports/token.service';
 import iamConfig from '../../iam.config';
@@ -21,13 +14,13 @@ import { User } from '../../../user/domain/user';
 import { RefreshTokenIdsStorage } from '../infrastructure/refresh-token-ids/refresh-token-ids.storage';
 import { RefreshTokenInput } from './inputs/refresh-token.input';
 import { InvalidateRefreshTokenError } from '../infrastructure/refresh-token-ids/invalidate-refresh-token.error';
+import { UserService } from '../../../user/application/user.service';
 
 @Injectable()
 export class AuthenticationService {
   constructor(
-    private readonly userRepository: UserRepository,
+    private readonly userService: UserService,
     private readonly hashingService: HashingService,
-    private readonly userFactory: UserFactory,
     private readonly tokenService: TokenService,
     @Inject(iamConfig.KEY)
     private readonly iamConfiguration: ConfigType<typeof iamConfig>,
@@ -35,19 +28,13 @@ export class AuthenticationService {
   ) {}
 
   async signUp(signUpInput: SignUpInput): Promise<void> {
-    const { name, email, password } = signUpInput;
-
-    const userExists = await this.userRepository.findByEmail(email);
-    if (userExists) throw new ConflictException();
-
+    const { password, ...data } = signUpInput;
     const hashedPassword = await this.hashingService.hash(password);
-
-    const user = this.userFactory.create(name, email, hashedPassword);
-    await this.userRepository.save(user);
+    await this.userService.create({ ...data, password: hashedPassword });
   }
 
   async signIn(signInInput: SignInInput) {
-    const user = await this.userRepository.findByEmail(signInInput.email);
+    const user = await this.userService.findByEmail(signInInput.email);
     if (!user) throw new UnauthorizedException('User does not exist.');
 
     const passwordMatch = await this.hashingService.compare(
@@ -61,15 +48,14 @@ export class AuthenticationService {
     return this.generateTokens(user);
   }
 
-  async refreshTokens(refreshTokenInput: RefreshTokenInput) {
+  async refreshTokens({ refreshToken }: RefreshTokenInput) {
     try {
       const decodedToken =
         await this.tokenService.validateAndDecode<RefreshTokenData>(
-          refreshTokenInput.refreshToken,
+          refreshToken,
         );
 
-      const user = await this.userRepository.findById(decodedToken.userId);
-      if (!user) throw new Error('User not found.');
+      const user = await this.userService.findById(decodedToken.userId);
 
       await this.refreshTokenIdsStorage.validate(
         user.id,

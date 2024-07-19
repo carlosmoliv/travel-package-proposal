@@ -51,7 +51,7 @@ export class UserService {
   }
 
   async create(createUserInput: CreateUserInput): Promise<void> {
-    const { name, email, password, roleIds } = createUserInput;
+    const { name, email, password } = createUserInput;
 
     const user = this.userFactory.create(name, email, password);
 
