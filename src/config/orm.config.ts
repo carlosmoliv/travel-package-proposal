@@ -12,7 +12,7 @@ export const ormConfig = {
   password: process.env.DATABASE_PASSWORD,
   database: process.env.DATABASE_NAME,
   synchronize: false,
-  logging: true,
+  logging: false,
   migrationsTableName: 'typeorm_migrations',
   entities: ['dist/**/*.entity.{ts,js}'],
   migrations: ['dist/migrations/*.{ts,js}'],

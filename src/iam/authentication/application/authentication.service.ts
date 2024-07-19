@@ -36,17 +36,18 @@ export class AuthenticationService {
 
   async signUp(payload: SignUpInput): Promise<void> {
     const { name, email, password } = payload;
-    const userExists = await this.userRepository.findByCriteria({ email });
+
+    const userExists = await this.userRepository.findByEmail(email);
     if (userExists) throw new ConflictException();
+
     const hashedPassword = await this.hashingService.hash(password);
+
     const user = this.userFactory.create(name, email, hashedPassword);
     await this.userRepository.save(user);
   }
 
   async signIn(payload: SignInInput) {
-    const user = await this.userRepository.findByCriteria({
-      email: payload.email,
-    });
+    const user = await this.userRepository.findByEmail(payload.email);
     if (!user) throw new UnauthorizedException('User does not exist.');
     const passwordMatch = await this.hashingService.compare(
       payload.password,
@@ -64,9 +65,7 @@ export class AuthenticationService {
         await this.tokenService.validateAndDecode<RefreshTokenData>(
           refreshTokenPayload.refreshToken,
         );
-      const user = await this.userRepository.findByCriteria({
-        id: decodedToken.userId,
-      });
+      const user = await this.userRepository.findById(decodedToken.userId);
       if (!user) throw new Error('User not found.');
       await this.refreshTokenIdsStorage.validate(
         user.id,

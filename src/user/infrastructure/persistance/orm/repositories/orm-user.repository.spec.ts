@@ -48,7 +48,7 @@ describe('OrmUserRepository', () => {
       await sut.save(user);
 
       typeOrmRepository.findOne.mockReturnValue(user);
-      const userSaved = await sut.findByCriteria({ email: user.email });
+      const userSaved = await sut.findByEmail(user.email);
       expect(userSaved).toBeTruthy();
     });
   });
@@ -60,7 +60,7 @@ describe('OrmUserRepository', () => {
       await sut.save(expectedUser);
       typeOrmRepository.findOne.mockReturnValue(expectedUser);
 
-      const user = await sut.findByCriteria({ email });
+      const user = await sut.findByEmail(email);
 
       expect(user).toEqual(expectedUser);
     });

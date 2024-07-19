@@ -37,7 +37,7 @@ export class AuthHelper {
 
     const user = await this.app
       .get<UserRepository>(UserRepository)
-      .findByCriteria({ email: signUpDto.email });
+      .findByEmail(signUpDto.email);
 
     const role = await this.createRoleWithPermissions(
       roleName,

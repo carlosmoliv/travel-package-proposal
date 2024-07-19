@@ -56,7 +56,7 @@ describe('UserService', () => {
         faker.internet.email(),
         'any_id',
       );
-      userRepository.findByCriteria.mockResolvedValueOnce(user);
+      userRepository.findById.mockResolvedValueOnce(user);
 
       const result = await sut.getById('any_id');
 
@@ -64,7 +64,7 @@ describe('UserService', () => {
     });
 
     test('Fails when User does not exists', async () => {
-      userRepository.findByCriteria.mockResolvedValueOnce(undefined);
+      userRepository.findById.mockResolvedValueOnce(undefined);
 
       const promise = sut.getById('any_id');
 
@@ -84,7 +84,7 @@ describe('UserService', () => {
         'any_id',
       );
       user.roles = [new Role(RoleName.Admin)];
-      userRepository.findByCriteria.mockResolvedValueOnce(user);
+      userRepository.findById.mockResolvedValueOnce(user);
       permissionsService.getByRoles.mockResolvedValueOnce(permissions);
 
       const userPermissions = await sut.getPermissionTypes('any_id');
@@ -95,7 +95,7 @@ describe('UserService', () => {
     });
 
     test('Fails when User does not exists', async () => {
-      userRepository.findByCriteria.mockResolvedValueOnce(undefined);
+      userRepository.findById.mockResolvedValueOnce(undefined);
 
       const promise = sut.getPermissionTypes('any_id');
 
@@ -123,7 +123,7 @@ describe('UserService', () => {
         faker.internet.email(),
         'any_id',
       );
-      userRepository.findByCriteria.mockResolvedValueOnce(user);
+      userRepository.findById.mockResolvedValueOnce(user);
       rolesService.findByIds.mockResolvedValueOnce(roles);
       user.roles = roles;
 

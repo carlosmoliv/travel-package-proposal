@@ -32,7 +32,7 @@ export class UserService {
   }
 
   async getById(id: string): Promise<User> {
-    const user = await this.userRepository.findByCriteria({ id });
+    const user = await this.userRepository.findById(id);
     if (!user) throw new NotFoundException('User does not exist.');
     return user;
   }

@@ -65,9 +65,8 @@ describe('Authentication (e2e)', () => {
         .send(signUpDto);
 
       expect(statusCode).toBe(HttpStatus.CREATED);
-      const userExists = await userRepository.findByCriteria({
-        email: signUpDto.email,
-      });
+
+      const userExists = await userRepository.findByEmail(signUpDto.email);
       expect(userExists).toBeTruthy();
     });
 
@@ -153,9 +152,7 @@ describe('Authentication (e2e)', () => {
         .post('/authentication/sign-in')
         .send(signInDto);
 
-      const user = await userRepository.findByCriteria({
-        email: signInDto.email,
-      });
+      const user = await userRepository.findByEmail(signInDto.email);
       const savedToStorage = await storageService.get(`user-${user.id}`);
       expect(savedToStorage).toBeTruthy();
     });

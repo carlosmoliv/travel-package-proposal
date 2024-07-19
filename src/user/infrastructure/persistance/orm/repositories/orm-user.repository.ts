@@ -20,12 +20,13 @@ export class OrmUserRepository implements UserRepository {
     await this.userRepository.save(userInstance);
   }
 
-  async findByCriteria(criteria: {
-    id?: string;
-    name?: string;
-    email?: string;
-  }): Promise<User> {
-    const user = await this.userRepository.findOne({ where: criteria });
+  async findByEmail(email: string): Promise<User> {
+    const user = await this.userRepository.findOne({ where: { email } });
+    return user && UserMapper.toDomain(user);
+  }
+
+  async findById(id: string): Promise<User> {
+    const user = await this.userRepository.findOne({ where: { id } });
     return user && UserMapper.toDomain(user);
   }
 }
