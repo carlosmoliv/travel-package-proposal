@@ -16,7 +16,7 @@ export class UserService {
   ) {}
 
   async getPermissionTypes(userId: string): Promise<PermissionType[]> {
-    const user = await this.getById(userId);
+    const user = await this.findById(userId);
     const rolesIds = user.roles.map((role) => role.id);
     const permissions = await this.permissionsService.getByRoles(rolesIds);
     return permissions.map((permission) => permission.type);
@@ -26,12 +26,12 @@ export class UserService {
     addRolesToUserInput: AddRolesToUserInput,
   ): Promise<void> {
     const { userId, roleIds } = addRolesToUserInput;
-    const user = await this.getById(userId);
+    const user = await this.findById(userId);
     user.roles = await this.rolesService.findByIds(roleIds);
     await this.userRepository.save(user);
   }
 
-  async getById(id: string): Promise<User> {
+  async findById(id: string): Promise<User> {
     const user = await this.userRepository.findById(id);
     if (!user) throw new NotFoundException('User does not exist.');
     return user;

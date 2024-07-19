@@ -58,7 +58,7 @@ describe('UserService', () => {
       );
       userRepository.findById.mockResolvedValueOnce(user);
 
-      const result = await sut.getById('any_id');
+      const result = await sut.findById('any_id');
 
       expect(result).toEqual(user);
     });
@@ -66,7 +66,7 @@ describe('UserService', () => {
     test('Fails when User does not exists', async () => {
       userRepository.findById.mockResolvedValueOnce(undefined);
 
-      const promise = sut.getById('any_id');
+      const promise = sut.findById('any_id');
 
       await expect(promise).rejects.toThrow(NotFoundException);
     });

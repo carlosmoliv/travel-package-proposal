@@ -23,7 +23,7 @@ export class UserController {
 
   @Get('me')
   getCurrentUser(@ActiveUser() activeUserData: ActiveUserData) {
-    return this.userService.getById(activeUserData.userId);
+    return this.userService.findById(activeUserData.userId);
   }
 
   @Permissions(UserPermission.AddRolesToUser)
