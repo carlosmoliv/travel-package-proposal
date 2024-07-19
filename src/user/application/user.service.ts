@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 
 import { UserRepository } from './ports/user.repository';
 import { User } from '../domain/user';
@@ -6,6 +10,8 @@ import { PermissionType } from '../../iam/authorization/domain/types/permission.
 import { PermissionService } from '../../iam/authorization/application/permission.service';
 import { AddRolesToUserInput } from './inputs/add-roles-to-user.input';
 import { RoleService } from '../../iam/authorization/application/role.service';
+import { CreateUserInput } from './inputs/create-user.input';
+import { UserFactory } from '../domain/factories/user.factory';
 
 @Injectable()
 export class UserService {
@@ -13,6 +19,7 @@ export class UserService {
     private readonly userRepository: UserRepository,
     private readonly permissionsService: PermissionService,
     private readonly rolesService: RoleService,
+    private readonly userFactory: UserFactory,
   ) {}
 
   async getPermissionTypes(userId: string): Promise<PermissionType[]> {
@@ -41,5 +48,16 @@ export class UserService {
     const user = await this.userRepository.findByEmail(email);
     if (!user) throw new NotFoundException('User does not exist.');
     return user;
+  }
+
+  async create(createUserInput: CreateUserInput): Promise<void> {
+    const { name, email, password, roleIds } = createUserInput;
+
+    const user = this.userFactory.create(name, email, password);
+
+    const userExists = await this.userRepository.findByEmail(email);
+    if (userExists) throw new ConflictException();
+
+    await this.userRepository.save(user);
   }
 }
