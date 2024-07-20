@@ -28,9 +28,7 @@ export class AuthenticationService {
   ) {}
 
   async signUp(signUpInput: SignUpInput): Promise<void> {
-    const { password, ...data } = signUpInput;
-    const hashedPassword = await this.hashingService.hash(password);
-    await this.userService.create({ ...data, password: hashedPassword });
+    await this.userService.create(signUpInput);
   }
 
   async signIn(signInInput: SignInInput) {

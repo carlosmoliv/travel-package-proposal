@@ -12,6 +12,7 @@ import { AddRolesToUserInput } from './inputs/add-roles-to-user.input';
 import { RoleService } from '../../iam/authorization/application/role.service';
 import { CreateUserInput } from './inputs/create-user.input';
 import { UserFactory } from '../domain/factories/user.factory';
+import { HashingService } from '../../iam/ports/hashing.service';
 
 @Injectable()
 export class UserService {
@@ -20,6 +21,7 @@ export class UserService {
     private readonly permissionsService: PermissionService,
     private readonly rolesService: RoleService,
     private readonly userFactory: UserFactory,
+    private readonly hashingService: HashingService,
   ) {}
 
   async getPermissionTypes(userId: string): Promise<PermissionType[]> {
@@ -53,10 +55,12 @@ export class UserService {
   async create(createUserInput: CreateUserInput): Promise<void> {
     const { name, email, password } = createUserInput;
 
-    const user = this.userFactory.create(name, email, password);
-
     const userExists = await this.userRepository.findByEmail(email);
     if (userExists) throw new ConflictException();
+
+    const hashedPassword = await this.hashingService.hash(password);
+
+    const user = this.userFactory.create(name, email, hashedPassword);
 
     await this.userRepository.save(user);
   }

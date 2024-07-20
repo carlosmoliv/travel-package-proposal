@@ -16,6 +16,7 @@ import { Role } from '../../iam/authorization/domain/role';
 import { AddRolesToUserInput } from './inputs/add-roles-to-user.input';
 import { User } from '../domain/user';
 import { CreateUserInput } from './inputs/create-user.input';
+import { HashingService } from '../../iam/ports/hashing.service';
 
 describe('UserService', () => {
   let sut: UserService;
@@ -23,6 +24,7 @@ describe('UserService', () => {
   let permissionsService: MockProxy<PermissionService>;
   let rolesService: MockProxy<RoleService>;
   let userFactory: MockProxy<UserFactory>;
+  let hashingService: MockProxy<HashingService>;
   let user: User;
 
   beforeEach(async () => {
@@ -41,6 +43,10 @@ describe('UserService', () => {
           provide: PermissionService,
           useValue: mock(),
         },
+        {
+          provide: HashingService,
+          useValue: mock(),
+        },
         UserFactory,
       ],
     }).compile();
@@ -49,6 +55,7 @@ describe('UserService', () => {
     permissionsService =
       module.get<MockProxy<PermissionService>>(PermissionService);
     rolesService = module.get<MockProxy<RoleService>>(RoleService);
+    hashingService = module.get<MockProxy<HashingService>>(HashingService);
     sut = module.get<UserService>(UserService);
 
     user = userFactory.create(
@@ -151,8 +158,9 @@ describe('UserService', () => {
       const createUserInput: CreateUserInput = {
         name: faker.person.firstName(),
         email: faker.internet.email(),
-        password: 'any_password',
+        password: '123456',
       };
+      hashingService.hash.mockResolvedValueOnce('hashed_password');
       userRepository.save.mockResolvedValueOnce();
 
       // Act
@@ -161,6 +169,7 @@ describe('UserService', () => {
       // Assert
       expect(userRepository.save).toHaveBeenCalledWith({
         ...createUserInput,
+        password: 'hashed_password',
         id: anyString(),
       });
     });

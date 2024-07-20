@@ -65,18 +65,11 @@ describe('AuthenticationService', () => {
     });
 
     test('Sign up of a new user', async () => {
-      // Arrange
       userService.findByEmail.mockResolvedValueOnce(undefined);
-      hashingService.hash.mockResolvedValueOnce('hashed_password');
 
-      // Act
       await sut.signUp(payload);
 
-      // Assert
-      expect(userService.create).toHaveBeenCalledWith({
-        ...payload,
-        password: 'hashed_password',
-      });
+      expect(userService.create).toHaveBeenCalledWith(payload);
     });
   });
 
