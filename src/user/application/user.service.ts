@@ -25,6 +25,14 @@ export class UserService {
     private readonly hashingService: HashingService,
   ) {}
 
+  async create({ name, email, password }: CreateUserInput): Promise<void> {
+    await this.ensureUserDoesNotExist(email);
+    const hashedPassword = await this.hashingService.hash(password);
+    await this.userRepository.save(
+      this.userFactory.create(name, email, hashedPassword),
+    );
+  }
+
   async getPermissionTypes(userId: string): Promise<PermissionType[]> {
     const user = await this.findById(userId);
     const rolesIds = user.roles.map((role) => role.id);
@@ -32,43 +40,17 @@ export class UserService {
     return permissions.map((permission) => permission.type);
   }
 
-  async addRolesToUser(
-    addRolesToUserInput: AddRolesToUserInput,
-  ): Promise<void> {
-    const { userId, roleIds } = addRolesToUserInput;
+  async addRolesToUser({
+    userId,
+    roleIds,
+  }: AddRolesToUserInput): Promise<void> {
     const user = await this.findById(userId);
     user.roles = await this.rolesService.findByIds(roleIds);
     await this.userRepository.save(user);
   }
 
-  async findById(id: string): Promise<User> {
-    const user = await this.userRepository.findById(id);
-    if (!user) throw new NotFoundException('User does not exist.');
-    return user;
-  }
-
-  async findByEmail(email: string): Promise<User> {
-    const user = await this.userRepository.findByEmail(email);
-    if (!user) throw new NotFoundException('User does not exist.');
-    return user;
-  }
-
-  async create(createUserInput: CreateUserInput): Promise<void> {
-    const { name, email, password } = createUserInput;
-
-    const userExists = await this.userRepository.findByEmail(email);
-    if (userExists) throw new ConflictException();
-
-    const hashedPassword = await this.hashingService.hash(password);
-
-    const user = this.userFactory.create(name, email, hashedPassword);
-
-    await this.userRepository.save(user);
-  }
-
   async verifyUserCredentials(email: string, password: string): Promise<User> {
     const user = await this.findByEmail(email);
-
     const passwordMatch = await this.hashingService.compare(
       password,
       user.password,
@@ -76,7 +58,29 @@ export class UserService {
     if (!passwordMatch) {
       throw new UnauthorizedException('Password does not match.');
     }
-
     return user;
+  }
+
+  async findById(id: string): Promise<User> {
+    const user = await this.userRepository.findById(id);
+    if (!user) {
+      throw new NotFoundException(`User with ID "${id}" does not exist.`);
+    }
+    return user;
+  }
+
+  async findByEmail(email: string): Promise<User> {
+    const user = await this.userRepository.findByEmail(email);
+    if (!user) {
+      throw new NotFoundException(`User with email "${email}" does not exist.`);
+    }
+    return user;
+  }
+
+  private async ensureUserDoesNotExist(email: string): Promise<void> {
+    const userExists = await this.userRepository.findByEmail(email);
+    if (userExists) {
+      throw new ConflictException(`User with email "${email}" already exists.`);
+    }
   }
 }
