@@ -8,16 +8,22 @@ import { OrmUser } from './infrastructure/persistance/orm/entities/orm-user.enti
 import { UserController } from './presenters/controllers/user.controller';
 import { UserService } from './application/user.service';
 import { IamModule } from '../iam/iam.module';
+import { HashingService } from '../iam/ports/hashing.service';
+import { BcryptService } from '../iam/hashing/bcrypt/bcrypt.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([OrmUser]), forwardRef(() => IamModule)],
   providers: [
     UserFactory,
+    UserService,
     {
       provide: UserRepository,
       useClass: OrmUserRepository,
     },
-    UserService,
+    // {
+    //   provide: HashingService,
+    //   useClass: BcryptService,
+    // },
   ],
   controllers: [UserController],
   exports: [UserRepository, UserFactory],
