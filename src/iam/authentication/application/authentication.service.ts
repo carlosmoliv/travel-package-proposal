@@ -4,7 +4,6 @@ import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 
 import { SignUpInput } from './inputs/sign-up.input';
-import { HashingService } from '../../ports/hashing.service';
 import { SignInInput } from './inputs/sign-in.input';
 import { TokenService } from '../../ports/token.service';
 import iamConfig from '../../iam.config';
@@ -20,7 +19,6 @@ import { UserService } from '../../../user/application/user.service';
 export class AuthenticationService {
   constructor(
     private readonly userService: UserService,
-    private readonly hashingService: HashingService,
     private readonly tokenService: TokenService,
     @Inject(iamConfig.KEY)
     private readonly iamConfiguration: ConfigType<typeof iamConfig>,
@@ -31,18 +29,8 @@ export class AuthenticationService {
     await this.userService.create(signUpInput);
   }
 
-  async signIn(signInInput: SignInInput) {
-    const user = await this.userService.findByEmail(signInInput.email);
-    if (!user) throw new UnauthorizedException('User does not exist.');
-
-    const passwordMatch = await this.hashingService.compare(
-      signInInput.password,
-      user.password,
-    );
-    if (!passwordMatch) {
-      throw new UnauthorizedException('Password does not match.');
-    }
-
+  async signIn({ email, password }: SignInInput) {
+    const user = await this.userService.verifyUserCredentials(email, password);
     return this.generateTokens(user);
   }
 

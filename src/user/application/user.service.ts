@@ -2,6 +2,7 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 
 import { UserRepository } from './ports/user.repository';
@@ -63,5 +64,19 @@ export class UserService {
     const user = this.userFactory.create(name, email, hashedPassword);
 
     await this.userRepository.save(user);
+  }
+
+  async verifyUserCredentials(email: string, password: string): Promise<User> {
+    const user = await this.findByEmail(email);
+
+    const passwordMatch = await this.hashingService.compare(
+      password,
+      user.password,
+    );
+    if (!passwordMatch) {
+      throw new UnauthorizedException('Password does not match.');
+    }
+
+    return user;
   }
 }

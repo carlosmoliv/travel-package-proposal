@@ -2,7 +2,7 @@ import { anyString, mock, MockProxy } from 'jest-mock-extended';
 import { faker } from '@faker-js/faker';
 
 import { Test, TestingModule } from '@nestjs/testing';
-import { NotFoundException } from '@nestjs/common';
+import { NotFoundException, UnauthorizedException } from '@nestjs/common';
 
 import { UserService } from './user.service';
 import { UserRepository } from './ports/user.repository';
@@ -172,6 +172,36 @@ describe('UserService', () => {
         password: 'hashed_password',
         id: anyString(),
       });
+    });
+  });
+
+  describe('verifyUserCredentials()', () => {
+    let email: string;
+    let password: string;
+    let user: User;
+
+    beforeEach(() => {
+      email = faker.internet.email();
+      password = faker.internet.password();
+      user = userFactory.create('any_id', 'any_name', email, 'hashed_password');
+    });
+
+    test('Returns the user when credentials are valid', async () => {
+      userRepository.findByEmail.mockResolvedValueOnce(user);
+      hashingService.compare.mockResolvedValueOnce(true);
+
+      const result = await sut.verifyUserCredentials(email, password);
+
+      expect(result).toEqual(user);
+    });
+
+    test('Throws UnauthorizedException when password does not match', async () => {
+      userRepository.findByEmail.mockResolvedValueOnce(user);
+      hashingService.compare.mockResolvedValueOnce(false);
+
+      await expect(sut.verifyUserCredentials(email, password)).rejects.toThrow(
+        UnauthorizedException,
+      );
     });
   });
 });

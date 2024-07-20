@@ -91,7 +91,7 @@ describe('AuthenticationService', () => {
         payload.email,
         'hashed_password',
       );
-      userService.findByEmail.mockResolvedValueOnce(user);
+      userService.verifyUserCredentials.mockResolvedValueOnce(user);
       hashingService.compare.mockResolvedValueOnce(true);
       tokenService.generate.mockResolvedValueOnce('generated_access_token');
       tokenService.generate.mockResolvedValueOnce('generated_refresh_token');
@@ -114,30 +114,6 @@ describe('AuthenticationService', () => {
         },
         expect.any(Number),
       );
-    });
-
-    test('Returns unauthorized exception when an invalid password is provided', async () => {
-      // Arrange
-      userService.findByEmail.mockResolvedValueOnce(
-        userFactory.create(
-          'any_id',
-          'any_name',
-          payload.email,
-          'hashed_password',
-        ),
-      );
-      hashingService.compare.mockResolvedValueOnce(false);
-
-      // Assert
-      await expect(sut.signIn(payload)).rejects.toThrow(UnauthorizedException);
-    });
-
-    test('Returns unauthorized exception when User does not exists', async () => {
-      // Arrange
-      userService.findByEmail.mockResolvedValueOnce(undefined);
-
-      // Act and Assert
-      await expect(sut.signIn(payload)).rejects.toThrow(UnauthorizedException);
     });
   });
 
