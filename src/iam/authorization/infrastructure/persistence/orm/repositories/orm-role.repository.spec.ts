@@ -61,5 +61,19 @@ describe('OrmRolesRepository', () => {
       });
       expect(result).toEqual(ormRoles);
     });
+
+    it('should return an empty array if no roles are found', async () => {
+      const roleNames = [RoleName.Admin, RoleName.Client];
+      const ormRoles: OrmRole[] = [];
+
+      typeOrmRepository.find.mockResolvedValueOnce(ormRoles);
+
+      const result = await sut.findByNames(roleNames);
+
+      expect(typeOrmRepository.find).toHaveBeenCalledWith({
+        where: { name: In(roleNames) },
+      });
+      expect(result).toEqual(ormRoles);
+    });
   });
 });
