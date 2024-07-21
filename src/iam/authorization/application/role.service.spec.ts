@@ -99,4 +99,31 @@ describe('RolesService', () => {
       });
     });
   });
+
+  describe('findByNames()', () => {
+    it('Return all roles from the provided names', async () => {
+      const roleNames = [RoleName.Admin, RoleName.TravelAgent];
+      const roles = [
+        new Role(RoleName.Admin, 'Admin description'),
+        new Role(RoleName.TravelAgent, 'TravelAgent description'),
+      ];
+      rolesRepository.findByNames.mockResolvedValueOnce(roles);
+
+      const result = await sut.findByNames(roleNames);
+
+      expect(result).toEqual(expect.arrayContaining(roles));
+      expect(rolesRepository.findByNames).toHaveBeenCalledWith(roleNames);
+    });
+
+    it('Throws an error if some roles could not be found', async () => {
+      const roleNames = [RoleName.Admin, RoleName.TravelAgent];
+      const roles = [new Role(RoleName.Admin, 'Admin description')];
+      rolesRepository.findByNames.mockResolvedValueOnce(roles);
+
+      await expect(sut.findByNames(roleNames)).rejects.toThrow(
+        'Some roles could not be found.',
+      );
+      expect(rolesRepository.findByNames).toHaveBeenCalledWith(roleNames);
+    });
+  });
 });
