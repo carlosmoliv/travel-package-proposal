@@ -6,6 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { RoleRepository } from '../../../../application/ports/role.repository';
 import { Role } from '../../../../domain/role';
 import { OrmRole } from '../entities/orm-role.entity';
+import { RoleName } from '../../../../domain/enums/role-name.enum';
 
 @Injectable()
 export class OrmRoleRepository implements RoleRepository {
@@ -26,6 +27,14 @@ export class OrmRoleRepository implements RoleRepository {
     return this.rolesRepository.find({
       where: {
         id: In(id),
+      },
+    });
+  }
+
+  async findByNames(roleNames: RoleName[]): Promise<Role[]> {
+    return this.rolesRepository.find({
+      where: {
+        name: In(roleNames),
       },
     });
   }
