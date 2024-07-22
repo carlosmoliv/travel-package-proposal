@@ -6,11 +6,11 @@ import { DataSource } from 'typeorm';
 
 export const ormConfig = {
   type: 'postgres' as const,
-  host: process.env.DATABASE_HOST,
-  port: +process.env.DATABASE_PORT,
-  username: process.env.DATABASE_USER,
-  password: process.env.DATABASE_PASSWORD,
-  database: process.env.DATABASE_NAME,
+  host: process.env.DATABASE_HOST || 'localhost',
+  port: parseInt(process.env.DATABASE_PORT, 10) || 5432,
+  username: process.env.DATABASE_USER || 'postgres',
+  password: process.env.DATABASE_PASSWORD || 'pass123',
+  database: process.env.DATABASE_NAME || 'travel-package-proposal-db',
   synchronize: false,
   logging: false,
   migrationsTableName: 'typeorm_migrations',
