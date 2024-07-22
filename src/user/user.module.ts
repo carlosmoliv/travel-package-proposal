@@ -20,12 +20,12 @@ import { BcryptService } from '../iam/hashing/bcrypt/bcrypt.service';
       provide: UserRepository,
       useClass: OrmUserRepository,
     },
-    // {
-    //   provide: HashingService,
-    //   useClass: BcryptService,
-    // },
+    {
+      provide: HashingService,
+      useClass: BcryptService,
+    },
   ],
   controllers: [UserController],
-  exports: [UserRepository, UserFactory],
+  exports: [UserRepository, UserFactory, UserService],
 })
 export class UserModule {}

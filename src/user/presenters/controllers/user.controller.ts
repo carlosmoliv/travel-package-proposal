@@ -12,9 +12,9 @@ import { ApiTags } from '@nestjs/swagger';
 import { ActiveUser } from '../../../iam/decorators/active-user';
 import { ActiveUserData } from '../../../iam/interfaces/active-user-data.interface';
 import { UserService } from '../../application/user.service';
-import { AddRolesToUserDto } from '../dtos/add-roles-to-user.dto';
 import { Permissions } from '../../../iam/authorization/application/decorators/permissions';
 import { UserPermission } from '../../user.permissions';
+import { AssignRolesToUserDto } from '../dtos/assign-roles-to-user.dto';
 
 @ApiTags('User')
 @Controller('users')
@@ -26,16 +26,16 @@ export class UserController {
     return this.userService.findById(activeUserData.userId);
   }
 
-  @Permissions(UserPermission.AddRolesToUser)
+  @Permissions(UserPermission.AssignRolesToUser)
   @HttpCode(HttpStatus.OK)
   @Post(':userId/roles')
-  addRolesToUser(
+  assignRolesToUser(
     @Param('userId') userId: string,
-    @Body() addRolesToUserDto: AddRolesToUserDto,
+    @Body() addRolesToUserDto: AssignRolesToUserDto,
   ) {
-    return this.userService.addRolesToUser({
+    return this.userService.assignRolesToUser({
       userId,
-      roleIds: addRolesToUserDto.roleIds,
+      roleNames: addRolesToUserDto.roleNames,
     });
   }
 }

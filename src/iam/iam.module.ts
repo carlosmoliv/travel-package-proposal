@@ -4,8 +4,6 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { APP_GUARD } from '@nestjs/core';
 
-import { BcryptService } from './hashing/bcrypt/bcrypt.service';
-import { HashingService } from './ports/hashing.service';
 import { AuthenticationService } from './authentication/application/authentication.service';
 import { AuthenticationController } from './authentication/presenters/controllers/authentication.controller';
 import { UserModule } from '../user/user.module';
@@ -37,10 +35,6 @@ import { OrmPermissionRepository } from './authorization/infrastructure/persiste
     forwardRef(() => UserModule),
   ],
   providers: [
-    {
-      provide: HashingService,
-      useClass: BcryptService,
-    },
     {
       provide: TokenService,
       useClass: JwtService,

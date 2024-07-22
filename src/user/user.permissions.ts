@@ -1,3 +1,3 @@
 export enum UserPermission {
-  AddRolesToUser = 'add_roles_to_user',
+  AssignRolesToUser = 'assign_roles_to_user',
 }

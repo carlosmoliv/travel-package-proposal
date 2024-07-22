@@ -15,7 +15,7 @@ import { OrmUser } from '../../src/user/infrastructure/persistance/orm/entities/
 import { OrmRole } from '../../src/iam/authorization/infrastructure/persistence/orm/entities/orm-role.entity';
 import { Role } from '../../src/iam/authorization/domain/role';
 import { RoleName } from '../../src/iam/authorization/domain/enums/role-name.enum';
-import { AddRolesToUserDto } from '../../src/user/presenters/dtos/add-roles-to-user.dto';
+import { AssignRolesToUserDto } from '../../src/user/presenters/dtos/add-roles-to-user.dto';
 import { UserFactory } from '../../src/user/domain/factories/user.factory';
 import { AuthHelper } from '../helpers/auth.helper';
 import { UserPermission } from '../../src/user/user.permissions';
@@ -114,7 +114,7 @@ describe('User (e2e)', () => {
     });
   });
 
-  describe('POST /users/:id/roleId', () => {
+  describe('POST /users/:userId/roles', () => {
     let accessToken: string;
 
     beforeAll(async () => {
@@ -123,14 +123,10 @@ describe('User (e2e)', () => {
       ]);
     });
 
-    test('Add a set of Roles to an User', async () => {
+    test('Assign a set of Roles to a User', async () => {
       // Arrange
-      const createdRole1 = await roleRepository.save(
-        new Role(RoleName.Client, 'any_description'),
-      );
-      const createdRole2 = await roleRepository.save(
-        new Role(RoleName.TravelAgent, 'any_description'),
-      );
+      await roleRepository.save(new Role(RoleName.Client));
+      await roleRepository.save(new Role(RoleName.TravelAgent));
       const userData = userFactory.create(
         faker.person.firstName(),
         faker.internet.email(),
@@ -143,8 +139,8 @@ describe('User (e2e)', () => {
         .post(`/users/${user.id}/roles`)
         .set('Authorization', `Bearer ${accessToken}`)
         .send({
-          roleIds: [createdRole1.id, createdRole2.id],
-        } as AddRolesToUserDto);
+          roleNames: [RoleName.Client, RoleName.TravelAgent],
+        } as AssignRolesToUserDto);
 
       // Assert
       expect(status).toEqual(200);
@@ -154,8 +150,8 @@ describe('User (e2e)', () => {
       });
       expect(findUser).toMatchObject({
         roles: expect.arrayContaining([
-          expect.objectContaining({ id: createdRole1.id }),
-          expect.objectContaining({ id: createdRole2.id }),
+          expect.objectContaining({ name: RoleName.Client }),
+          expect.objectContaining({ name: RoleName.TravelAgent }),
         ]),
       });
     });

@@ -13,10 +13,10 @@ import { PermissionService } from '../../iam/authorization/application/permissio
 import { Permission } from '../../iam/authorization/domain/permission';
 import { RoleName } from '../../iam/authorization/domain/enums/role-name.enum';
 import { Role } from '../../iam/authorization/domain/role';
-import { AddRolesToUserInput } from './inputs/add-roles-to-user.input';
 import { User } from '../domain/user';
 import { CreateUserInput } from './inputs/create-user.input';
 import { HashingService } from '../../iam/ports/hashing.service';
+import { AssignRolesToUserInput } from './inputs/assign-roles-to-user.input';
 
 describe('UserService', () => {
   let sut: UserService;
@@ -127,7 +127,7 @@ describe('UserService', () => {
     });
   });
 
-  describe('addPermissions()', () => {
+  describe('assignRolesToUser()', () => {
     let roles: Role[];
 
     beforeEach(() => {
@@ -138,15 +138,15 @@ describe('UserService', () => {
     });
 
     test('Attach a set of Roles to a User', async () => {
-      const addRolesToUser: AddRolesToUserInput = {
-        roleIds: ['any_role_id_1', 'any_role_id_2'],
+      const assignRolesToUser: AssignRolesToUserInput = {
+        roleNames: [RoleName.TravelAgent],
         userId: 'any_user_id',
       };
       userRepository.findById.mockResolvedValueOnce(user);
       rolesService.findByIds.mockResolvedValueOnce(roles);
       user.roles = roles;
 
-      await sut.addRolesToUser(addRolesToUser);
+      await sut.assignRolesToUser(assignRolesToUser);
 
       expect(userRepository.save).toHaveBeenCalledWith(user);
     });

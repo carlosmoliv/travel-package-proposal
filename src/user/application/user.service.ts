@@ -9,11 +9,11 @@ import { UserRepository } from './ports/user.repository';
 import { User } from '../domain/user';
 import { PermissionType } from '../../iam/authorization/domain/types/permission.type';
 import { PermissionService } from '../../iam/authorization/application/permission.service';
-import { AddRolesToUserInput } from './inputs/add-roles-to-user.input';
 import { RoleService } from '../../iam/authorization/application/role.service';
 import { CreateUserInput } from './inputs/create-user.input';
 import { UserFactory } from '../domain/factories/user.factory';
 import { HashingService } from '../../iam/ports/hashing.service';
+import { AssignRolesToUserInput } from './inputs/assign-roles-to-user.input';
 
 @Injectable()
 export class UserService {
@@ -40,12 +40,12 @@ export class UserService {
     return permissions.map((permission) => permission.type);
   }
 
-  async addRolesToUser({
+  async assignRolesToUser({
     userId,
-    roleIds,
-  }: AddRolesToUserInput): Promise<void> {
+    roleNames,
+  }: AssignRolesToUserInput): Promise<void> {
     const user = await this.findById(userId);
-    user.roles = await this.rolesService.findByIds(roleIds);
+    user.roles = await this.rolesService.findByNames(roleNames);
     await this.userRepository.save(user);
   }
 

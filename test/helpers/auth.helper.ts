@@ -43,9 +43,9 @@ export class AuthHelper {
       roleName,
       permissionTypes,
     );
-    await this.app.get<UserService>(UserService).addRolesToUser({
+    await this.app.get<UserService>(UserService).assignRolesToUser({
       userId: user.id,
-      roleIds: [role.id],
+      roleNames: [role.name],
     });
 
     await this.signIn({ email: signUpDto.email, password: signUpDto.password });
