@@ -14,6 +14,7 @@ import { CreateUserInput } from './inputs/create-user.input';
 import { UserFactory } from '../domain/factories/user.factory';
 import { HashingService } from '../../iam/ports/hashing.service';
 import { AssignRolesToUserInput } from './inputs/assign-roles-to-user.input';
+import { RoleName } from '../../iam/authorization/domain/enums/role-name.enum';
 
 @Injectable()
 export class UserService {
@@ -29,7 +30,7 @@ export class UserService {
     name,
     email,
     password,
-    roleNames,
+    roleNames = [RoleName.Client],
   }: CreateUserInput): Promise<void> {
     await this.ensureUserDoesNotExist(email);
     const hashedPassword = await this.hashingService.hash(password);

@@ -156,6 +156,35 @@ describe('UserService', () => {
   describe('create()', () => {
     test('Creation of a new user', async () => {
       // Arrange
+      const roleNames = [RoleName.Client, RoleName.TravelAgent];
+      const createUserInput: CreateUserInput = {
+        name: user.name,
+        email: user.email,
+        password: '123456',
+        roleNames,
+      };
+      hashingService.hash.mockResolvedValueOnce('hashed_password');
+      rolesService.findByNames.mockResolvedValueOnce([
+        new Role(RoleName.Client),
+        new Role(RoleName.TravelAgent),
+      ]);
+      userRepository.save.mockResolvedValue();
+
+      // Act
+      await sut.create(createUserInput);
+
+      // Assert
+      expect(userRepository.save).toHaveBeenCalledWith({
+        name: user.name,
+        email: user.email,
+        id: expect.any(String),
+        password: 'hashed_password',
+        roles: [new Role(RoleName.Client), new Role(RoleName.TravelAgent)],
+      });
+    });
+
+    test('Assign default "Client" role to new users when no specific role is provided', async () => {
+      // Arrange
       const createUserInput: CreateUserInput = {
         name: user.name,
         email: user.email,
@@ -163,7 +192,7 @@ describe('UserService', () => {
       };
       hashingService.hash.mockResolvedValueOnce('hashed_password');
       rolesService.findByNames.mockResolvedValueOnce([
-        new Role(RoleName.Client, 'Client role description'),
+        new Role(RoleName.Client),
       ]);
       userRepository.save.mockResolvedValue();
 
@@ -175,7 +204,7 @@ describe('UserService', () => {
         ...createUserInput,
         id: expect.any(String),
         password: 'hashed_password',
-        roles: [new Role(RoleName.Client, 'Client role description')],
+        roles: [new Role(RoleName.Client)],
       });
     });
   });
