@@ -15,7 +15,7 @@ import { OrmUser } from '../../src/user/infrastructure/persistance/orm/entities/
 import { OrmRole } from '../../src/iam/authorization/infrastructure/persistence/orm/entities/orm-role.entity';
 import { Role } from '../../src/iam/authorization/domain/role';
 import { RoleName } from '../../src/iam/authorization/domain/enums/role-name.enum';
-import { AssignRolesToUserDto } from '../../src/user/presenters/dtos/add-roles-to-user.dto';
+import { AssignRolesToUserDto } from '../../src/user/presenters/dtos/assign-roles-to-user.dto';
 import { UserFactory } from '../../src/user/domain/factories/user.factory';
 import { AuthHelper } from '../helpers/auth.helper';
 import { UserPermission } from '../../src/user/user.permissions';
@@ -119,7 +119,7 @@ describe('User (e2e)', () => {
 
     beforeAll(async () => {
       accessToken = await authHelper.getAccessToken(RoleName.Admin, [
-        UserPermission.AddRolesToUser,
+        UserPermission.AssignRolesToUser,
       ]);
     });
 
