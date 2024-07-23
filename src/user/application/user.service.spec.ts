@@ -61,6 +61,7 @@ describe('UserService', () => {
     user = userFactory.create(
       faker.person.firstName(),
       faker.internet.email(),
+      'hashed_password',
       'any_id',
     );
   });
@@ -156,12 +157,15 @@ describe('UserService', () => {
     test('Creation of a new user', async () => {
       // Arrange
       const createUserInput: CreateUserInput = {
-        name: faker.person.firstName(),
-        email: faker.internet.email(),
+        name: user.name,
+        email: user.email,
         password: '123456',
       };
       hashingService.hash.mockResolvedValueOnce('hashed_password');
-      userRepository.save.mockResolvedValueOnce();
+      rolesService.findByNames.mockResolvedValueOnce([
+        new Role(RoleName.Client, 'Client role description'),
+      ]);
+      userRepository.save.mockResolvedValue();
 
       // Act
       await sut.create(createUserInput);
@@ -169,8 +173,9 @@ describe('UserService', () => {
       // Assert
       expect(userRepository.save).toHaveBeenCalledWith({
         ...createUserInput,
+        id: expect.any(String),
         password: 'hashed_password',
-        id: anyString(),
+        roles: [new Role(RoleName.Client, 'Client role description')],
       });
     });
   });

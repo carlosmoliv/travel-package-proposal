@@ -25,12 +25,17 @@ export class UserService {
     private readonly hashingService: HashingService,
   ) {}
 
-  async create({ name, email, password }: CreateUserInput): Promise<void> {
+  async create({
+    name,
+    email,
+    password,
+    roleNames,
+  }: CreateUserInput): Promise<void> {
     await this.ensureUserDoesNotExist(email);
     const hashedPassword = await this.hashingService.hash(password);
-    await this.userRepository.save(
-      this.userFactory.create(name, email, hashedPassword),
-    );
+    const user = this.userFactory.create(name, email, hashedPassword);
+    user.roles = await this.rolesService.findByNames(roleNames);
+    await this.userRepository.save(user);
   }
 
   async getPermissionTypes(userId: string): Promise<PermissionType[]> {
