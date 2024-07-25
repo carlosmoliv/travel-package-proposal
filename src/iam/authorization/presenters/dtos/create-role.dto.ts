@@ -1,4 +1,4 @@
-import { IsEnum, MaxLength } from 'class-validator';
+import { IsEnum, IsOptional, MaxLength } from 'class-validator';
 
 import { RoleName } from '../../domain/enums/role-name.enum';
 
@@ -7,5 +7,6 @@ export class CreateRoleDto {
   name: RoleName;
 
   @MaxLength(100)
+  @IsOptional()
   description?: string;
 }

@@ -9,20 +9,21 @@ import {
 
 import { CreateRoleDto } from '../dtos/create-role.dto';
 import { RoleService } from '../../application/role.service';
-import { Public } from '../../../authentication/application/decorators/public.decorator';
 import { AddPermissionsToRoleDto } from '../dtos/add-permissions-to-role.dto';
+import { Permissions } from '../../application/decorators/permissions';
+import { RolePermission } from '../../role.permissions';
 
 @Controller('roles')
 export class RoleController {
   constructor(private readonly rolesService: RoleService) {}
 
-  @Public()
+  @Permissions(RolePermission.CreateRole)
   @Post()
   async create(@Body() createRoleDto: CreateRoleDto): Promise<void> {
     await this.rolesService.create(createRoleDto);
   }
 
-  @Public()
+  @Permissions(RolePermission.AssignPermissionsToRole)
   @HttpCode(HttpStatus.OK)
   @Post(':roleId/permissions')
   async addPermissionToRole(

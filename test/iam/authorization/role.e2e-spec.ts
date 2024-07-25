@@ -7,20 +7,22 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
 
 import { IamModule } from '../../../src/iam/iam.module';
-import { CreateRoleDto } from '../../../src/iam/authorization/presenters/dtos/create-role.dto';
 import { RoleName } from '../../../src/iam/authorization/domain/enums/role-name.enum';
 import { OrmRole } from '../../../src/iam/authorization/infrastructure/persistence/orm/entities/orm-role.entity';
 import { OrmHelper } from '../../helpers/orm.helper';
 import { AddPermissionsToRoleDto } from '../../../src/iam/authorization/presenters/dtos/add-permissions-to-role.dto';
 import { ExamplePermission } from '../../../src/iam/authorization/domain/enums/example-permission.enum';
 import { OrmPermission } from '../../../src/iam/authorization/infrastructure/persistence/orm/entities/orm-permission.entity';
+import { AuthHelper } from '../../helpers/auth.helper';
+import { UserPermission } from '../../../src/user/user.permissions';
+import { CreateRoleDto } from '../../../src/iam/authorization/presenters/dtos/create-role.dto';
 
 describe('Roles (e2e)', () => {
   let app: INestApplication;
   let roleRepository: Repository<OrmRole>;
   let permissionRepository: Repository<OrmPermission>;
-  let createRoleDto: CreateRoleDto;
   let dataSource: DataSource;
+  let accessToken: string;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -49,14 +51,11 @@ describe('Roles (e2e)', () => {
     );
     await app.init();
     dataSource = app.get<DataSource>(DataSource);
-  });
 
-  beforeEach(async () => {
     await OrmHelper.clearTables(dataSource, [OrmRole, OrmPermission]);
-    createRoleDto = {
-      name: RoleName.Admin,
-      description: faker.lorem.sentence(),
-    };
+    accessToken = await new AuthHelper(app).getAccessToken(RoleName.Admin, [
+      UserPermission.AssignRolesToUser,
+    ]);
   });
 
   afterAll(() => {
@@ -68,14 +67,15 @@ describe('Roles (e2e)', () => {
       // Act
       const { status } = await request(app.getHttpServer())
         .post('/roles')
-        .send(createRoleDto);
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send({ name: RoleName.Client } as CreateRoleDto);
 
       // Assert
       expect(status).toEqual(201);
       const findRole = await roleRepository.findOne({
-        where: { name: RoleName.Admin },
+        where: { name: RoleName.Client },
       });
-      expect(findRole).toMatchObject(createRoleDto);
+      expect(findRole).toMatchObject({ name: RoleName.Client });
     });
   });
 
@@ -90,11 +90,14 @@ describe('Roles (e2e)', () => {
         type: ExamplePermission.CanUpdateResource,
         description: faker.lorem.sentence(),
       });
-      const createdRole = await roleRepository.save(createRoleDto);
+      const createdRole = await roleRepository.save({
+        name: RoleName.TravelAgent,
+      });
 
       // Act
       const { status } = await request(app.getHttpServer())
         .post(`/roles/${createdRole.id}/permissions`)
+        .set('Authorization', `Bearer ${accessToken}`)
         .send({
           permissionIds: [createdPermission1.id, createdPermission2.id],
         } as AddPermissionsToRoleDto);
@@ -106,14 +109,10 @@ describe('Roles (e2e)', () => {
         relations: ['permissions'],
       });
       expect(findRole).toMatchObject({
-        ...createRoleDto,
+        ...createdRole,
         permissions: expect.arrayContaining([
-          expect.objectContaining({
-            id: createdPermission1.id,
-          }),
-          expect.objectContaining({
-            id: createdPermission2.id,
-          }),
+          expect.objectContaining({ id: createdPermission1.id }),
+          expect.objectContaining({ id: createdPermission2.id }),
         ]),
       });
     });
