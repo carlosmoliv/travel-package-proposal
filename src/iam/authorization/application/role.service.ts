@@ -20,7 +20,9 @@ export class RoleService {
     return this.roleRepository.save(role);
   }
 
-  async addPermissionsToRole(input: AddPermissionsToRoleInput): Promise<void> {
+  async assignPermissionsToRole(
+    input: AddPermissionsToRoleInput,
+  ): Promise<void> {
     const { roleId, permissionIds } = input;
     const role = await this.roleRepository.findById(roleId);
     role.permissions = await this.permissionsService.findByIds(permissionIds);

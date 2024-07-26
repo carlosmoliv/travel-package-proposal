@@ -14,8 +14,8 @@ import { AddPermissionsToRoleDto } from '../../../src/iam/authorization/presente
 import { ExamplePermission } from '../../../src/iam/authorization/domain/enums/example-permission.enum';
 import { OrmPermission } from '../../../src/iam/authorization/infrastructure/persistence/orm/entities/orm-permission.entity';
 import { AuthHelper } from '../../helpers/auth.helper';
-import { UserPermission } from '../../../src/user/user.permissions';
 import { CreateRoleDto } from '../../../src/iam/authorization/presenters/dtos/create-role.dto';
+import { RolePermission } from '../../../src/iam/authorization/role.permissions';
 
 describe('Roles (e2e)', () => {
   let app: INestApplication;
@@ -53,9 +53,11 @@ describe('Roles (e2e)', () => {
     dataSource = app.get<DataSource>(DataSource);
 
     await OrmHelper.clearTables(dataSource, [OrmRole, OrmPermission]);
-    accessToken = await new AuthHelper(app).getAccessToken(RoleName.Admin, [
-      UserPermission.AssignRolesToUser,
-    ]);
+    const authUser = await new AuthHelper(app).createAuthenticatedUser(
+      RoleName.Admin,
+      [RolePermission.CreateRole, RolePermission.AssignPermissionsToRole],
+    );
+    accessToken = authUser.accessToken;
   });
 
   afterAll(() => {

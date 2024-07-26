@@ -26,11 +26,11 @@ export class RoleController {
   @Permissions(RolePermission.AssignPermissionsToRole)
   @HttpCode(HttpStatus.OK)
   @Post(':roleId/permissions')
-  async addPermissionToRole(
+  async assignPermissionToRole(
     @Param('roleId') roleId: string,
     @Body() dto: AddPermissionsToRoleDto,
   ): Promise<void> {
-    await this.rolesService.addPermissionsToRole({
+    await this.rolesService.assignPermissionsToRole({
       roleId,
       permissionIds: dto.permissionIds,
     });

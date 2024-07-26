@@ -1,7 +1,7 @@
 import * as request from 'supertest';
 import { DataSource } from 'typeorm';
-
 import { faker } from '@faker-js/faker';
+
 import { Test, TestingModule } from '@nestjs/testing';
 import { HttpStatus, INestApplication, ValidationPipe } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -15,6 +15,8 @@ import { RefreshTokenDto } from '../../../src/iam/authentication/presenters/dtos
 import { OrmHelper } from '../../helpers/orm.helper';
 import { OrmUser } from '../../../src/user/infrastructure/persistance/orm/entities/orm-user.entity';
 import { fakeSignUpDto } from '../../fakes/dtos/make-fake-signup-dto';
+import { RoleService } from '../../../src/iam/authorization/application/role.service';
+import { RoleName } from '../../../src/iam/authorization/domain/enums/role-name.enum';
 
 describe('Authentication (e2e)', () => {
   let app: INestApplication;
@@ -46,6 +48,10 @@ describe('Authentication (e2e)', () => {
 
     userRepository = moduleFixture.get<UserRepository>(UserRepository);
     storageService = moduleFixture.get<StorageService>(StorageService);
+
+    await moduleFixture
+      .get<RoleService>(RoleService)
+      .create({ name: RoleName.Client });
   });
 
   afterAll(() => {

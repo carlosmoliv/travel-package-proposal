@@ -53,7 +53,7 @@ describe('RolesService', () => {
     });
   });
 
-  describe('addPermissionsToRole()', () => {
+  describe('assignPermissionsToRole()', () => {
     let role: Role;
     let permissions: Permission[];
 
@@ -79,7 +79,7 @@ describe('RolesService', () => {
       permissionsService.findByIds.mockResolvedValueOnce(permissions);
       role.permissions = permissions;
 
-      await sut.addPermissionsToRole(addPermissionToRole);
+      await sut.assignPermissionsToRole(addPermissionToRole);
 
       expect(rolesRepository.save).toHaveBeenCalledWith(role);
     });
