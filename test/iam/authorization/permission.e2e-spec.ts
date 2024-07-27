@@ -11,6 +11,8 @@ import { OrmHelper } from '../../helpers/orm.helper';
 import { OrmPermission } from '../../../src/iam/authorization/infrastructure/persistence/orm/entities/orm-permission.entity';
 import { ExamplePermission } from '../../../src/iam/authorization/domain/enums/example-permission.enum';
 import { CreatePermissionDto } from '../../../src/iam/authorization/presenters/dtos/create-permission.dto';
+import { OrmUser } from '../../../src/user/infrastructure/persistance/orm/entities/orm-user.entity';
+import { OrmRole } from '../../../src/iam/authorization/infrastructure/persistence/orm/entities/orm-role.entity';
 
 describe('Permissions (e2e)', () => {
   let app: INestApplication;
@@ -28,6 +30,7 @@ describe('Permissions (e2e)', () => {
           database: process.env.DATABASE_NAME,
           autoLoadEntities: true,
           synchronize: true,
+          logging: false,
         }),
         IamModule,
       ],
@@ -37,7 +40,7 @@ describe('Permissions (e2e)', () => {
     await app.init();
 
     const dataSource = app.get<DataSource>(DataSource);
-    await OrmHelper.clearTables(dataSource, [OrmPermission]);
+    await OrmHelper.clearTables(dataSource, [OrmUser, OrmRole, OrmPermission]);
 
     permissionsRepository = moduleFixture.get<Repository<OrmPermission>>(
       getRepositoryToken(OrmPermission),

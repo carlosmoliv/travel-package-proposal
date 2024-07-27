@@ -16,6 +16,7 @@ import { OrmPermission } from '../../../src/iam/authorization/infrastructure/per
 import { AuthHelper } from '../../helpers/auth.helper';
 import { CreateRoleDto } from '../../../src/iam/authorization/presenters/dtos/create-role.dto';
 import { RolePermission } from '../../../src/iam/authorization/role.permissions';
+import { OrmUser } from '../../../src/user/infrastructure/persistance/orm/entities/orm-user.entity';
 
 describe('Roles (e2e)', () => {
   let app: INestApplication;
@@ -52,7 +53,7 @@ describe('Roles (e2e)', () => {
     await app.init();
     dataSource = app.get<DataSource>(DataSource);
 
-    await OrmHelper.clearTables(dataSource, [OrmRole, OrmPermission]);
+    await OrmHelper.clearTables(dataSource, [OrmUser, OrmRole, OrmPermission]);
     const authUser = await new AuthHelper(app).createAuthenticatedUser(
       RoleName.Admin,
       [RolePermission.CreateRole, RolePermission.AssignPermissionsToRole],
@@ -65,7 +66,7 @@ describe('Roles (e2e)', () => {
   });
 
   describe('POST /roles', () => {
-    test('Creates a new Role', async () => {
+    test('Create a new Role', async () => {
       // Act
       const { status } = await request(app.getHttpServer())
         .post('/roles')

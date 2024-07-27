@@ -17,6 +17,8 @@ import { OrmUser } from '../../../src/user/infrastructure/persistance/orm/entiti
 import { fakeSignUpDto } from '../../fakes/dtos/make-fake-signup-dto';
 import { RoleService } from '../../../src/iam/authorization/application/role.service';
 import { RoleName } from '../../../src/iam/authorization/domain/enums/role-name.enum';
+import { OrmRole } from '../../../src/iam/authorization/infrastructure/persistence/orm/entities/orm-role.entity';
+import { OrmPermission } from '../../../src/iam/authorization/infrastructure/persistence/orm/entities/orm-permission.entity';
 
 describe('Authentication (e2e)', () => {
   let app: INestApplication;
@@ -34,7 +36,8 @@ describe('Authentication (e2e)', () => {
           password: process.env.DATABASE_PASSWORD,
           database: process.env.DATABASE_NAME,
           autoLoadEntities: true,
-          synchronize: true,
+          synchronize: false,
+          logging: false,
         }),
         IamModule,
       ],
@@ -44,7 +47,7 @@ describe('Authentication (e2e)', () => {
     await app.init();
 
     const dataSource = app.get<DataSource>(DataSource);
-    await OrmHelper.clearTables(dataSource, [OrmUser]);
+    await OrmHelper.clearTables(dataSource, [OrmUser, OrmRole, OrmPermission]);
 
     userRepository = moduleFixture.get<UserRepository>(UserRepository);
     storageService = moduleFixture.get<StorageService>(StorageService);
