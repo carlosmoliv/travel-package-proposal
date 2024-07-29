@@ -9,6 +9,7 @@ import appConfig from './config/app.config';
 import { typeOrmAsyncConfig } from './config/orm.config';
 import { ClientModule } from './client/client.module';
 import { TravelPackageModule } from './travel-package/travel-package.module';
+import { ProposalModule } from './proposal/proposal.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { TravelPackageModule } from './travel-package/travel-package.module';
     SharedModule,
     ClientModule,
     TravelPackageModule,
+    ProposalModule,
   ],
 })
 export class AppModule {}
