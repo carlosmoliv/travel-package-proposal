@@ -7,6 +7,7 @@ import { UserModule } from './user/user.module';
 import { SharedModule } from './shared/shared.module';
 import appConfig from './config/app.config';
 import { typeOrmAsyncConfig } from './config/orm.config';
+import { ClientModule } from './client/client.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { typeOrmAsyncConfig } from './config/orm.config';
     IamModule,
     UserModule,
     SharedModule,
+    ClientModule,
   ],
 })
 export class AppModule {}
