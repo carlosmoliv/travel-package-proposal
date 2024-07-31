@@ -1,6 +1,5 @@
 export class TravelPackage {
   constructor(
-    public id: string,
     public name: string,
     public destination: string,
     public duration: number,
