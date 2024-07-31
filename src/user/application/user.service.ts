@@ -7,14 +7,14 @@ import {
 
 import { UserRepository } from './ports/user.repository';
 import { User } from '../domain/user';
-import { PermissionType } from '../../iam/authorization/domain/types/permission.type';
-import { PermissionService } from '../../iam/authorization/application/permission.service';
-import { RoleService } from '../../iam/authorization/application/role.service';
+import { PermissionType } from '../../iam/authorization/permission.type';
+import { PermissionService } from '../../iam/authorization/permission.service';
+import { RoleService } from '../../iam/authorization/role.service';
 import { CreateUserInput } from './inputs/create-user.input';
 import { UserFactory } from '../domain/factories/user.factory';
 import { HashingService } from '../../iam/ports/hashing.service';
 import { AssignRolesToUserInput } from './inputs/assign-roles-to-user.input';
-import { RoleName } from '../../iam/authorization/domain/enums/role-name.enum';
+import { RoleName } from '../../iam/authorization/enums/role-name.enum';
 
 @Injectable()
 export class UserService {

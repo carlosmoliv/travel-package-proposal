@@ -12,7 +12,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { ActiveUser } from '../../../iam/decorators/active-user';
 import { ActiveUserData } from '../../../iam/interfaces/active-user-data.interface';
 import { UserService } from '../../application/user.service';
-import { Permissions } from '../../../iam/authorization/application/decorators/permissions';
+import { Permissions } from '../../../iam/authorization/decorators/permissions';
 import { UserPermission } from '../../user.permissions';
 import { AssignRolesToUserDto } from '../dtos/assign-roles-to-user.dto';
 

@@ -8,17 +8,17 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { IamModule } from '../../../src/iam/iam.module';
 import { UserRepository } from '../../../src/user/application/ports/user.repository';
-import { SignUpDto } from '../../../src/iam/authentication/presenters/dtos/sign-up.dto';
-import { SignInDto } from '../../../src/iam/authentication/presenters/dtos/sign-in.dto';
+import { SignUpDto } from '../../../src/iam/authentication/dtos/sign-up.dto';
+import { SignInDto } from '../../../src/iam/authentication/dtos/sign-in.dto';
 import { StorageService } from '../../../src/shared/application/ports/storage.service';
-import { RefreshTokenDto } from '../../../src/iam/authentication/presenters/dtos/refresh-token.dto';
+import { RefreshTokenDto } from '../../../src/iam/authentication/dtos/refresh-token.dto';
 import { OrmHelper } from '../../helpers/orm.helper';
 import { OrmUser } from '../../../src/user/infrastructure/persistance/orm/entities/orm-user.entity';
 import { fakeSignUpDto } from '../../fakes/dtos/make-fake-signup-dto';
-import { RoleService } from '../../../src/iam/authorization/application/role.service';
-import { RoleName } from '../../../src/iam/authorization/domain/enums/role-name.enum';
-import { OrmRole } from '../../../src/iam/authorization/infrastructure/persistence/orm/entities/orm-role.entity';
-import { OrmPermission } from '../../../src/iam/authorization/infrastructure/persistence/orm/entities/orm-permission.entity';
+import { RoleService } from '../../../src/iam/authorization/role.service';
+import { RoleName } from '../../../src/iam/authorization/enums/role-name.enum';
+import { OrmRole } from '../../../src/iam/authorization/orm/entities/orm-role.entity';
+import { OrmPermission } from '../../../src/iam/authorization/orm/entities/orm-permission.entity';
 
 describe('Authentication (e2e)', () => {
   let app: INestApplication;

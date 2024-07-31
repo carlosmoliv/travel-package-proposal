@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { SignUpDto } from '../../../src/iam/authentication/presenters/dtos/sign-up.dto';
+import { SignUpDto } from '../../../src/iam/authentication/dtos/sign-up.dto';
 
 export const fakeSignUpDto = (): SignUpDto => {
   const password = faker.internet.password({ prefix: '!Aa0' });

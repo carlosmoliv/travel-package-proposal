@@ -7,14 +7,14 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
 
 import { IamModule } from '../../../src/iam/iam.module';
-import { RoleName } from '../../../src/iam/authorization/domain/enums/role-name.enum';
-import { OrmRole } from '../../../src/iam/authorization/infrastructure/persistence/orm/entities/orm-role.entity';
+import { RoleName } from '../../../src/iam/authorization/enums/role-name.enum';
+import { OrmRole } from '../../../src/iam/authorization/orm/entities/orm-role.entity';
 import { OrmHelper } from '../../helpers/orm.helper';
-import { AddPermissionsToRoleDto } from '../../../src/iam/authorization/presenters/dtos/add-permissions-to-role.dto';
-import { ExamplePermission } from '../../../src/iam/authorization/domain/enums/example-permission.enum';
-import { OrmPermission } from '../../../src/iam/authorization/infrastructure/persistence/orm/entities/orm-permission.entity';
+import { AddPermissionsToRoleDto } from '../../../src/iam/authorization/dtos/add-permissions-to-role.dto';
+import { ExamplePermission } from '../../../src/iam/authorization/enums/example-permission.enum';
+import { OrmPermission } from '../../../src/iam/authorization/orm/entities/orm-permission.entity';
 import { AuthHelper } from '../../helpers/auth.helper';
-import { CreateRoleDto } from '../../../src/iam/authorization/presenters/dtos/create-role.dto';
+import { CreateRoleDto } from '../../../src/iam/authorization/dtos/create-role.dto';
 import { RolePermission } from '../../../src/iam/authorization/role.permissions';
 import { OrmUser } from '../../../src/user/infrastructure/persistance/orm/entities/orm-user.entity';
 

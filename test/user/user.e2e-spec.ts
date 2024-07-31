@@ -10,14 +10,14 @@ import { UserModule } from '../../src/user/user.module';
 import { IamModule } from '../../src/iam/iam.module';
 import { OrmHelper } from '../helpers/orm.helper';
 import { OrmUser } from '../../src/user/infrastructure/persistance/orm/entities/orm-user.entity';
-import { OrmRole } from '../../src/iam/authorization/infrastructure/persistence/orm/entities/orm-role.entity';
-import { Role } from '../../src/iam/authorization/domain/role';
-import { RoleName } from '../../src/iam/authorization/domain/enums/role-name.enum';
+import { OrmRole } from '../../src/iam/authorization/orm/entities/orm-role.entity';
+import { Role } from '../../src/iam/authorization/role';
+import { RoleName } from '../../src/iam/authorization/enums/role-name.enum';
 import { AssignRolesToUserDto } from '../../src/user/presenters/dtos/assign-roles-to-user.dto';
 import { UserFactory } from '../../src/user/domain/factories/user.factory';
 import { AuthHelper } from '../helpers/auth.helper';
 import { UserPermission } from '../../src/user/user.permissions';
-import { OrmPermission } from '../../src/iam/authorization/infrastructure/persistence/orm/entities/orm-permission.entity';
+import { OrmPermission } from '../../src/iam/authorization/orm/entities/orm-permission.entity';
 import { User } from '../../src/user/domain/user';
 
 describe('User (e2e)', () => {

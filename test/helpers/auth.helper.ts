@@ -3,12 +3,12 @@ import { faker } from '@faker-js/faker';
 
 import { INestApplication } from '@nestjs/common';
 
-import { SignInDto } from '../../src/iam/authentication/presenters/dtos/sign-in.dto';
-import { Permission } from '../../src/iam/authorization/domain/permission';
-import { RoleName } from '../../src/iam/authorization/domain/enums/role-name.enum';
-import { PermissionType } from '../../src/iam/authorization/domain/types/permission.type';
-import { RoleRepository } from '../../src/iam/authorization/application/ports/role.repository';
-import { Role } from '../../src/iam/authorization/domain/role';
+import { SignInDto } from '../../src/iam/authentication/dtos/sign-in.dto';
+import { Permission } from '../../src/iam/authorization/permission';
+import { RoleName } from '../../src/iam/authorization/enums/role-name.enum';
+import { PermissionType } from '../../src/iam/authorization/permission.type';
+import { RoleRepository } from '../../src/iam/authorization/ports/role.repository';
+import { Role } from '../../src/iam/authorization/role';
 import { UserService } from '../../src/user/application/user.service';
 import { CreateUserInput } from 'src/user/application/inputs/create-user.input';
 
