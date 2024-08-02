@@ -11,6 +11,7 @@ type MockRepository<T = any> = Partial<Record<keyof Repository<T>, jest.Mock>>;
 const createMockRepository = <T = any>(): MockRepository<T> => ({
   create: jest.fn(),
   save: jest.fn(),
+  findOne: jest.fn(),
 });
 
 describe('TravelPackageRepositoryService', () => {
@@ -37,6 +38,29 @@ describe('TravelPackageRepositoryService', () => {
   describe('save()', () => {
     test('Persist a Travel Package on database', async () => {
       const travelPackage = new TravelPackage(
+        null,
+        'Beach Paradise',
+        'Hawaii',
+        7,
+        999.99,
+        'https://example.com/image.jpg',
+        'A relaxing beach getaway',
+      );
+      ormRepository.create.mockReturnValue(travelPackage);
+      ormRepository.save.mockResolvedValue(travelPackage);
+
+      await sut.save(travelPackage);
+
+      expect(ormRepository.create).toHaveBeenCalledWith(travelPackage);
+      expect(ormRepository.save).toHaveBeenCalledWith(travelPackage);
+    });
+  });
+
+  describe('findById()', () => {
+    it('should return a travel package by ID', async () => {
+      const id = 'any_id';
+      const travelPackage = new TravelPackage(
+        id,
         'Beach Paradise',
         'Hawaii',
         7,
@@ -45,13 +69,11 @@ describe('TravelPackageRepositoryService', () => {
         'A relaxing beach getaway',
       );
 
-      ormRepository.create.mockReturnValue(travelPackage);
-      ormRepository.save.mockResolvedValue(travelPackage);
+      ormRepository.findOne.mockResolvedValue(travelPackage);
 
-      await sut.save(travelPackage);
+      const result = await sut.findById(id);
 
-      expect(ormRepository.create).toHaveBeenCalledWith(travelPackage);
-      expect(ormRepository.save).toHaveBeenCalledWith(travelPackage);
+      expect(result).toEqual(travelPackage);
     });
   });
 });

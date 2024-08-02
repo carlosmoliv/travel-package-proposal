@@ -11,11 +11,16 @@ import { OrmTravelPackage } from '../entities/orm-travel-package.entity';
 export class OrmTravelPackageRepository implements TravelPackageRepository {
   constructor(
     @InjectRepository(OrmTravelPackage)
-    private readonly userRepository: Repository<OrmTravelPackage>,
+    private readonly travelPackageRepository: Repository<OrmTravelPackage>,
   ) {}
 
   async save(travelPackage: TravelPackage): Promise<void> {
-    const travelPackageInstance = this.userRepository.create(travelPackage);
-    await this.userRepository.save(travelPackageInstance);
+    const travelPackageInstance =
+      this.travelPackageRepository.create(travelPackage);
+    await this.travelPackageRepository.save(travelPackageInstance);
+  }
+
+  async findById(id: string): Promise<TravelPackage> {
+    return this.travelPackageRepository.findOne({ where: { id } });
   }
 }
