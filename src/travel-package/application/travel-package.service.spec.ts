@@ -1,19 +1,22 @@
-import { mock, MockProxy } from 'jest-mock-extended';
+import { anyString, mock, MockProxy } from 'jest-mock-extended';
 
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { TravelPackageService } from './travel-package.service';
 import { TravelPackageRepository } from './ports/travel-package.repository';
 import { CreateTravelPackageInput } from './inputs/create-travel-package.input';
+import { TravelPackageFactory } from '../domain/factories/travel-package.factory';
 
 describe('TravelPackageService', () => {
   let sut: TravelPackageService;
   let travelPackageRepository: MockProxy<TravelPackageRepository>;
+  let travelPackageFactory: MockProxy<TravelPackageFactory>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         TravelPackageService,
+        TravelPackageFactory,
         {
           provide: TravelPackageRepository,
           useValue: mock(),
@@ -37,14 +40,14 @@ describe('TravelPackageService', () => {
         price: 999.99,
         imageUrl: 'https://example.com/image.jpg',
       };
-
       travelPackageRepository.save.mockResolvedValue();
 
       await sut.create(createTravelPackageInput);
 
-      expect(travelPackageRepository.save).toHaveBeenCalledWith(
-        createTravelPackageInput,
-      );
+      expect(travelPackageRepository.save).toHaveBeenCalledWith({
+        id: anyString(),
+        ...createTravelPackageInput,
+      });
     });
   });
 });
