@@ -1,7 +1,10 @@
 import { Module } from '@nestjs/common';
-import { ClientService } from './client.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
+import { OrmClient } from './infrastructure/persitence/orm/entities/orm-client.entity';
 
 @Module({
-  providers: [ClientService]
+  imports: [TypeOrmModule.forFeature([OrmClient])],
+  providers: [],
 })
 export class ClientModule {}
