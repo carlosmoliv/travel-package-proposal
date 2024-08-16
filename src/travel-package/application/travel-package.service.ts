@@ -21,6 +21,6 @@ export class TravelPackageService {
       createTravelPackageInput.imageUrl,
       createTravelPackageInput.description,
     );
-    return this.travelPackageRepository.save(travelPackage);
+    await this.travelPackageRepository.save(travelPackage);
   }
 }

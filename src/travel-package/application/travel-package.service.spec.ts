@@ -10,7 +10,6 @@ import { TravelPackageFactory } from '../domain/factories/travel-package.factory
 describe('TravelPackageService', () => {
   let sut: TravelPackageService;
   let travelPackageRepository: MockProxy<TravelPackageRepository>;
-  let travelPackageFactory: MockProxy<TravelPackageFactory>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
