@@ -1,3 +1,6 @@
+import { Injectable } from '@nestjs/common';
+
+@Injectable()
 export abstract class StorageService {
   abstract set(key: string, value: string): Promise<void>;
   abstract get(key: string): Promise<string | null>;
