@@ -5,7 +5,7 @@ import { AwsS3Service } from '../../src/shared/infrastructure/file-storage/aws-s
 import { ConfigModule } from '@nestjs/config';
 import awsS3Config from '../../src/shared/infrastructure/file-storage/aws-s3/aws-s3.config';
 
-describe('User (e2e)', () => {
+describe('AwsS3Service (e2e external)', () => {
   let app: INestApplication;
   let awsS3Service: AwsS3Service;
 
