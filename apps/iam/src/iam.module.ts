@@ -10,7 +10,6 @@ import { UserModule } from '../user/user.module';
 import { JwtService } from './token/jwt/jwt.service';
 import { TokenService } from './ports/token.service';
 import { RefreshTokenIdsStorage } from './authentication/refresh-token-ids/refresh-token-ids.storage';
-import { SharedModule } from '../shared/shared.module';
 import { AuthenticationGuard } from './authentication/guards/authentication/authentication.guard';
 import { OrmPermission } from './authorization/orm/entities/orm-permission.entity';
 import { OrmRole } from './authorization/orm/entities/orm-role.entity';
@@ -24,6 +23,7 @@ import { OrmRoleRepository } from './authorization/orm/repositories/orm-role.rep
 import { PermissionRepository } from './authorization/ports/permission.repository';
 import { PermissionController } from './authorization/permission.controller';
 import { OrmPermissionRepository } from './authorization/orm/repositories/orm-permission.repository';
+import { SharedModule } from '@app/shared';
 
 @Module({
   imports: [
