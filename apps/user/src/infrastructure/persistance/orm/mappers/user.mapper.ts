@@ -1,5 +1,5 @@
 import { OrmUser } from '../entities/orm-user.entity';
-import { User } from '../../../../domain/user';
+import { User } from '@app/shared/domain/user';
 
 export class UserMapper {
   static toDomain(ormUser: OrmUser): User {

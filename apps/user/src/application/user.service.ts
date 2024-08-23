@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 
 import { UserRepository } from './ports/user.repository';
-import { User } from '../domain/user';
+import { User } from '@app/shared/domain/user';
 import { PermissionType } from '../../iam/authorization/permission.type';
 import { PermissionService } from '../../iam/authorization/permission.service';
 import { RoleService } from '../../iam/authorization/role.service';

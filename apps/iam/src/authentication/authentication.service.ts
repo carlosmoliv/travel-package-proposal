@@ -9,7 +9,7 @@ import { TokenService } from '../ports/token.service';
 import iamConfig from '../iam.config';
 import { ActiveUserData } from '../interfaces/active-user-data.interface';
 import { RefreshTokenData } from '../interfaces/refresh-token-data.interface';
-import { User } from '../../user/domain/user';
+import { User } from '@app/shared';
 import { RefreshTokenIdsStorage } from './refresh-token-ids/refresh-token-ids.storage';
 import { RefreshTokenInput } from './inputs/refresh-token.input';
 import { InvalidateRefreshTokenError } from './refresh-token-ids/invalidate-refresh-token.error';

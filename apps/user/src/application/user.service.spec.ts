@@ -13,7 +13,7 @@ import { PermissionService } from '../../iam/authorization/permission.service';
 import { Permission } from '../../iam/authorization/permission';
 import { RoleName } from '../../iam/authorization/enums/role-name.enum';
 import { Role } from '../../iam/authorization/role';
-import { User } from '../domain/user';
+import { User } from '@app/shared/domain/user';
 import { CreateUserInput } from './inputs/create-user.input';
 import { HashingService } from '../../iam/ports/hashing.service';
 import { AssignRolesToUserInput } from './inputs/assign-roles-to-user.input';

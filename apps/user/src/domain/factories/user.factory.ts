@@ -2,7 +2,7 @@ import { randomUUID } from 'crypto';
 
 import { Injectable } from '@nestjs/common';
 
-import { User } from '../user';
+import { User } from '@app/shared/domain/user';
 
 @Injectable()
 export class UserFactory {
