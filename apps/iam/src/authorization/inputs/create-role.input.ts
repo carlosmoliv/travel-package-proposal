@@ -1,4 +1,4 @@
-import { RoleName } from '../enums/role-name.enum';
+import { RoleName } from '@app/shared';
 
 export interface CreateRoleInput {
   name: RoleName;

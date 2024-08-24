@@ -1,4 +1,4 @@
-import { anyString, mock, MockProxy } from 'jest-mock-extended';
+import { mock, MockProxy } from 'jest-mock-extended';
 import { faker } from '@faker-js/faker';
 
 import { Test, TestingModule } from '@nestjs/testing';

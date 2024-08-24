@@ -1,17 +1,18 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 
-import { PermissionType } from '../permission.type';
-import { PERMISSIONS_KEY } from '../decorators/permissions';
-import { ActiveUserData } from '../../interfaces/active-user-data.interface';
+import { PermissionType } from '@app/shared/iam/authorization/permission.type';
+import { PERMISSIONS_KEY } from '@app/shared/iam/authorization/decorators/permissions';
+import { ActiveUserData } from '@app/shared/iam/interfaces/active-user-data.interface';
 import { REQUEST_USER_KEY } from '../../iam.constants';
-import { UserService } from '../../../user/application/user.service';
+import { ClientProxy } from '@nestjs/microservices';
+import { lastValueFrom } from 'rxjs';
 
 @Injectable()
 export class PermissionGuard implements CanActivate {
   constructor(
     private readonly reflector: Reflector,
-    private readonly userService: UserService,
+    private readonly userService: ClientProxy,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -22,9 +23,11 @@ export class PermissionGuard implements CanActivate {
     const activeUserData: ActiveUserData = context.switchToHttp().getRequest()[
       REQUEST_USER_KEY
     ];
-    const userPermissions = await this.userService.getPermissionTypes(
-      activeUserData.userId,
+
+    const userPermissions = await lastValueFrom(
+      this.userService.send('user.get.permissions', activeUserData.userId),
     );
+
     return contextPermissions.every((contextPermission) =>
       userPermissions.includes(contextPermission),
     );

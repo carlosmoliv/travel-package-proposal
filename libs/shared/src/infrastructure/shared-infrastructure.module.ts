@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
 import { RedisService } from './redis/redis.service';
-import { StorageService } from '../application/ports/storage.service';
+import { StorageService } from '@app/shared';
 import { AwsS3Service } from './file-storage/aws-s3/aws-s3.service';
 import redisConfig from './redis/redis.config';
 import { FileStorageService } from '../application/ports/file-storage.service';

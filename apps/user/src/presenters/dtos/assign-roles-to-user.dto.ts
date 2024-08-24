@@ -1,6 +1,6 @@
 import { IsArray, IsEnum } from 'class-validator';
 
-import { RoleName } from '../../../iam/authorization/enums/role-name.enum';
+import { RoleName } from '@app/shared';
 
 export class AssignRolesToUserDto {
   @IsArray()

@@ -7,7 +7,7 @@ import { ConfigModule } from '@nestjs/config';
 
 import iamConfig from '../iam.config';
 import { AuthenticationService } from './authentication.service';
-import { HashingService } from '../ports/hashing.service';
+import { HashingService } from '@app/shared/iam/ports/hashing.service';
 import { SignUpInput } from './inputs/sign-up.input';
 import { UserFactory } from '../../user/domain/factories/user.factory';
 import { SignInInput } from './inputs/sign-in.input';

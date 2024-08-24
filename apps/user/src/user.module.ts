@@ -1,4 +1,4 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { UserRepository } from './application/ports/user.repository';
@@ -7,12 +7,17 @@ import { UserFactory } from './domain/factories/user.factory';
 import { OrmUser } from './infrastructure/persistance/orm/entities/orm-user.entity';
 import { UserController } from './presenters/controllers/user.controller';
 import { UserService } from './application/user.service';
-import { IamModule } from '../iam/iam.module';
-import { HashingService } from '../iam/ports/hashing.service';
-import { BcryptService } from '../iam/hashing/bcrypt/bcrypt.service';
+import { IamLibModule, HashingService, BcryptService } from '@app/shared';
+import { ConfigModule } from '@nestjs/config';
+import { typeOrmAsyncConfig } from './config/orm.config';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([OrmUser]), forwardRef(() => IamModule)],
+  imports: [
+    ConfigModule.forRoot(),
+    IamLibModule,
+    TypeOrmModule.forRootAsync(typeOrmAsyncConfig),
+    TypeOrmModule.forFeature([OrmUser]),
+  ],
   providers: [
     UserFactory,
     UserService,

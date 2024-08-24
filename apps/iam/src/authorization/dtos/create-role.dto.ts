@@ -1,6 +1,6 @@
 import { IsEnum, IsOptional, MaxLength } from 'class-validator';
 
-import { RoleName } from '../enums/role-name.enum';
+import { RoleName } from '@app/shared';
 
 export class CreateRoleDto {
   @IsEnum(RoleName)

@@ -1,6 +1,6 @@
 import { IsEmail, IsStrongPassword, MinLength } from 'class-validator';
 
-import { MatchesProperty } from '../../../common/decorators/validation/matches-property';
+import { MatchesProperty } from '@app/shared';
 
 export class SignUpDto {
   @MinLength(3)

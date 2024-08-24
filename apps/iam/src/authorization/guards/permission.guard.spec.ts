@@ -6,11 +6,11 @@ import { Reflector } from '@nestjs/core';
 import { ExecutionContext } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { ActiveUserData } from '../../interfaces/active-user-data.interface';
+import { ActiveUserData } from '@app/shared/iam/interfaces/active-user-data.interface';
 import { PermissionGuard } from './permission.guard';
-import { ExamplePermission } from '../enums/example-permission.enum';
+import { ExamplePermission } from '@app/shared/iam/authorization/enums/example-permission.enum';
 import { UserService } from '../../../user/application/user.service';
-import { PermissionType } from '../permission.type';
+import { PermissionType } from '@app/shared/iam/authorization/permission.type';
 
 describe('PermissionsGuard', () => {
   let sut: PermissionGuard;

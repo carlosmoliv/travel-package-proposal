@@ -1,36 +1,40 @@
 import { randomUUID } from 'crypto';
+import { lastValueFrom } from 'rxjs';
 
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
-import { ConfigType } from '@nestjs/config';
 
 import { SignUpInput } from './inputs/sign-up.input';
 import { SignInInput } from './inputs/sign-in.input';
 import { TokenService } from '../ports/token.service';
-import iamConfig from '../iam.config';
-import { ActiveUserData } from '../interfaces/active-user-data.interface';
+import { ActiveUserData } from '@app/shared/iam/interfaces/active-user-data.interface';
 import { RefreshTokenData } from '../interfaces/refresh-token-data.interface';
 import { User } from '@app/shared';
 import { RefreshTokenIdsStorage } from './refresh-token-ids/refresh-token-ids.storage';
 import { RefreshTokenInput } from './inputs/refresh-token.input';
 import { InvalidateRefreshTokenError } from './refresh-token-ids/invalidate-refresh-token.error';
-import { UserService } from '../../user/application/user.service';
+import { ClientProxy } from '@nestjs/microservices';
+import { USER_SERVICE } from '../iam.constants';
 
 @Injectable()
 export class AuthenticationService {
   constructor(
-    private readonly userService: UserService,
+    @Inject(USER_SERVICE)
+    private readonly userService: ClientProxy,
     private readonly tokenService: TokenService,
-    @Inject(iamConfig.KEY)
-    private readonly iamConfiguration: ConfigType<typeof iamConfig>,
     private readonly refreshTokenIdsStorage: RefreshTokenIdsStorage,
   ) {}
 
   async signUp(signUpInput: SignUpInput): Promise<void> {
-    await this.userService.create(signUpInput);
+    const { email, password, name } = signUpInput;
+    await lastValueFrom(
+      this.userService.send('user.create', { name, email, password }),
+    );
   }
 
   async signIn({ email, password }: SignInInput) {
-    const user = await this.userService.verifyUserCredentials(email, password);
+    const user = await lastValueFrom(
+      this.userService.send('user.verify.credentials', { email, password }),
+    );
     return this.generateTokens(user);
   }
 
@@ -41,7 +45,9 @@ export class AuthenticationService {
           refreshToken,
         );
 
-      const user = await this.userService.findById(decodedToken.userId);
+      const user = await lastValueFrom(
+        this.userService.send('user.findById', decodedToken.userId),
+      );
 
       await this.refreshTokenIdsStorage.validate(
         user.id,
@@ -65,11 +71,11 @@ export class AuthenticationService {
     const [accessToken, refreshToken] = await Promise.all([
       this.tokenService.generate<ActiveUserData>(
         { userId: id, email },
-        this.iamConfiguration.accessTokenTtl,
+        parseInt(process.env.ACCESS_TOKEN_TTL),
       ),
       this.tokenService.generate<RefreshTokenData>(
         { userId: id, refreshTokenId },
-        this.iamConfiguration.refreshTokenTtl,
+        parseInt(process.env.REFRESH_TOKEN_TTL),
       ),
     ]);
 
