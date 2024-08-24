@@ -11,7 +11,7 @@ import { HashingService } from '@app/shared/iam/ports/hashing.service';
 import { SignUpInput } from './inputs/sign-up.input';
 import { UserFactory } from '../../user/domain/factories/user.factory';
 import { SignInInput } from './inputs/sign-in.input';
-import { TokenService } from '../ports/token.service';
+import { TokenService } from '@app/shared/iam/ports/token.service';
 import { RefreshTokenIdsStorage } from './refresh-token-ids/refresh-token-ids.storage';
 import { RefreshTokenInput } from './inputs/refresh-token.input';
 import { UserService } from '../../user/application/user.service';

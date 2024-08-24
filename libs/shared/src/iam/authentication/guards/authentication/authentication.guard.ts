@@ -8,8 +8,8 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 
-import { TokenService } from '../../../ports/token.service';
 import { IS_PUBLIC_KEY } from '../../decorators/public.decorator';
+import { TokenService } from '@app/shared/iam/ports/token.service';
 
 @Injectable()
 export class AuthenticationGuard implements CanActivate {

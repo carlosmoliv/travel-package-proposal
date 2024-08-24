@@ -14,6 +14,7 @@ import { UserService } from '../../application/user.service';
 import { UserPermission } from '@app/shared/iam/authorization/enums/user.permissions';
 import { AssignRolesToUserDto } from '../dtos/assign-roles-to-user.dto';
 import { MessagePattern, Payload } from '@nestjs/microservices';
+import { Public } from '@app/shared/iam/authentication/decorators/public.decorator';
 
 class VerifyUserCredentialsDto {
   email: string;
@@ -33,6 +34,7 @@ export class UserController {
 
   @Get('me')
   getCurrentUser(@ActiveUser() activeUserData: ActiveUserData) {
+    console.log(activeUserData);
     return this.userService.findById(activeUserData.userId);
   }
 
@@ -68,5 +70,11 @@ export class UserController {
   @MessagePattern('user.get.permissions')
   async getUserPermissions(@Payload() userId: string) {
     return this.userService.getPermissionTypes(userId);
+  }
+
+  @Public()
+  @Get('testing')
+  async testing() {
+    return 'auth guard working...';
   }
 }

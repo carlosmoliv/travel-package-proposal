@@ -1,17 +1,11 @@
 import { Module } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { APP_GUARD } from '@nestjs/core';
 
 import { AuthenticationService } from './authentication/authentication.service';
 import { AuthenticationController } from './authentication/authentication.controller';
-import { JwtService } from './token/jwt/jwt.service';
-import { TokenService } from './ports/token.service';
 import { RefreshTokenIdsStorage } from './authentication/refresh-token-ids/refresh-token-ids.storage';
-import { AuthenticationGuard } from './authentication/guards/authentication/authentication.guard';
 import { RoleController } from './authorization/role.controller';
-import jwtConfig from './token/jwt/jwt.config';
 import { PermissionController } from './authorization/permission.controller';
 import { SharedModule } from '@app/shared/shared.module';
 import { IamLibModule } from '@app/shared/iam/iam-lib.module';
@@ -22,9 +16,7 @@ import { typeOrmAsyncConfig } from '../../travel-package-proposal-api/src/config
 @Module({
   imports: [
     IamLibModule,
-    ConfigModule.forFeature(jwtConfig),
     ConfigModule.forRoot(),
-    JwtModule.registerAsync(jwtConfig.asProvider()),
     TypeOrmModule.forRootAsync(typeOrmAsyncConfig),
     SharedModule,
     ClientsModule.register([
@@ -38,19 +30,7 @@ import { typeOrmAsyncConfig } from '../../travel-package-proposal-api/src/config
       },
     ]),
   ],
-  providers: [
-    {
-      provide: TokenService,
-      useClass: JwtService,
-    },
-    RefreshTokenIdsStorage,
-    AuthenticationService,
-    JwtService,
-    {
-      provide: APP_GUARD,
-      useClass: AuthenticationGuard,
-    },
-  ],
+  providers: [RefreshTokenIdsStorage, AuthenticationService],
   controllers: [AuthenticationController, RoleController, PermissionController],
   exports: [AuthenticationService, SharedModule],
 })
