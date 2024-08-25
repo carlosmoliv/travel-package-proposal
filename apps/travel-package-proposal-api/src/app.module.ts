@@ -14,6 +14,7 @@ import { ProposalModule } from './proposal/proposal.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
+      isGlobal: false,
       load: [appConfig],
       envFilePath: process.env.NODE_ENV
         ? `.env.${process.env.NODE_ENV}`

@@ -10,7 +10,6 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { AwsS3Service } from './aws-s3.service';
-import awsS3Config from './aws-s3.config';
 
 jest.mock('@aws-sdk/s3-request-presigner', () => ({
   getSignedUrl: jest.fn(),

@@ -6,6 +6,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(IamModule);
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+
   const options = new DocumentBuilder()
     .setTitle('Travel Package Proposal API')
     .setDescription('Project endpoints.')
@@ -13,6 +14,7 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api', app, document);
+
   await app.listen(3001);
   console.log(`Application is running on: ${await app.getUrl()}`);
 }

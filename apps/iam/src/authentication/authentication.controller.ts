@@ -30,7 +30,7 @@ export class AuthenticationController {
 
   @HttpCode(HttpStatus.OK)
   @Post('refresh-tokens')
-  refreshTokens(@Body() refreshTokenDto: RefreshTokenDto) {
+  async refreshTokens(@Body() refreshTokenDto: RefreshTokenDto) {
     return this.authenticationService.refreshTokens(refreshTokenDto);
   }
 }

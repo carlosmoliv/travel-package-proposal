@@ -12,11 +12,35 @@ import { IamLibModule } from '@app/shared/iam/iam-lib.module';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { USER_SERVICE } from './iam.constants';
 import { typeOrmAsyncConfig } from '../../travel-package-proposal-api/src/config/orm.config';
+import * as Joi from 'joi';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      // validationSchema: Joi.object({
+      //   PORT: Joi.number().required(),
+      //
+      //   DATABASE_HOST: Joi.string().required(),
+      //   DATABASE_USER: Joi.string().required(),
+      //   DATABASE_PASSWORD: Joi.string().required(),
+      //   DATABASE_NAME: Joi.string().required(),
+      //   DATABASE_PORT: Joi.string().required(),
+      //
+      //   JWT_SECRET: Joi.string().required(),
+      //   JWT_TOKEN_AUDIENCE: Joi.string().required(),
+      //   JWT_TOKEN_ISSUER: Joi.string().required(),
+      //
+      //   ACCESS_TOKEN_TTL: Joi.number().required(),
+      //   REFRESH_TOKEN_TTL: Joi.number().required(),
+      //
+      //   REDIS_HOST: Joi.string().required(),
+      //   REDIS_PORT: Joi.number().required(),
+      //
+      //   RABBITMQ_URL: Joi.string().required(),
+      // }),
+    }),
     IamLibModule,
-    ConfigModule.forRoot(),
     TypeOrmModule.forRootAsync(typeOrmAsyncConfig),
     SharedModule,
     ClientsModule.register([

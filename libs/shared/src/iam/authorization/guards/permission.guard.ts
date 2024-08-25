@@ -4,9 +4,9 @@ import { Reflector } from '@nestjs/core';
 import { PermissionType } from '@app/shared/iam/authorization/permission.type';
 import { PERMISSIONS_KEY } from '@app/shared/iam/authorization/decorators/permissions';
 import { ActiveUserData } from '@app/shared/iam/interfaces/active-user-data.interface';
-import { REQUEST_USER_KEY } from '../../iam.constants';
 import { ClientProxy } from '@nestjs/microservices';
 import { lastValueFrom } from 'rxjs';
+import { REQUEST_USER_KEY } from '@app/shared/iam/iam.constants';
 
 @Injectable()
 export class PermissionGuard implements CanActivate {

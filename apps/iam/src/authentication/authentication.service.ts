@@ -83,4 +83,8 @@ export class AuthenticationService {
 
     return { accessToken, refreshToken };
   }
+
+  async validateToken(token: string) {
+    await this.tokenService.validateAndDecode(token);
+  }
 }
