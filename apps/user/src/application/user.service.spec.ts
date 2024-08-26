@@ -7,16 +7,16 @@ import { NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserRepository } from './ports/user.repository';
 import { UserFactory } from '../domain/factories/user.factory';
-import { ExamplePermission } from '../../iam/authorization/enums/example-permission.enum';
-import { RoleService } from '../../iam/authorization/role.service';
-import { PermissionService } from '../../iam/authorization/permission.service';
-import { Permission } from '../../iam/authorization/permission';
-import { RoleName } from '../../iam/authorization/enums/role-name.enum';
-import { Role } from '../../iam/authorization/role';
-import { User } from '@app/shared/domain/user';
 import { CreateUserInput } from './inputs/create-user.input';
-import { HashingService } from '../../iam/ports/hashing.service';
 import { AssignRolesToUserInput } from './inputs/assign-roles-to-user.input';
+import { PermissionService } from '@app/iam-lib/authorization/permission.service';
+import { RoleService } from '@app/iam-lib/authorization/role.service';
+import { HashingService } from '@app/iam-lib/hashing/hashing.service';
+import { User } from '@app/common/domain/user';
+import { Permission } from '@app/iam-lib/authorization/permission';
+import { Role } from '@app/iam-lib/authorization/role';
+import { RoleName } from '@app/iam-lib/authorization/enums/role-name.enum';
+import { ExamplePermission } from '@app/iam-lib/authorization/enums/example-permission.enum';
 
 describe('UserService', () => {
   let sut: UserService;
