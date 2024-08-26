@@ -2,22 +2,23 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { MockProxy, mock } from 'jest-mock-extended';
 
 import { RefreshTokenIdsStorage } from './refresh-token-ids.storage';
-import { StorageService } from '../../../shared/application/ports/storage.service';
 import { InvalidateRefreshTokenError } from './invalidate-refresh-token.error';
+import { CacheStorageService } from '@app/common/cache-storage/cache-storage.service';
 
 describe('RefreshTokenIdsStorageService', () => {
   let sut: RefreshTokenIdsStorage;
-  let storageService: MockProxy<StorageService>;
+  let storageService: MockProxy<CacheStorageService>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         RefreshTokenIdsStorage,
-        { provide: StorageService, useValue: mock() },
+        { provide: CacheStorageService, useValue: mock() },
       ],
     }).compile();
     sut = module.get<RefreshTokenIdsStorage>(RefreshTokenIdsStorage);
-    storageService = module.get<MockProxy<StorageService>>(StorageService);
+    storageService =
+      module.get<MockProxy<CacheStorageService>>(CacheStorageService);
   });
 
   describe('insert()', () => {
