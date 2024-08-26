@@ -39,6 +39,15 @@
       "compilerOptions": {
         "tsConfigPath": "libs/shared/tsconfig.lib.json"
       }
+    },
+    "iam-lib": {
+      "type": "library",
+      "root": "libs/iam-lib",
+      "entryFile": "index",
+      "sourceRoot": "libs/iam-lib/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/iam-lib/tsconfig.lib.json"
+      }
     }
   }
 }

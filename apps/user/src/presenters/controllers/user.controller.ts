@@ -11,10 +11,10 @@ import { ApiTags } from '@nestjs/swagger';
 
 import { ActiveUser, ActiveUserData, Permissions } from '@app/shared';
 import { UserService } from '../../application/user.service';
-import { UserPermission } from '@app/shared/iam/authorization/enums/user.permissions';
+import { UserPermission } from '@app/iam-lib/authorization/enums/user.permissions';
 import { AssignRolesToUserDto } from '../dtos/assign-roles-to-user.dto';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { Public } from '@app/shared/iam/authentication/decorators/public.decorator';
+import { Public } from '@app/iam-lib/authentication/decorators/public.decorator';
 
 class VerifyUserCredentialsDto {
   email: string;

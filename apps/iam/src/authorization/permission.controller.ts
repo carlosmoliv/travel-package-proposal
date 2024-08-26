@@ -1,7 +1,7 @@
 import { Body, Controller, Post } from '@nestjs/common';
 
-import { Public } from '@app/shared/iam/authentication/decorators/public.decorator';
-import { PermissionService } from '@app/shared/iam/authorization/permission.service';
+import { Public } from '@app/iam-lib/authentication/decorators/public.decorator';
+import { PermissionService } from '@app/iam-lib/authorization/permission.service';
 import { CreatePermissionDto } from './dtos/create-permission.dto';
 
 @Controller('permissions')

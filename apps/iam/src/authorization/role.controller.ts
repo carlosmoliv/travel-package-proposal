@@ -8,10 +8,10 @@ import {
 } from '@nestjs/common';
 
 import { CreateRoleDto } from './dtos/create-role.dto';
-import { RoleService } from '@app/shared/iam/authorization/role.service';
+import { RoleService } from '@app/iam-lib/authorization/role.service';
 import { AddPermissionsToRoleDto } from './dtos/add-permissions-to-role.dto';
-import { Permissions } from '@app/shared/iam/authorization/decorators/permissions';
-import { RolePermission } from '@app/shared/iam/authorization/enums/role.permissions';
+import { Permissions } from '@app/iam-lib/authorization/decorators/permissions';
+import { RolePermission } from '@app/iam-lib/authorization/enums/role.permissions';
 
 @Controller('roles')
 export class RoleController {

@@ -23,6 +23,12 @@
       ],
       "@app/shared/*": [
         "libs/shared/src/*"
+      ],
+      "@app/iam-lib": [
+        "libs/iam-lib/src"
+      ],
+      "@app/iam-lib/*": [
+        "libs/iam-lib/src/*"
       ]
     }
   }

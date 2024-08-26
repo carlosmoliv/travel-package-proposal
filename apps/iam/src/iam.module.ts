@@ -8,7 +8,7 @@ import { RefreshTokenIdsStorage } from './authentication/refresh-token-ids/refre
 import { RoleController } from './authorization/role.controller';
 import { PermissionController } from './authorization/permission.controller';
 import { SharedModule } from '@app/shared/shared.module';
-import { IamLibModule } from '@app/shared/iam/iam-lib.module';
+import { IamLibModule } from '@app/iam-lib/iam-lib.module';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { USER_SERVICE } from './iam.constants';
 import * as Joi from 'joi';
