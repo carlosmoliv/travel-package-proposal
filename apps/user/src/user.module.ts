@@ -11,7 +11,7 @@ import { ConfigModule } from '@nestjs/config';
 import { typeOrmAsyncConfig } from './config/orm.config';
 import * as Joi from 'joi';
 import { IamLibModule } from '@app/iam-lib';
-import { HashingService } from '@app/iam-lib/ports/hashing.service';
+import { HashingService } from '@app/iam-lib/hashing/hashing.service';
 import { BcryptService } from '@app/iam-lib/hashing/bcrypt/bcrypt.service';
 
 @Module({

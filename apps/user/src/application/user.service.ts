@@ -11,7 +11,7 @@ import { UserFactory } from '../domain/factories/user.factory';
 import { AssignRolesToUserInput } from './inputs/assign-roles-to-user.input';
 import { PermissionService } from '@app/iam-lib/authorization/permission.service';
 import { RoleService } from '@app/iam-lib/authorization/role.service';
-import { HashingService } from '@app/iam-lib/ports/hashing.service';
+import { HashingService } from '@app/iam-lib/hashing/hashing.service';
 import { RoleName } from '@app/iam-lib/authorization/enums/role-name.enum';
 import { PermissionType } from '@app/iam-lib/authorization/permission.type';
 import { User } from '@app/common/domain/user';

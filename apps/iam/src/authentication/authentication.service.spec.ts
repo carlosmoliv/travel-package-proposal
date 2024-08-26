@@ -7,11 +7,11 @@ import { ConfigModule } from '@nestjs/config';
 
 import iamConfig from '../iam.config';
 import { AuthenticationService } from './authentication.service';
-import { HashingService } from '@app/iam-lib/ports/hashing.service';
+import { HashingService } from '@app/iam-lib/hashing/hashing.service';
 import { SignUpInput } from './inputs/sign-up.input';
 import { UserFactory } from '../../user/domain/factories/user.factory';
 import { SignInInput } from './inputs/sign-in.input';
-import { TokenService } from '@app/iam-lib/ports/token.service';
+import { TokenService } from '@app/iam-lib/token/token.service';
 import { RefreshTokenIdsStorage } from './refresh-token-ids/refresh-token-ids.storage';
 import { RefreshTokenInput } from './inputs/refresh-token.input';
 import { UserService } from '../../user/application/user.service';

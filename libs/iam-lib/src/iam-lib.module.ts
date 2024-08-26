@@ -10,7 +10,7 @@ import { OrmRole } from '@app/iam-lib/authorization/orm/entities/orm-role.entity
 import { OrmPermission } from '@app/iam-lib/authorization/orm/entities/orm-permission.entity';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthenticationGuard } from '@app/iam-lib/authentication/guards/authentication/authentication.guard';
-import { TokenService } from '@app/iam-lib/ports/token.service';
+import { TokenService } from '@app/iam-lib/token/token.service';
 import { JwtService } from '@app/iam-lib/token/jwt/jwt.service';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
