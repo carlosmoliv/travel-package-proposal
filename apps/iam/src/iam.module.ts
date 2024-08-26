@@ -11,8 +11,8 @@ import { SharedModule } from '@app/shared/shared.module';
 import { IamLibModule } from '@app/shared/iam/iam-lib.module';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { USER_SERVICE } from './iam.constants';
-import { typeOrmAsyncConfig } from '../../travel-package-proposal-api/src/config/orm.config';
 import * as Joi from 'joi';
+import { typeOrmAsyncConfig } from './config/orm.config';
 
 @Module({
   imports: [

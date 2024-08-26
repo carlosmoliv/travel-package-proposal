@@ -1,27 +1,18 @@
 {
   "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
-  "sourceRoot": "apps/travel-package-proposal-api/src",
+  "sourceRoot": "apps/iam/src",
   "compilerOptions": {
     "deleteOutDir": true,
     "plugins": [
       "@nestjs/swagger/plugin"
     ],
     "webpack": true,
-    "tsConfigPath": "apps/travel-package-proposal-api/tsconfig.app.json"
+    "tsConfigPath": "apps/auth/tsconfig.app.json"
   },
   "monorepo": true,
-  "root": "apps/travel-package-proposal-api",
+  "root": "apps/iam",
   "projects": {
-    "travel-package-proposal-api": {
-      "type": "application",
-      "root": "apps/travel-package-proposal-api",
-      "entryFile": "main",
-      "sourceRoot": "apps/travel-package-proposal-api/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/travel-package-proposal-api/tsconfig.app.json"
-      }
-    },
     "iam": {
       "type": "application",
       "root": "apps/iam",
