@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 
 import { InvalidateRefreshTokenError } from './invalidate-refresh-token.error';
-import { StorageService } from '@app/common/application/ports/storage.service';
+import { CacheStorageService } from '@app/common/cache-storage/cache-storage.service';
 
 @Injectable()
 export class RefreshTokenIdsStorage {
-  constructor(private readonly storageService: StorageService) {}
+  constructor(private readonly storageService: CacheStorageService) {}
 
   async insert(userId: string, tokenId: string): Promise<void> {
     await this.storageService.set(this.getKey(userId), tokenId);

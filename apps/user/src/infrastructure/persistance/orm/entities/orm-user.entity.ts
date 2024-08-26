@@ -1,5 +1,5 @@
 import { Column, Entity, JoinTable, ManyToMany } from 'typeorm';
-import { OrmBaseEntity } from '@app/common/infrastructure/persistence/orm/entities/orm-base.entity';
+import { OrmBaseEntity } from '@app/common/persistence/orm/entities/orm-base.entity';
 import { OrmRole } from '@app/iam-lib/authorization/orm/entities/orm-role.entity';
 
 @Entity('users')

@@ -15,7 +15,6 @@ export class JwtService implements TokenService {
     payload: T,
     expirationInSeconds: number,
   ): Promise<string> {
-    console.log('Its here');
     return this.nestJwtService.signAsync(payload, {
       secret: this.configService.get('JWT_SECRET'),
       audience: this.configService.get('JWT_TOKEN_AUDIENCE'),

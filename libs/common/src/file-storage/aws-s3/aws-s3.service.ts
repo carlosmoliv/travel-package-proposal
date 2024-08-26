@@ -8,7 +8,7 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
-import { FileStorageService } from '../../../application/ports/file-storage.service';
+import { FileStorageService } from '@app/common/file-storage/file-storage.service';
 
 @Injectable()
 export class AwsS3Service implements FileStorageService {

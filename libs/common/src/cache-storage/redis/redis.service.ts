@@ -3,11 +3,14 @@ import Redis from 'ioredis';
 import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
-import { StorageService } from '../../application/ports/storage.service';
+import { CacheStorageService } from '@app/common/cache-storage/cache-storage.service';
 
 @Injectable()
 export class RedisService
-  implements StorageService, OnApplicationBootstrap, OnApplicationBootstrap
+  implements
+    CacheStorageService,
+    OnApplicationBootstrap,
+    OnApplicationBootstrap
 {
   private redisClient: Redis;
 
