@@ -100,7 +100,7 @@
       "<rootDir>/libs/"
     ],
     "moduleNameMapper": {
-      "^@app/shared(|/.*)$": "<rootDir>/libs/shared/src/$1",
+      "^@app/common(|/.*)$": "<rootDir>/libs/common/src/$1",
       "^@app/iam-lib(|/.*)$": "<rootDir>/libs/iam-lib/src/$1"
     }
   }

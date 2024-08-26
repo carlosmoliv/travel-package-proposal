@@ -7,12 +7,11 @@ import { AuthenticationController } from './authentication/authentication.contro
 import { RefreshTokenIdsStorage } from './authentication/refresh-token-ids/refresh-token-ids.storage';
 import { RoleController } from './authorization/role.controller';
 import { PermissionController } from './authorization/permission.controller';
-import { SharedModule } from '@app/shared/shared.module';
 import { IamLibModule } from '@app/iam-lib/iam-lib.module';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { USER_SERVICE } from './iam.constants';
-import * as Joi from 'joi';
 import { typeOrmAsyncConfig } from './config/orm.config';
+import { CommonModule } from '@app/common';
 
 @Module({
   imports: [
@@ -42,7 +41,7 @@ import { typeOrmAsyncConfig } from './config/orm.config';
     }),
     IamLibModule,
     TypeOrmModule.forRootAsync(typeOrmAsyncConfig),
-    SharedModule,
+    CommonModule,
     ClientsModule.register([
       {
         name: USER_SERVICE,
@@ -56,6 +55,6 @@ import { typeOrmAsyncConfig } from './config/orm.config';
   ],
   providers: [RefreshTokenIdsStorage, AuthenticationService],
   controllers: [AuthenticationController, RoleController, PermissionController],
-  exports: [AuthenticationService, SharedModule],
+  exports: [AuthenticationService, CommonModule],
 })
 export class IamModule {}

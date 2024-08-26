@@ -1,6 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-
-import { OrmBaseEntity, PermissionType } from '@app/shared';
+import { PermissionType } from '@app/iam-lib/authorization/permission.type';
+import { OrmBaseEntity } from '@app/common/infrastructure/persistence/orm/entities/orm-base.entity';
 
 @Entity('permissions')
 export class OrmPermission extends OrmBaseEntity {

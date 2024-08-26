@@ -6,13 +6,15 @@ import {
 } from '@nestjs/common';
 
 import { UserRepository } from './ports/user.repository';
-import { User } from '@app/shared/domain/user';
-import { PermissionType } from '@app/shared';
-import { PermissionService, RoleService, RoleName } from '@app/shared';
 import { CreateUserInput } from './inputs/create-user.input';
 import { UserFactory } from '../domain/factories/user.factory';
-import { HashingService } from '@app/shared';
 import { AssignRolesToUserInput } from './inputs/assign-roles-to-user.input';
+import { PermissionService } from '@app/iam-lib/authorization/permission.service';
+import { RoleService } from '@app/iam-lib/authorization/role.service';
+import { HashingService } from '@app/iam-lib/ports/hashing.service';
+import { RoleName } from '@app/iam-lib/authorization/enums/role-name.enum';
+import { PermissionType } from '@app/iam-lib/authorization/permission.type';
+import { User } from '@app/common/domain/user';
 
 @Injectable()
 export class UserService {

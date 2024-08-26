@@ -6,4 +6,4 @@ import { SharedInfrastructureModule } from './infrastructure/shared-infrastructu
   imports: [SharedInfrastructureModule],
   exports: [SharedInfrastructureModule],
 })
-export class SharedModule {}
+export class CommonModule {}

@@ -1,7 +1,8 @@
 import { Column, Entity, ManyToMany, JoinTable } from 'typeorm';
 
 import { OrmPermission } from './orm-permission.entity';
-import { OrmBaseEntity, RoleName } from '@app/shared';
+import { OrmBaseEntity } from '@app/common/infrastructure/persistence/orm/entities/orm-base.entity';
+import { RoleName } from '@app/iam-lib/authorization/enums/role-name.enum';
 
 @Entity('roles')
 export class OrmRole extends OrmBaseEntity {

@@ -1,4 +1,4 @@
-import { Permission } from '@app/shared';
+import { Permission } from '@app/iam-lib/authorization/permission';
 
 export abstract class PermissionRepository {
   abstract findByRoles(roleIds: string[]): Promise<Permission[] | []>;

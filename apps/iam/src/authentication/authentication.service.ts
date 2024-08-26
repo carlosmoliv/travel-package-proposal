@@ -8,12 +8,12 @@ import { SignInInput } from './inputs/sign-in.input';
 import { TokenService } from '@app/iam-lib/ports/token.service';
 import { ActiveUserData } from '@app/iam-lib/interfaces/active-user-data.interface';
 import { RefreshTokenData } from '../interfaces/refresh-token-data.interface';
-import { User } from '@app/shared';
 import { RefreshTokenIdsStorage } from './refresh-token-ids/refresh-token-ids.storage';
 import { RefreshTokenInput } from './inputs/refresh-token.input';
 import { InvalidateRefreshTokenError } from './refresh-token-ids/invalidate-refresh-token.error';
 import { ClientProxy } from '@nestjs/microservices';
 import { USER_SERVICE } from '../iam.constants';
+import { User } from '@app/common/domain/user';
 
 @Injectable()
 export class AuthenticationService {

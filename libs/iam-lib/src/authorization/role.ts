@@ -1,4 +1,5 @@
-import { RoleName, Permission } from '@app/shared';
+import { RoleName } from '@app/iam-lib/authorization/enums/role-name.enum';
+import { Permission } from '@app/iam-lib/authorization/permission';
 
 export class Role {
   public id: string;

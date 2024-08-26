@@ -4,7 +4,8 @@ import { Role } from './role';
 import { RoleRepository } from '@app/iam-lib/authorization/ports/role.repository';
 import { CreateRoleInput } from '../../../../apps/iam/src/authorization/inputs/create-role.input';
 import { AddPermissionsToRoleInput } from '../../../../apps/iam/src/authorization/inputs/add-permissions-to-role.input';
-import { PermissionService, RoleName } from '@app/shared';
+import { PermissionService } from '@app/iam-lib/authorization/permission.service';
+import { RoleName } from '@app/iam-lib/authorization/enums/role-name.enum';
 
 @Injectable()
 export class RoleService {

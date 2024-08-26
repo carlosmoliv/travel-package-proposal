@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
-import { StorageService } from '@app/shared';
 import { InvalidateRefreshTokenError } from './invalidate-refresh-token.error';
+import { StorageService } from '@app/common/application/ports/storage.service';
 
 @Injectable()
 export class RefreshTokenIdsStorage {

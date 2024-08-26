@@ -7,10 +7,12 @@ import { UserFactory } from './domain/factories/user.factory';
 import { OrmUser } from './infrastructure/persistance/orm/entities/orm-user.entity';
 import { UserController } from './presenters/controllers/user.controller';
 import { UserService } from './application/user.service';
-import { IamLibModule, HashingService, BcryptService } from '@app/shared';
 import { ConfigModule } from '@nestjs/config';
 import { typeOrmAsyncConfig } from './config/orm.config';
 import * as Joi from 'joi';
+import { IamLibModule } from '@app/iam-lib';
+import { HashingService } from '@app/iam-lib/ports/hashing.service';
+import { BcryptService } from '@app/iam-lib/hashing/bcrypt/bcrypt.service';
 
 @Module({
   imports: [
