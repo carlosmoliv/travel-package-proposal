@@ -55,6 +55,6 @@ import { CommonModule } from '@app/common';
   ],
   providers: [RefreshTokenIdsStorage, AuthenticationService],
   controllers: [AuthenticationController, RoleController, PermissionController],
-  exports: [AuthenticationService, CommonModule],
+  exports: [AuthenticationService],
 })
 export class IamModule {}
