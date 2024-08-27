@@ -2,32 +2,44 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { JwtModule } from '@nestjs/jwt';
 
 import { JwtService } from './jwt.service';
-import jwtConfig from './jwt.config';
+import { ConfigService } from '@nestjs/config';
 
 describe('JwtService', () => {
-  let service: JwtService;
+  let sut: JwtService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         JwtModule.registerAsync({
-          useFactory: () => ({}),
+          useFactory: () => ({
+            secret: 'test-secret',
+            signOptions: { expiresIn: '1h' },
+          }),
         }),
       ],
       providers: [
         JwtService,
         {
-          provide: jwtConfig.KEY,
+          provide: ConfigService,
           useValue: {
-            audience: 'test-audience',
-            issuer: 'test-issuer',
-            secret: 'test-secret',
+            get: (key: string) => {
+              switch (key) {
+                case 'JWT_SECRET':
+                  return 'test-secret';
+                case 'JWT_TOKEN_AUDIENCE':
+                  return 'test-audience';
+                case 'JWT_TOKEN_ISSUER':
+                  return 'test-issuer';
+                default:
+                  return undefined;
+              }
+            },
           },
         },
       ],
     }).compile();
 
-    service = module.get<JwtService>(JwtService);
+    sut = module.get<JwtService>(JwtService);
   });
 
   describe('generate()', () => {
@@ -35,7 +47,7 @@ describe('JwtService', () => {
       const payload = { userId: '123', role: 'admin' };
       const expirationInSeconds = 3600;
 
-      const token = await service.generate(payload, expirationInSeconds);
+      const token = await sut.generate(payload, expirationInSeconds);
 
       expect(token).toBeTruthy();
       expect(typeof token).toBe('string');
