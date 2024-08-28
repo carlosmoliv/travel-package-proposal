@@ -1,11 +1,12 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { lastValueFrom } from 'rxjs';
+
 import { Reflector } from '@nestjs/core';
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
 
 import { PermissionType } from '@app/iam-lib/authorization/permission.type';
 import { PERMISSIONS_KEY } from '@app/iam-lib/authorization/decorators/permissions';
 import { ActiveUserData } from '@app/iam-lib/interfaces/active-user-data.interface';
-import { ClientProxy } from '@nestjs/microservices';
-import { lastValueFrom } from 'rxjs';
 import { REQUEST_USER_KEY } from '@app/iam-lib/iam.constants';
 
 @Injectable()

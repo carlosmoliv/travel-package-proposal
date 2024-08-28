@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { PermissionRepository } from '@app/iam-lib/authorization/ports/permission.repository';
+
 import { Permission } from './permission';
 import { CreatePermissionInput } from '../../../../apps/iam/src/authorization/inputs/create-permission.input';
 

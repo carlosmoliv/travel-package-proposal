@@ -4,13 +4,13 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { RoleService } from './role.service';
 import { RoleRepository } from '@app/iam-lib/authorization/ports/role.repository';
-import { RoleName } from '../../../../../apps/iam/src/authorization/enums/role-name.enum';
 import { CreateRoleInput } from '../../../../apps/iam/src/authorization/inputs/create-role.input';
 import { AddPermissionsToRoleInput } from '../../../../apps/iam/src/authorization/inputs/add-permissions-to-role.input';
 import { Role } from './role';
 import { Permission } from './permission';
 import { ExamplePermission } from './enums/example-permission.enum';
 import { PermissionService } from '@app/iam-lib/authorization/permission.service';
+import { RoleName } from '@app/iam-lib/authorization/enums/role-name.enum';
 
 describe('RolesService', () => {
   let sut: RoleService;
