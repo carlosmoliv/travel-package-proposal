@@ -10,11 +10,11 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 
 import { UserService } from '../../application/user.service';
-import { UserPermission } from '@app/iam-lib/authorization/enums/user.permissions';
+import { UserPermission } from '../../../authorization/enums/user.permissions';
 import { AssignRolesToUserDto } from '../dtos/assign-roles-to-user.dto';
-import { ActiveUserData } from '@app/iam-lib/interfaces/active-user-data.interface';
-import { ActiveUser } from '@app/iam-lib/decorators/active-user';
-import { Permissions } from '@app/iam-lib/authorization/decorators/permissions';
+import { ActiveUserData } from '../../../interfaces/active-user-data.interface';
+import { ActiveUser } from '../../../decorators/active-user';
+import { Permissions } from '../../../authorization/decorators/permissions';
 
 @ApiTags('User')
 @Controller('users')

@@ -1,5 +1,5 @@
-import { RoleName } from '@app/iam-lib/authorization/enums/role-name.enum';
-import { Permission } from '@app/iam-lib/authorization/permission';
+import { RoleName } from './enums/role-name.enum';
+import { Permission } from './permission';
 
 export class Role {
   public id: string;

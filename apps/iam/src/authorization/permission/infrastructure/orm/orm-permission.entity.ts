@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { PermissionType } from '@app/iam-lib/authorization/permission.type';
+import { PermissionType } from '../../../permission.type';
 import { OrmBaseEntity } from '@app/common/persistence/orm/entities/orm-base.entity';
 
 @Entity('permissions')

@@ -1,6 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
 
-import { Public } from '@app/iam-lib/authentication/decorators/public.decorator';
+import { Public } from '../../../../authentication/decorators/public.decorator';
 import { PermissionService } from '../../application/permission.service';
 import { CreatePermissionDto } from '../dtos/create-permission.dto';
 

@@ -3,14 +3,14 @@ import { mock, MockProxy } from 'jest-mock-extended';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { RoleService } from './role.service';
-import { RoleRepository } from '@app/iam-lib/authorization/ports/role.repository';
+import { RoleRepository } from '../../ports/role.repository';
 import { CreateRoleInput } from '../inputs/create-role.input';
 import { AddPermissionsToRoleInput } from '../inputs/add-permissions-to-role.input';
-import { Role } from '@app/iam-lib/authorization/role';
-import { Permission } from '@app/iam-lib/authorization/permission';
-import { ExamplePermission } from '@app/iam-lib/authorization/enums/example-permission.enum';
+import { Role } from '../../role';
+import { Permission } from '../../permission';
+import { ExamplePermission } from '../../enums/example-permission.enum';
 import { PermissionService } from '../../permission/application/permission.service';
-import { RoleName } from '@app/iam-lib/authorization/enums/role-name.enum';
+import { RoleName } from '../../enums/role-name.enum';
 
 describe('RolesService', () => {
   let sut: RoleService;

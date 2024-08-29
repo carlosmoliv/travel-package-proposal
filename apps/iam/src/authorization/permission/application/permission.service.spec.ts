@@ -2,10 +2,10 @@ import { mock, MockProxy } from 'jest-mock-extended';
 
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { Permission } from '@app/iam-lib/authorization/permission';
+import { Permission } from '../../permission';
 import { PermissionService } from './permission.service';
-import { ExamplePermission } from '@app/iam-lib/authorization/enums/example-permission.enum';
-import { PermissionRepository } from '@app/iam-lib/authorization/ports/permission.repository';
+import { ExamplePermission } from '../../enums/example-permission.enum';
+import { PermissionRepository } from '../../ports/permission.repository';
 import { CreatePermissionInput } from './inputs/create-permission.input';
 
 describe('PermissionsService', () => {

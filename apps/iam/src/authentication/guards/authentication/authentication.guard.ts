@@ -9,7 +9,7 @@ import {
 import { Reflector } from '@nestjs/core';
 
 import { IS_PUBLIC_KEY } from '../../decorators/public.decorator';
-import { TokenService } from '@app/iam-lib/token/token.service';
+import { TokenService } from '../../../token/token.service';
 
 @Injectable()
 export class AuthenticationGuard implements CanActivate {

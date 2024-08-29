@@ -3,10 +3,10 @@ import { In, Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { RoleRepository } from '@app/iam-lib/authorization/ports/role.repository';
-import { Role } from '@app/iam-lib/authorization/role';
+import { RoleRepository } from '../../../ports/role.repository';
+import { Role } from '../../../role';
 import { OrmRole } from './orm-role.entity';
-import { RoleName } from '@app/iam-lib/authorization/enums/role-name.enum';
+import { RoleName } from '../../../enums/role-name.enum';
 
 @Injectable()
 export class OrmRoleRepository implements RoleRepository {

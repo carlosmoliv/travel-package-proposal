@@ -11,12 +11,12 @@ import { CreateUserInput } from './inputs/create-user.input';
 import { AssignRolesToUserInput } from './inputs/assign-roles-to-user.input';
 import { PermissionService } from '../../authorization/permission/application/permission.service';
 import { RoleService } from '../../authorization/role/application/role.service';
-import { HashingService } from '@app/iam-lib/hashing/hashing.service';
+import { HashingService } from '../../hashing/hashing.service';
 import { User } from '@app/common/domain/user';
-import { Permission } from '@app/iam-lib/authorization/permission';
-import { Role } from '@app/iam-lib/authorization/role';
-import { RoleName } from '@app/iam-lib/authorization/enums/role-name.enum';
-import { ExamplePermission } from '@app/iam-lib/authorization/enums/example-permission.enum';
+import { Permission } from '../../authorization/permission';
+import { Role } from '../../authorization/role';
+import { RoleName } from '../../authorization/enums/role-name.enum';
+import { ExamplePermission } from '../../authorization/enums/example-permission.enum';
 
 describe('UserService', () => {
   let sut: UserService;

@@ -10,8 +10,8 @@ import {
 import { CreateRoleDto } from '../dtos/create-role.dto';
 import { RoleService } from '../../application/role.service';
 import { AddPermissionsToRoleDto } from '../dtos/add-permissions-to-role.dto';
-import { Permissions } from '@app/iam-lib/authorization/decorators/permissions';
-import { RolePermission } from '@app/iam-lib/authorization/enums/role.permissions';
+import { Permissions } from '../../../decorators/permissions';
+import { RolePermission } from '../../../enums/role.permissions';
 
 @Controller('roles')
 export class RoleController {

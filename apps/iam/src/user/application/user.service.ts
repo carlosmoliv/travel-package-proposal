@@ -6,12 +6,12 @@ import {
 } from '@nestjs/common';
 
 import { UserRepository } from './ports/user.repository';
-import { HashingService } from '@app/iam-lib/hashing/hashing.service';
+import { HashingService } from '../../hashing/hashing.service';
 import { CreateUserInput } from './inputs/create-user.input';
 import { UserFactory } from '../domain/factories/user.factory';
 import { AssignRolesToUserInput } from './inputs/assign-roles-to-user.input';
-import { RoleName } from '@app/iam-lib/authorization/enums/role-name.enum';
-import { PermissionType } from '@app/iam-lib/authorization/permission.type';
+import { RoleName } from '../../authorization/enums/role-name.enum';
+import { PermissionType } from '../../authorization/permission.type';
 import { User } from '@app/common/domain/user';
 import { RoleService } from '../../authorization/role/application/role.service';
 import { PermissionService } from '../../authorization/permission/application/permission.service';

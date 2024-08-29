@@ -1,4 +1,4 @@
-import { Role } from '@app/iam-lib/authorization/role';
+import { Role } from '../../../../apps/iam/src/authorization/role';
 
 export class User {
   public name: string;

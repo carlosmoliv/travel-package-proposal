@@ -7,8 +7,8 @@ import { UserFactory } from './domain/factories/user.factory';
 import { OrmUser } from './infrastructure/persistance/orm/entities/orm-user.entity';
 import { UserController } from './presenters/controllers/user.controller';
 import { UserService } from './application/user.service';
-import { HashingService } from '@app/iam-lib/hashing/hashing.service';
-import { BcryptService } from '@app/iam-lib/hashing/bcrypt/bcrypt.service';
+import { HashingService } from '../hashing/hashing.service';
+import { BcryptService } from '../hashing/bcrypt/bcrypt.service';
 import { IamModule } from '../iam.module';
 
 @Module({

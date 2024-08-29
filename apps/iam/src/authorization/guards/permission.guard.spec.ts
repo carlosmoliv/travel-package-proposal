@@ -6,10 +6,10 @@ import { Reflector } from '@nestjs/core';
 import { ExecutionContext } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { ActiveUserData } from '@app/iam-lib/interfaces/active-user-data.interface';
+import { ActiveUserData } from '../../interfaces/active-user-data.interface';
 import { PermissionGuard } from './permission.guard';
-import { ExamplePermission } from '@app/iam-lib/authorization/enums/example-permission.enum';
-import { PermissionType } from '@app/iam-lib/authorization/permission.type';
+import { ExamplePermission } from '../enums/example-permission.enum';
+import { PermissionType } from '../permission.type';
 import { ClientProxy } from '@nestjs/microservices';
 import { of } from 'rxjs';
 

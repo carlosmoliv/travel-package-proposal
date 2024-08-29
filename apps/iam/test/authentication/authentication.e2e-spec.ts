@@ -11,7 +11,7 @@ import { OrmHelper } from '@app/common/test/helpers/orm.helper';
 import { OrmRole } from '../../src/authorization/role/infrastructure/orm/orm-role.entity';
 import { OrmPermission } from '../../src/authorization/permission/infrastructure/orm/orm-permission.entity';
 import { RoleService } from '../../src/authorization/role/application/role.service';
-import { RoleName } from '@app/iam-lib/authorization/enums/role-name.enum';
+import { RoleName } from '../../src/authorization/enums/role-name.enum';
 
 import { SignInDto } from '../../src/authentication/dtos/sign-in.dto';
 import { IamModule } from '../../src/iam.module';

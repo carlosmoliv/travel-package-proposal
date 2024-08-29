@@ -24,12 +24,6 @@
       "@app/common/*": [
         "libs/common/src/*"
       ],
-      "@app/iam-lib": [
-        "libs/iam-lib/src"
-      ],
-      "@app/iam-lib/*": [
-        "libs/iam-lib/src/*"
-      ]
     }
   }
 }

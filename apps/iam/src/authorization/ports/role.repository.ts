@@ -1,5 +1,5 @@
-import { Role } from '@app/iam-lib/authorization/role';
-import { RoleName } from '@app/iam-lib/authorization/enums/role-name.enum';
+import { Role } from '../role';
+import { RoleName } from '../enums/role-name.enum';
 
 export abstract class RoleRepository {
   abstract save(role: Role): Promise<Role>;

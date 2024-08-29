@@ -10,10 +10,10 @@ import { ClientProxy } from '@nestjs/microservices';
 import { User } from '@app/common/domain/user';
 
 import { AuthenticationService } from './authentication.service';
-import { HashingService } from '@app/iam-lib/hashing/hashing.service';
+import { HashingService } from '../hashing/hashing.service';
 import { SignUpInput } from './inputs/sign-up.input';
 import { SignInInput } from './inputs/sign-in.input';
-import { TokenService } from '@app/iam-lib/token/token.service';
+import { TokenService } from '../token/token.service';
 import { RefreshTokenIdsStorage } from './refresh-token-ids/refresh-token-ids.storage';
 import { RefreshTokenInput } from './inputs/refresh-token.input';
 import { USER_SERVICE } from '../iam.constants';
