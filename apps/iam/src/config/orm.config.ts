@@ -11,10 +11,11 @@ export const ormConfig = {
   username: process.env.DATABASE_USER || 'postgres',
   password: process.env.DATABASE_PASSWORD || 'pass123',
   database: process.env.DATABASE_NAME || 'travel-package-proposal-db',
-  synchronize: false,
+  synchronize: true,
   logging: false,
   migrationsTableName: 'typeorm_migrations',
-  entities: ['dist/**/*.entity.{ts,js}'],
+  autoLoadEntities: true,
+  // entities: ['dist/**/*.entity.{ts,js}'],
   migrations: ['dist/migrations/*.{ts,js}'],
   cli: {
     migrationsDir: 'src/migrations',

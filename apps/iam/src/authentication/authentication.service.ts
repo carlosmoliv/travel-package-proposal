@@ -1,7 +1,6 @@
 import { randomUUID } from 'crypto';
-import { lastValueFrom } from 'rxjs';
 
-import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 
 import { SignUpInput } from './inputs/sign-up.input';
 import { SignInInput } from './inputs/sign-in.input';
@@ -11,30 +10,24 @@ import { RefreshTokenData } from '../interfaces/refresh-token-data.interface';
 import { RefreshTokenIdsStorage } from './refresh-token-ids/refresh-token-ids.storage';
 import { RefreshTokenInput } from './inputs/refresh-token.input';
 import { InvalidateRefreshTokenError } from './refresh-token-ids/invalidate-refresh-token.error';
-import { ClientProxy } from '@nestjs/microservices';
-import { USER_SERVICE } from '../iam.constants';
 import { User } from '@app/common/domain/user';
+import { UserService } from '../user/application/user.service';
 
 @Injectable()
 export class AuthenticationService {
   constructor(
-    @Inject(USER_SERVICE)
-    private readonly userService: ClientProxy,
+    private readonly userService: UserService,
     private readonly tokenService: TokenService,
     private readonly refreshTokenIdsStorage: RefreshTokenIdsStorage,
   ) {}
 
   async signUp(signUpInput: SignUpInput): Promise<void> {
     const { email, password, name } = signUpInput;
-    await lastValueFrom(
-      this.userService.send('user.create', { name, email, password }),
-    );
+    await this.userService.create({ email, password, name });
   }
 
   async signIn({ email, password }: SignInInput) {
-    const user = await lastValueFrom(
-      this.userService.send('user.verify.credentials', { email, password }),
-    );
+    const user = await this.userService.verifyUserCredentials(email, password);
     return this.generateTokens(user);
   }
 
@@ -45,9 +38,7 @@ export class AuthenticationService {
           refreshToken,
         );
 
-      const user = await lastValueFrom(
-        this.userService.send('user.findById', decodedToken.userId),
-      );
+      const user = await this.userService.findById(decodedToken.userId);
 
       await this.refreshTokenIdsStorage.validate(
         user.id,

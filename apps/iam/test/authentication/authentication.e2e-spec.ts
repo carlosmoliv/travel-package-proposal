@@ -8,16 +8,16 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { CacheStorageService } from '@app/common/cache-storage/cache-storage.service';
 import { OrmHelper } from '@app/common/test/helpers/orm.helper';
-import { OrmRole } from '@app/iam-lib/authorization/orm/entities/orm-role.entity';
-import { OrmPermission } from '@app/iam-lib/authorization/orm/entities/orm-permission.entity';
-import { RoleService } from '@app/iam-lib/authorization/role.service';
+import { OrmRole } from '../../src/authorization/role/infrastructure/orm/orm-role.entity';
+import { OrmPermission } from '../../src/authorization/permission/infrastructure/orm/orm-permission.entity';
+import { RoleService } from '../../src/authorization/role/application/role.service';
 import { RoleName } from '@app/iam-lib/authorization/enums/role-name.enum';
 
 import { SignInDto } from '../../src/authentication/dtos/sign-in.dto';
 import { IamModule } from '../../src/iam.module';
 import { SignUpDto } from '../../src/authentication/dtos/sign-up.dto';
 import { fakeSignUpDto } from '../fakes/dtos/make-fake-signup-dto';
-import { OrmUser } from '../../../user/src/infrastructure/persistance/orm/entities/orm-user.entity';
+import { OrmUser } from '../../src/user/infrastructure/persistance/orm/entities/orm-user.entity';
 import { RefreshTokenDto } from '../../src/authentication/dtos/refresh-token.dto';
 
 describe('Authentication (e2e)', () => {
