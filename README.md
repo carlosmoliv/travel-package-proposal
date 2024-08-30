@@ -42,30 +42,7 @@ For now, I've been considering the following approaches:
    npm install
 
 ### Running the application
-1. You can use Docker to set up the necessary environment before running the application:
-   ```bash
-   docker compose up -d db redis
-
-2. Run the migrations
-   ```bash
-   npm run migration:run
-
-3. To start the application in development mode:
-   ```bash
-   npm run start:dev
-
-### Running the tests
-1. To run unit tests:
-   ```bash
-   npm run test
-
-2. To run unit tests in watch mode:
-   ```bash
-   npm run test:watch
-   
-3. Before running e2e tests, ensure Docker is installed and running on your machine. To run e2e tests:
-   ```bash
-   npm run test:e2e
+The project has been refactored into a microservices architecture within a monorepo. The instructions for running the application are currently being updated to reflect this new structure.
 
 ## :shipit: Contributing
 
