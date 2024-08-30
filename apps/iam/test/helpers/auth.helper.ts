@@ -3,14 +3,14 @@ import { faker } from '@faker-js/faker';
 
 import { INestApplication } from '@nestjs/common';
 
-import { SignInDto } from '../../src/iam/authentication/dtos/sign-in.dto';
-import { Permission } from '../../src/iam/authorization/permission';
-import { RoleName } from '../../src/iam/authorization/enums/role-name.enum';
-import { PermissionType } from '../../src/iam/authorization/permission.type';
-import { RoleRepository } from '../../src/iam/authorization/ports/role.repository';
-import { Role } from '../../src/iam/authorization/role';
+import { CreateUserInput } from '../../src/user/application/inputs/create-user.input';
+import { PermissionType } from '../../src/authorization/permission.type';
+import { RoleName } from '../../src/authorization/enums/role-name.enum';
 import { UserService } from '../../src/user/application/user.service';
-import { CreateUserInput } from 'src/user/application/inputs/create-user.input';
+import { SignInDto } from '../../src/authentication/dtos/sign-in.dto';
+import { Role } from '../../src/authorization/role/domain/role';
+import { Permission } from '../../src/authorization/permission/domain/permission';
+import { RoleRepository } from '../../src/authorization/role/application/ports/role.repository';
 
 export class AuthHelper {
   private accessToken: string;

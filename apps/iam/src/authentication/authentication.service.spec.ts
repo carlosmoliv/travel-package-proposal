@@ -1,13 +1,11 @@
 import { mock, MockProxy } from 'jest-mock-extended';
 import { faker } from '@faker-js/faker';
-import { of } from 'rxjs';
 
 import { Test, TestingModule } from '@nestjs/testing';
 import { UnauthorizedException } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { ClientProxy } from '@nestjs/microservices';
 
-import { User } from '@app/common/domain/user';
+import { User } from '../user/domain/user';
 
 import { AuthenticationService } from './authentication.service';
 import { HashingService } from '../hashing/hashing.service';
@@ -16,7 +14,7 @@ import { SignInInput } from './inputs/sign-in.input';
 import { TokenService } from '../token/token.service';
 import { RefreshTokenIdsStorage } from './refresh-token-ids/refresh-token-ids.storage';
 import { RefreshTokenInput } from './inputs/refresh-token.input';
-import { USER_SERVICE } from '../iam.constants';
+import { UserService } from '../user/application/user.service';
 
 const mockRefreshTokenIdsStorage = {
   insert: jest.fn(),
@@ -28,14 +26,13 @@ describe('AuthenticationService', () => {
   let sut: AuthenticationService;
   let hashingService: MockProxy<HashingService>;
   let tokenService: MockProxy<TokenService>;
-  let userService: MockProxy<ClientProxy>;
+  let userService: MockProxy<UserService>;
   let refreshTokenIdsStorage: jest.Mocked<RefreshTokenIdsStorage>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [ConfigModule.forRoot({})],
       providers: [
-        { provide: USER_SERVICE, useValue: mock<ClientProxy>() },
         AuthenticationService,
         { provide: HashingService, useValue: mock() },
         { provide: TokenService, useValue: mock() },
@@ -43,11 +40,15 @@ describe('AuthenticationService', () => {
           provide: RefreshTokenIdsStorage,
           useValue: mockRefreshTokenIdsStorage,
         },
+        {
+          provide: UserService,
+          useValue: mock(),
+        },
       ],
     }).compile();
 
     sut = module.get<AuthenticationService>(AuthenticationService);
-    userService = module.get<MockProxy<ClientProxy>>(USER_SERVICE);
+    userService = module.get<MockProxy<UserService>>(UserService);
     hashingService = module.get<MockProxy<HashingService>>(HashingService);
     tokenService = module.get<MockProxy<TokenService>>(TokenService);
     refreshTokenIdsStorage = module.get(RefreshTokenIdsStorage);
@@ -65,11 +66,11 @@ describe('AuthenticationService', () => {
     });
 
     test('Sign up of a new user', async () => {
-      userService.send.mockReturnValueOnce(of(undefined));
+      userService.create.mockResolvedValueOnce();
 
       await sut.signUp(input);
 
-      expect(userService.send).toHaveBeenCalledWith('user.create', input);
+      expect(userService.create).toHaveBeenCalledWith(input);
     });
   });
 
@@ -90,7 +91,7 @@ describe('AuthenticationService', () => {
 
     test('Authenticate User returning the accessToken and refreshToken', async () => {
       // Arrange
-      userService.send.mockReturnValueOnce(of(user));
+      userService.verifyUserCredentials.mockResolvedValueOnce(user);
       hashingService.compare.mockResolvedValueOnce(true);
       tokenService.generate.mockResolvedValueOnce('generated_access_token');
       tokenService.generate.mockResolvedValueOnce('generated_refresh_token');
@@ -125,7 +126,7 @@ describe('AuthenticationService', () => {
       user.email = 'any_email@email.com';
       user.password = 'hashed_password';
 
-      userService.send.mockReturnValueOnce(of(user));
+      userService.findById.mockResolvedValueOnce(user);
       tokenService.validateAndDecode.mockResolvedValueOnce({
         userId: 'any_id',
         refreshTokenId: 'refresh_token_id',
@@ -151,7 +152,7 @@ describe('AuthenticationService', () => {
         userId: 'any_id',
         refreshTokenId: 'refresh_token_id',
       });
-      userService.send.mockReturnValueOnce(of(undefined));
+      userService.findById.mockReturnValueOnce(undefined);
 
       // Act and Assert
       await expect(sut.refreshTokens(payload)).rejects.toThrow(
@@ -167,7 +168,7 @@ describe('AuthenticationService', () => {
       user.name = 'any_name';
       user.email = 'any_email@email.com';
       user.password = 'hashed_password';
-      userService.send.mockReturnValueOnce(of(user));
+      userService.findById.mockResolvedValueOnce(user);
       const regeneratedTokens = sut.refreshTokens(payload);
 
       // Act and Assert
@@ -180,7 +181,7 @@ describe('AuthenticationService', () => {
       user.name = 'any_name';
       user.email = 'any_email@email.com';
       user.password = 'hashed_password';
-      userService.send.mockReturnValueOnce(of(user));
+      userService.findById.mockResolvedValueOnce(user);
       tokenService.validateAndDecode.mockResolvedValueOnce({
         userId: 'any_id',
         refreshTokenId: 'refresh_token_id',

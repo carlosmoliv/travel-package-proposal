@@ -1,9 +1,11 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { MockProxy, mock } from 'jest-mock-extended';
+
+import { Test, TestingModule } from '@nestjs/testing';
+
+import { CacheStorageService } from '@app/common/cache-storage/cache-storage.service';
 
 import { RefreshTokenIdsStorage } from './refresh-token-ids.storage';
 import { InvalidateRefreshTokenError } from './invalidate-refresh-token.error';
-import { CacheStorageService } from '@app/common/cache-storage/cache-storage.service';
 
 describe('RefreshTokenIdsStorageService', () => {
   let sut: RefreshTokenIdsStorage;

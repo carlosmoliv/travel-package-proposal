@@ -1,6 +1,9 @@
 <h1 style="text-align: center;">Travel Package Proposal API </h1>
 
-Note: The API is under construction. 
+Notes: 
+- The API is currently under construction.
+- I decided to implement microservices, serverless architecture, and related functionalities to gain a deeper understanding of how these components work together in a real-world project.
+  As part of this process, I'm refactoring the existing monolithic structure into microservices. 
 
 ## :bulb: About the project
 
@@ -11,10 +14,16 @@ For now, I've been considering the following approaches:
 - Writing unit tests for services, repositories, domain classes containing crucial logic, utility classes, etc.
 - Integration/e2e tests for endpoints using real implementations as much as possible.
 - Using Docker to construct the services environment every time an e2e test is executed.
-- Implementing a dedicated layer for IAM.
+- Implementing a dedicated microservice for IAM.
 - Implementing authentication using email and password, social login with Google, and also 2FA feature.
 - Implementing dynamic refresh tokens including in-memory token storage.
 - Implementing a more robust authorization flow with permissions and roles.
+- 
+- 
+
+## :spiral_notepad: Architecture
+
+- **I'll update here soon.**
 
 ## :spiral_notepad: Requirements
 
@@ -22,7 +31,7 @@ For now, I've been considering the following approaches:
 
 ## :page_facing_up: Documentation
 
-- You can access the Swagger documentation at http://localhost:3000/api.
+- **I'll update here soon.**
 
 ## :white_square_button: How to Run
 

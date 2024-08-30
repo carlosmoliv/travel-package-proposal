@@ -3,11 +3,11 @@ import { mock, MockProxy } from 'jest-mock-extended';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { RoleService } from './role.service';
-import { RoleRepository } from '../../ports/role.repository';
+import { RoleRepository } from './ports/role.repository';
 import { CreateRoleInput } from '../inputs/create-role.input';
 import { AddPermissionsToRoleInput } from '../inputs/add-permissions-to-role.input';
-import { Role } from '../../role';
-import { Permission } from '../../permission';
+import { Role } from '../domain/role';
+import { Permission } from '../../permission/domain/permission';
 import { ExamplePermission } from '../../enums/example-permission.enum';
 import { PermissionService } from '../../permission/application/permission.service';
 import { RoleName } from '../../enums/role-name.enum';

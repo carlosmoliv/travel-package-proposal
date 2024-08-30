@@ -19,16 +19,13 @@ import { SignUpDto } from '../../src/authentication/dtos/sign-up.dto';
 import { fakeSignUpDto } from '../fakes/dtos/make-fake-signup-dto';
 import { OrmUser } from '../../src/user/infrastructure/persistance/orm/entities/orm-user.entity';
 import { RefreshTokenDto } from '../../src/authentication/dtos/refresh-token.dto';
+import { UserService } from '../../src/user/application/user.service';
 
 describe('Authentication (e2e)', () => {
   let app: INestApplication;
   let cacheStorageService: CacheStorageService;
 
   beforeAll(async () => {
-    console.log(
-      'DATABASE PORT TESTING LOGGING ===>',
-      +process.env.DATABASE_PORT,
-    );
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
         TypeOrmModule.forRoot({
@@ -161,9 +158,11 @@ describe('Authentication (e2e)', () => {
         .post('/authentication/sign-in')
         .send(signInDto);
 
-      // const user = await userRepository.findByEmail(signInDto.email);
-      // const savedToStorage = await cacheStorageService.get(`user-${user.id}`);
-      // expect(savedToStorage).toBeTruthy();
+      const user = await app
+        .get<UserService>(UserService)
+        .findByEmail(signInDto.email);
+      const savedToStorage = await cacheStorageService.get(`user-${user.id}`);
+      expect(savedToStorage).toBeTruthy();
     });
 
     test.each(['email', 'password'])(

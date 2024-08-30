@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
-import { Role } from '../../role';
-import { RoleRepository } from '../../ports/role.repository';
+import { Role } from '../domain/role';
+import { RoleRepository } from './ports/role.repository';
 import { CreateRoleInput } from '../inputs/create-role.input';
 import { AddPermissionsToRoleInput } from '../inputs/add-permissions-to-role.input';
 import { PermissionService } from '../../permission/application/permission.service';

@@ -1,5 +1,5 @@
-import { Role } from '../role';
-import { RoleName } from '../enums/role-name.enum';
+import { Role } from '../../domain/role';
+import { RoleName } from '../../../enums/role-name.enum';
 
 export abstract class RoleRepository {
   abstract save(role: Role): Promise<Role>;

@@ -12,9 +12,9 @@ import { AssignRolesToUserInput } from './inputs/assign-roles-to-user.input';
 import { PermissionService } from '../../authorization/permission/application/permission.service';
 import { RoleService } from '../../authorization/role/application/role.service';
 import { HashingService } from '../../hashing/hashing.service';
-import { User } from '@app/common/domain/user';
-import { Permission } from '../../authorization/permission';
-import { Role } from '../../authorization/role';
+import { User } from '../domain/user';
+import { Permission } from '../../authorization/permission/domain/permission';
+import { Role } from '../../authorization/role/domain/role';
 import { RoleName } from '../../authorization/enums/role-name.enum';
 import { ExamplePermission } from '../../authorization/enums/example-permission.enum';
 

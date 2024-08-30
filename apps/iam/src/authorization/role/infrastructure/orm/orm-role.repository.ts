@@ -3,8 +3,8 @@ import { In, Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { RoleRepository } from '../../../ports/role.repository';
-import { Role } from '../../../role';
+import { RoleRepository } from '../../application/ports/role.repository';
+import { Role } from '../../domain/role';
 import { OrmRole } from './orm-role.entity';
 import { RoleName } from '../../../enums/role-name.enum';
 

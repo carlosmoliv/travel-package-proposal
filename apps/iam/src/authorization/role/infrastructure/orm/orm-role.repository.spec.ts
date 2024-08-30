@@ -4,7 +4,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
 import { OrmRoleRepository } from './orm-role.repository';
 import { OrmRole } from './orm-role.entity';
-import { Role } from '../../../role';
+import { Role } from '../../domain/role';
 import { RoleName } from '../../../enums/role-name.enum';
 
 type MockRepository<T = any> = Partial<Record<keyof Repository<T>, jest.Mock>>;

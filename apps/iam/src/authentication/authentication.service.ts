@@ -10,7 +10,7 @@ import { RefreshTokenData } from '../interfaces/refresh-token-data.interface';
 import { RefreshTokenIdsStorage } from './refresh-token-ids/refresh-token-ids.storage';
 import { RefreshTokenInput } from './inputs/refresh-token.input';
 import { InvalidateRefreshTokenError } from './refresh-token-ids/invalidate-refresh-token.error';
-import { User } from '@app/common/domain/user';
+import { User } from '../user/domain/user';
 import { UserService } from '../user/application/user.service';
 
 @Injectable()

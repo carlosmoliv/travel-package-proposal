@@ -1,4 +1,4 @@
-import { PermissionType } from './permission.type';
+import { PermissionType } from '../../permission.type';
 
 export class Permission {
   constructor(

@@ -3,9 +3,9 @@ import { In, Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { PermissionRepository } from '../../../ports/permission.repository';
+import { PermissionRepository } from '../../application/ports/permission.repository';
 import { OrmPermission } from './orm-permission.entity';
-import { Permission } from '../../../permission';
+import { Permission } from '../../domain/permission';
 import { PermissionMapper } from './permission.mapper';
 
 @Injectable()

@@ -1,4 +1,4 @@
-import { Permission } from '../../../permission';
+import { Permission } from '../../domain/permission';
 import { OrmPermission } from './orm-permission.entity';
 
 export class PermissionMapper {

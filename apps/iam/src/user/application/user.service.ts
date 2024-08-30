@@ -12,7 +12,7 @@ import { UserFactory } from '../domain/factories/user.factory';
 import { AssignRolesToUserInput } from './inputs/assign-roles-to-user.input';
 import { RoleName } from '../../authorization/enums/role-name.enum';
 import { PermissionType } from '../../authorization/permission.type';
-import { User } from '@app/common/domain/user';
+import { User } from '../domain/user';
 import { RoleService } from '../../authorization/role/application/role.service';
 import { PermissionService } from '../../authorization/permission/application/permission.service';
 
