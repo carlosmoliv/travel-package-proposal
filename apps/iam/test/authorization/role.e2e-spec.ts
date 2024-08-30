@@ -5,18 +5,20 @@ import { faker } from '@faker-js/faker';
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
-
-import { IamModule } from '../../../src/iam/iam.module';
-import { RoleName } from '../../../src/iam/authorization/enums/role-name.enum';
-import { OrmRole } from '../../../src/iam/authorization/orm/entities/orm-role.entity';
-import { OrmHelper } from '../../helpers/orm.helper';
-import { AddPermissionsToRoleDto } from '../../../src/iam/authorization/dtos/add-permissions-to-role.dto';
-import { ExamplePermission } from '../../../src/iam/authorization/enums/example-permission.enum';
-import { OrmPermission } from '../../../src/iam/authorization/orm/entities/orm-permission.entity';
-import { AuthHelper } from '../../helpers/auth.helper';
-import { CreateRoleDto } from '../../../src/iam/authorization/dtos/create-role.dto';
-import { RolePermission } from '../../../src/iam/authorization/role.permissions';
-import { OrmUser } from '../../../src/user/infrastructure/persistance/orm/entities/orm-user.entity';
+import { OrmPermission } from '../../src/authorization/permission/infrastructure/orm/orm-permission.entity';
+import { OrmRole } from '../../src/authorization/role/infrastructure/orm/orm-role.entity';
+import { IamModule } from '../../src/iam.module';
+import { RoleModule } from '../../src/authorization/role/role.module';
+import { OrmUser } from '../../src/user/infrastructure/persistance/orm/entities/orm-user.entity';
+import { AuthHelper } from '../helpers/auth.helper';
+import { OrmHelper } from '@app/common/test/helpers/orm.helper';
+import { RoleName } from '../../src/authorization/enums/role-name.enum';
+import { RolePermission } from '../../src/authorization/enums/role.permissions';
+import { CreateRoleDto } from '../../src/authorization/role/presenters/dtos/create-role.dto';
+import { ExamplePermission } from '../../src/authorization/enums/example-permission.enum';
+import { AddPermissionsToRoleDto } from '../../src/authorization/role/presenters/dtos/add-permissions-to-role.dto';
+import { UserModule } from '../../src/user/user.module';
+import { PermissionModule } from '../../src/authorization/permission/permission.module';
 
 describe('Roles (e2e)', () => {
   let app: INestApplication;
@@ -39,7 +41,9 @@ describe('Roles (e2e)', () => {
           synchronize: true,
           logging: false,
         }),
-        IamModule,
+        RoleModule,
+        UserModule,
+        PermissionModule,
       ],
     }).compile();
     app = moduleFixture.createNestApplication();

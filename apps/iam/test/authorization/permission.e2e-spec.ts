@@ -5,14 +5,15 @@ import { faker } from '@faker-js/faker';
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
-
-import { IamModule } from '../../../src/iam/iam.module';
-import { OrmHelper } from '../../helpers/orm.helper';
-import { OrmPermission } from '../../../src/iam/authorization/orm/entities/orm-permission.entity';
-import { ExamplePermission } from '../../../src/iam/authorization/enums/example-permission.enum';
-import { CreatePermissionDto } from '../../../src/iam/authorization/dtos/create-permission.dto';
-import { OrmUser } from '../../../src/user/infrastructure/persistance/orm/entities/orm-user.entity';
-import { OrmRole } from '../../../src/iam/authorization/orm/entities/orm-role.entity';
+import { OrmPermission } from '../../src/authorization/permission/infrastructure/orm/orm-permission.entity';
+import { PermissionModule } from '../../src/authorization/permission/permission.module';
+import { OrmHelper } from '@app/common/test/helpers/orm.helper';
+import { OrmUser } from '../../src/user/infrastructure/persistance/orm/entities/orm-user.entity';
+import { OrmRole } from '../../src/authorization/role/infrastructure/orm/orm-role.entity';
+import { CreatePermissionDto } from '../../src/authorization/permission/presenters/dtos/create-permission.dto';
+import { ExamplePermission } from '../../src/authorization/enums/example-permission.enum';
+import { IamModule } from '../../src/iam.module';
+import { UserModule } from '../../src/user/user.module';
 
 describe('Permissions (e2e)', () => {
   let app: INestApplication;
@@ -32,7 +33,8 @@ describe('Permissions (e2e)', () => {
           synchronize: true,
           logging: false,
         }),
-        IamModule,
+        UserModule,
+        PermissionModule,
       ],
     }).compile();
     app = moduleFixture.createNestApplication();

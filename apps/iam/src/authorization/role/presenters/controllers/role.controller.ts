@@ -12,12 +12,14 @@ import { RoleService } from '../../application/role.service';
 import { AddPermissionsToRoleDto } from '../dtos/add-permissions-to-role.dto';
 import { Permissions } from '../../../decorators/permissions';
 import { RolePermission } from '../../../enums/role.permissions';
+import { Public } from '../../../../authentication/decorators/public.decorator';
 
 @Controller('roles')
 export class RoleController {
   constructor(private readonly rolesService: RoleService) {}
 
-  @Permissions(RolePermission.CreateRole)
+  // @Permissions(RolePermission.CreateRole)
+  @Public()
   @Post()
   async create(@Body() createRoleDto: CreateRoleDto): Promise<void> {
     await this.rolesService.create(createRoleDto);
