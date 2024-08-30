@@ -1,9 +1,9 @@
 <h1 style="text-align: center;">Travel Package Proposal API </h1>
 
-Notes: 
-- The API is currently under construction.
-- I decided to implement microservices, serverless architecture, and related functionalities to gain a deeper understanding of how these components work together in a real-world project.
-  As part of this process, I'm refactoring the existing monolithic structure into microservices. 
+### Notes: 
+- The project is currently under construction.
+- I'm currently refactoring the existing monolithic structure into microservices. 
+   
 
 ## :bulb: About the project
 
@@ -18,10 +18,11 @@ For now, I've been considering the following approaches:
 - Implementing authentication using email and password, social login with Google, and also 2FA feature.
 - Implementing dynamic refresh tokens including in-memory token storage.
 - Implementing a more robust authorization flow with permissions and roles.
-- 
-- 
+- New Focus: 
+  - Incorporating microservices, serverless architecture, and related functionalities to gain a deeper understanding of how these components work together in a real-world project, including refactoring existing monolithic components into microservices. 
+  - Deploying the application using AWS cloud features, with a particular focus on Lambda functions for serverless execution.
 
-## :spiral_notepad: Architecture
+## :spiral_notepad: System Architecture
 
 - **I'll update here soon.**
 
