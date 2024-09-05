@@ -10,6 +10,8 @@
 - Microservices
 - Shared libraries
 - Unit tests and integration/e2e tests
+- Each microservice with their own Dockerfile
+- 
 
 ## :spiral_notepad: System Architecture
 
