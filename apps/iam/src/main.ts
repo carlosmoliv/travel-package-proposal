@@ -10,7 +10,7 @@ async function bootstrap() {
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.RMQ,
     options: {
-      urls: ['amqp://localhost:5672'],
+      urls: [process.env.RABBITMQ_URI],
       queue: 'iam_queue',
     },
   });
@@ -24,7 +24,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api', app, document);
 
-  await app.listen(3001);
+  await app.listen(process.env.PORT);
   await app.startAllMicroservices();
   console.log(`Application is running on: ${await app.getUrl()}`);
 }
