@@ -30,6 +30,15 @@
       "compilerOptions": {
         "tsConfigPath": "libs/common/tsconfig.lib.json"
       }
+    },
+    "travel-package": {
+      "type": "application",
+      "root": "apps/travel-package",
+      "entryFile": "main",
+      "sourceRoot": "apps/travel-package/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/travel-package/tsconfig.app.json"
+      }
     }
   }
 }
