@@ -3,6 +3,6 @@ import { TravelPackageModule } from './travel-package.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(TravelPackageModule);
-  await app.listen(3000);
+  await app.listen(process.env.PORT);
 }
 bootstrap();
