@@ -6,7 +6,7 @@ import { Reflector } from '@nestjs/core';
 import { ExecutionContext, UnauthorizedException } from '@nestjs/common';
 
 import { AuthenticationGuard } from './authentication.guard';
-import { TokenService } from '../../../token/token.service';
+import { TokenService } from '../../../shared/token/token.service';
 import { RoleName } from '../../../authorization/role/domain/enums/role-name.enum';
 
 describe('AuthenticationGuard', () => {

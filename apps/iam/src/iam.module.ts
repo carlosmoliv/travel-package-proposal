@@ -12,10 +12,10 @@ import { RefreshTokenIdsStorage } from './authentication/refresh-token-ids/refre
 import { typeOrmAsyncConfig } from './config/orm.config';
 import { UserModule } from './user/user.module';
 import { AuthenticationGuard } from './authentication/guards/authentication/authentication.guard';
-import { TokenService } from './token/token.service';
-import { JwtService } from './token/jwt/jwt.service';
-import { HashingService } from './hashing/hashing.service';
-import { BcryptService } from './hashing/bcrypt/bcrypt.service';
+import { TokenService } from './shared/token/token.service';
+import { JwtService } from './shared/token/jwt/jwt.service';
+import { HashingService } from './shared/hashing/hashing.service';
+import { BcryptService } from './shared/hashing/bcrypt/bcrypt.service';
 
 @Module({
   imports: [

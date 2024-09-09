@@ -6,7 +6,7 @@ import { Reflector } from '@nestjs/core';
 import { ExecutionContext } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { ActiveUserData } from '../../interfaces/active-user-data.interface';
+import { ActiveUserData } from '../../shared/interfaces/active-user-data.interface';
 import { PermissionGuard } from './permission.guard';
 import { ExamplePermission } from '../permission/domain/enums/example-permission.enum';
 import { PermissionType } from '../permission.type';

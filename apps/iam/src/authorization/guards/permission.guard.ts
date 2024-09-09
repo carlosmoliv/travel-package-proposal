@@ -6,8 +6,8 @@ import { ClientProxy } from '@nestjs/microservices';
 
 import { PermissionType } from '../permission.type';
 import { PERMISSIONS_KEY } from '../decorators/permissions';
-import { ActiveUserData } from '../../interfaces/active-user-data.interface';
-import { REQUEST_USER_KEY } from '../../iam.constants';
+import { ActiveUserData } from '../../shared/interfaces/active-user-data.interface';
+import { REQUEST_USER_KEY } from '../../shared/iam.constants';
 
 @Injectable()
 export class PermissionGuard implements CanActivate {

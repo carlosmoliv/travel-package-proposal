@@ -4,9 +4,9 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 
 import { SignUpInput } from './inputs/sign-up.input';
 import { SignInInput } from './inputs/sign-in.input';
-import { TokenService } from '../token/token.service';
-import { ActiveUserData } from '../interfaces/active-user-data.interface';
-import { RefreshTokenData } from '../interfaces/refresh-token-data.interface';
+import { TokenService } from '../shared/token/token.service';
+import { ActiveUserData } from '../shared/interfaces/active-user-data.interface';
+import { RefreshTokenData } from '../shared/interfaces/refresh-token-data.interface';
 import { RefreshTokenIdsStorage } from './refresh-token-ids/refresh-token-ids.storage';
 import { RefreshTokenInput } from './inputs/refresh-token.input';
 import { InvalidateRefreshTokenError } from './refresh-token-ids/invalidate-refresh-token.error';

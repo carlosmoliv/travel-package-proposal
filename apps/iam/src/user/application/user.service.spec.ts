@@ -11,7 +11,7 @@ import { CreateUserInput } from './inputs/create-user.input';
 import { AssignRolesToUserInput } from './inputs/assign-roles-to-user.input';
 import { PermissionService } from '../../authorization/permission/application/permission.service';
 import { RoleService } from '../../authorization/role/application/role.service';
-import { HashingService } from '../../hashing/hashing.service';
+import { HashingService } from '../../shared/hashing/hashing.service';
 import { User } from '../domain/user';
 import { Permission } from '../../authorization/permission/domain/permission';
 import { Role } from '../../authorization/role/domain/role';

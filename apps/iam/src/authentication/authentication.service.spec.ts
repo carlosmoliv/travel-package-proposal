@@ -8,10 +8,10 @@ import { ConfigModule } from '@nestjs/config';
 import { User } from '../user/domain/user';
 
 import { AuthenticationService } from './authentication.service';
-import { HashingService } from '../hashing/hashing.service';
+import { HashingService } from '../shared/hashing/hashing.service';
 import { SignUpInput } from './inputs/sign-up.input';
 import { SignInInput } from './inputs/sign-in.input';
-import { TokenService } from '../token/token.service';
+import { TokenService } from '../shared/token/token.service';
 import { RefreshTokenIdsStorage } from './refresh-token-ids/refresh-token-ids.storage';
 import { RefreshTokenInput } from './inputs/refresh-token.input';
 import { UserService } from '../user/application/user.service';

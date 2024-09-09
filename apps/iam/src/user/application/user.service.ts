@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 
 import { UserRepository } from './ports/user.repository';
-import { HashingService } from '../../hashing/hashing.service';
+import { HashingService } from '../../shared/hashing/hashing.service';
 import { CreateUserInput } from './inputs/create-user.input';
 import { UserFactory } from '../domain/factories/user.factory';
 import { AssignRolesToUserInput } from './inputs/assign-roles-to-user.input';
