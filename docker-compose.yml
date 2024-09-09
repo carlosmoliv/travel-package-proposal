@@ -12,15 +12,43 @@ services:
     volumes:
       - .:/usr/src/app
     depends_on:
-      - postgres
+      - iam-postgres-db
       - redis
-  postgres:
+      - rabbitmq
+  iam-postgres-db:
     image: postgres
     ports:
       - "5432:5432"
     environment:
       POSTGRES_PASSWORD: pass123
-      POSTGRES_DB: travel-package-proposal-db
+      POSTGRES_DB: iam-db
+    volumes:
+      - iam-postgres-data:/var/lib/postgresql/data
+
+  travel-package:
+    build:
+      context: .
+      dockerfile: ./apps/travel-package/Dockerfile
+      target: development
+    command: npm run start:dev travel-package
+    env_file:
+      - ./apps/travel-package/.env
+    ports:
+      - '3002:3002'
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - travel-package-postgres-db
+  travel-package-postgres-db:
+    image: postgres
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_PASSWORD: pass123
+      POSTGRES_DB: travel-package-db
+    volumes:
+      - travel-package-postgres-data:/var/lib/postgresql/data
+
   redis:
     image: redis
     ports:
@@ -30,7 +58,7 @@ services:
     ports:
       - "5672:5672"
 
-  # E2e/integration tests
+   # e2e / integration tests
 #  test-postgres:
 #    image: postgres
 #    ports:
@@ -42,3 +70,7 @@ services:
 #    image: redis
 #    ports:
 #      - "6380:6379"
+
+volumes:
+  iam-postgres-data:
+  travel-package-postgres-data:
