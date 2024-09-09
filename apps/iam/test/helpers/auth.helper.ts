@@ -5,7 +5,7 @@ import { INestApplication } from '@nestjs/common';
 
 import { CreateUserInput } from '../../src/user/application/inputs/create-user.input';
 import { PermissionType } from '../../src/authorization/permission.type';
-import { RoleName } from '../../src/authorization/enums/role-name.enum';
+import { RoleName } from '../../src/authorization/role/domain/enums/role-name.enum';
 import { UserService } from '../../src/user/application/user.service';
 import { SignInDto } from '../../src/authentication/dtos/sign-in.dto';
 import { Role } from '../../src/authorization/role/domain/role';

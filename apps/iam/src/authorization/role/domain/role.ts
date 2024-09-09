@@ -1,4 +1,4 @@
-import { RoleName } from '../../enums/role-name.enum';
+import { RoleName } from './enums/role-name.enum';
 import { Permission } from '../../permission/domain/permission';
 
 export class Role {

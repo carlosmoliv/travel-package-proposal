@@ -11,7 +11,7 @@ import { OrmHelper } from '@app/common/test/helpers/orm.helper';
 import { OrmUser } from '../../src/user/infrastructure/persistance/orm/entities/orm-user.entity';
 import { OrmRole } from '../../src/authorization/role/infrastructure/orm/orm-role.entity';
 import { CreatePermissionDto } from '../../src/authorization/permission/presenters/dtos/create-permission.dto';
-import { ExamplePermission } from '../../src/authorization/enums/example-permission.enum';
+import { ExamplePermission } from '../../src/authorization/permission/domain/enums/example-permission.enum';
 import { IamModule } from '../../src/iam.module';
 import { UserModule } from '../../src/user/user.module';
 

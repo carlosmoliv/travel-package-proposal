@@ -8,9 +8,9 @@ import { CreateRoleInput } from '../inputs/create-role.input';
 import { AddPermissionsToRoleInput } from '../inputs/add-permissions-to-role.input';
 import { Role } from '../domain/role';
 import { Permission } from '../../permission/domain/permission';
-import { ExamplePermission } from '../../enums/example-permission.enum';
+import { ExamplePermission } from '../../permission/domain/enums/example-permission.enum';
 import { PermissionService } from '../../permission/application/permission.service';
-import { RoleName } from '../../enums/role-name.enum';
+import { RoleName } from '../domain/enums/role-name.enum';
 
 describe('RolesService', () => {
   let sut: RoleService;

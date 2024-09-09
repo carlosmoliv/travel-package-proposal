@@ -5,7 +5,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { OrmRoleRepository } from './orm-role.repository';
 import { OrmRole } from './orm-role.entity';
 import { Role } from '../../domain/role';
-import { RoleName } from '../../../enums/role-name.enum';
+import { RoleName } from '../../domain/enums/role-name.enum';
 
 type MockRepository<T = any> = Partial<Record<keyof Repository<T>, jest.Mock>>;
 const createMockRepository = <T = any>(): MockRepository<T> => ({

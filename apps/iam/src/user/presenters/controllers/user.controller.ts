@@ -10,7 +10,7 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 
 import { UserService } from '../../application/user.service';
-import { UserPermission } from '../../../authorization/enums/user.permissions';
+import { UserPermission } from '../../domain/enums/user.permissions';
 import { AssignRolesToUserDto } from '../dtos/assign-roles-to-user.dto';
 import { ActiveUserData } from '../../../interfaces/active-user-data.interface';
 import { ActiveUser } from '../../../decorators/active-user';

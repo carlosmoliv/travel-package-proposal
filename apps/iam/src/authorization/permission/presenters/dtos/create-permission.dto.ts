@@ -1,7 +1,7 @@
 import { IsEnum, MaxLength } from 'class-validator';
 
 import { PermissionType } from '../../../permission.type';
-import { ExamplePermission } from '../../../enums/example-permission.enum';
+import { ExamplePermission } from '../../domain/enums/example-permission.enum';
 
 export class CreatePermissionDto {
   @IsEnum(ExamplePermission)

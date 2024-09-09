@@ -6,7 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { RoleRepository } from '../../application/ports/role.repository';
 import { Role } from '../../domain/role';
 import { OrmRole } from './orm-role.entity';
-import { RoleName } from '../../../enums/role-name.enum';
+import { RoleName } from '../../domain/enums/role-name.enum';
 
 @Injectable()
 export class OrmRoleRepository implements RoleRepository {
