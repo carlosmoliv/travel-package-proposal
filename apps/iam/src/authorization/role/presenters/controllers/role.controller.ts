@@ -10,7 +10,7 @@ import {
 import { CreateRoleDto } from '../dtos/create-role.dto';
 import { RoleService } from '../../application/role.service';
 import { AddPermissionsToRoleDto } from '../dtos/add-permissions-to-role.dto';
-import { Permissions } from '../../../decorators/permissions';
+import { Permissions } from '@app/common/iam/authorization/decorators/permissions';
 import { RolePermission } from '../../domain/enums/role.permissions';
 import { Public } from '../../../../authentication/decorators/public.decorator';
 
