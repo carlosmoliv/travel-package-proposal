@@ -11,11 +11,14 @@ import { AuthenticationController } from './authentication/authentication.contro
 import { RefreshTokenIdsStorage } from './authentication/refresh-token-ids/refresh-token-ids.storage';
 import { typeOrmAsyncConfig } from './config/orm.config';
 import { UserModule } from './user/user.module';
-import { AuthenticationGuard } from './authentication/guards/authentication/authentication.guard';
+import { AuthenticationGuard } from '@app/common/iam/guards/authentication-guard/authentication.guard';
 import { TokenService } from './shared/token/token.service';
 import { JwtService } from './shared/token/jwt/jwt.service';
 import { HashingService } from './shared/hashing/hashing.service';
 import { BcryptService } from './shared/hashing/bcrypt/bcrypt.service';
+import { IamController } from './iam.controller';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { IAM_SERVICE } from '@app/common/iam/iam.constants';
 
 @Module({
   imports: [
@@ -29,6 +32,16 @@ import { BcryptService } from './shared/hashing/bcrypt/bcrypt.service';
     TypeOrmModule.forRootAsync(typeOrmAsyncConfig),
     CommonModule,
     forwardRef(() => UserModule),
+    ClientsModule.register([
+      {
+        name: IAM_SERVICE,
+        transport: Transport.RMQ,
+        options: {
+          urls: [process.env.RABBITMQ_URL],
+          queue: 'iam_queue',
+        },
+      },
+    ]),
   ],
   providers: [
     RefreshTokenIdsStorage,
@@ -46,7 +59,7 @@ import { BcryptService } from './shared/hashing/bcrypt/bcrypt.service';
       useClass: BcryptService,
     },
   ],
-  controllers: [AuthenticationController],
+  controllers: [AuthenticationController, IamController],
   exports: [HashingService],
 })
 export class IamModule {}

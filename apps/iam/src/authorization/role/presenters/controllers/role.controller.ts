@@ -10,9 +10,9 @@ import {
 import { CreateRoleDto } from '../dtos/create-role.dto';
 import { RoleService } from '../../application/role.service';
 import { AddPermissionsToRoleDto } from '../dtos/add-permissions-to-role.dto';
-import { Permissions } from '@app/common/iam/authorization/decorators/permissions';
+import { Permissions } from '@app/common/iam/decorators/permissions.decorator';
 import { RolePermission } from '../../domain/enums/role.permissions';
-import { Public } from '../../../../authentication/decorators/public.decorator';
+import { Public } from '@app/common/iam/decorators/public.decorator';
 
 @Controller('roles')
 export class RoleController {

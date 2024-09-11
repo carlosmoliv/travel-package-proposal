@@ -5,7 +5,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { SignUpInput } from './inputs/sign-up.input';
 import { SignInInput } from './inputs/sign-in.input';
 import { TokenService } from '../shared/token/token.service';
-import { ActiveUserData } from '../shared/interfaces/active-user-data.interface';
+import { ActiveUserData } from '@app/common/iam/interfaces/active-user-data.interface';
 import { RefreshTokenData } from '../shared/interfaces/refresh-token-data.interface';
 import { RefreshTokenIdsStorage } from './refresh-token-ids/refresh-token-ids.storage';
 import { RefreshTokenInput } from './inputs/refresh-token.input';

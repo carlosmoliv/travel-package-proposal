@@ -11,7 +11,7 @@ import { CreateUserInput } from './inputs/create-user.input';
 import { UserFactory } from '../domain/factories/user.factory';
 import { AssignRolesToUserInput } from './inputs/assign-roles-to-user.input';
 import { RoleName } from '../../authorization/role/domain/enums/role-name.enum';
-import { PermissionType } from '../../authorization/permission.type';
+import { PermissionType } from '@app/common/iam/permission.type';
 import { User } from '../domain/user';
 import { RoleService } from '../../authorization/role/application/role.service';
 import { PermissionService } from '../../authorization/permission/application/permission.service';

@@ -9,12 +9,13 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
+import { Permissions } from '@app/common/iam/decorators/permissions.decorator';
+import { ActiveUserData } from '@app/common/iam/interfaces/active-user-data.interface';
+
 import { UserService } from '../../application/user.service';
 import { UserPermission } from '../../domain/enums/user.permissions';
 import { AssignRolesToUserDto } from '../dtos/assign-roles-to-user.dto';
-import { ActiveUserData } from '../../../shared/interfaces/active-user-data.interface';
 import { ActiveUser } from '../../../shared/decorators/active-user';
-import { Permissions } from '@app/common/iam/authorization/decorators/permissions';
 
 @ApiTags('User')
 @Controller('users')

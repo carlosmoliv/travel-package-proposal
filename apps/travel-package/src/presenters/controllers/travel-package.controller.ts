@@ -2,8 +2,8 @@ import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 
 import { TravelPackageService } from '../../application/travel-package.service';
 import { CreateTravelPackageDto } from '../dtos/create-travel-package.dto';
-import { Permissions } from '@app/common/iam/authorization/decorators/permissions';
-import { TravelPackagePermission } from '@app/common/iam/authorization/enums/travel-package.permissions.enum';
+import { TravelPackagePermission } from '@app/common/iam/enums/travel-package.permissions.enum';
+import { Permissions } from '@app/common/iam/decorators/permissions.decorator';
 
 @Controller('travel-packages')
 export class TravelPackageController {

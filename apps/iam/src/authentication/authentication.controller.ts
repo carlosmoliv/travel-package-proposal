@@ -5,7 +5,7 @@ import { SignUpDto } from './dtos/sign-up.dto';
 import { AuthenticationService } from './authentication.service';
 import { SignInDto } from './dtos/sign-in.dto';
 import { RefreshTokenDto } from './dtos/refresh-token.dto';
-import { Public } from './decorators/public.decorator';
+import { Public } from '@app/common/iam/decorators/public.decorator';
 
 @Public()
 @ApiTags('Authentication')

@@ -4,7 +4,7 @@ import { faker } from '@faker-js/faker';
 import { INestApplication } from '@nestjs/common';
 
 import { CreateUserInput } from '../../src/user/application/inputs/create-user.input';
-import { PermissionType } from '../../src/authorization/permission.type';
+import { PermissionType } from '@app/common/iam/permission.type';
 import { RoleName } from '../../src/authorization/role/domain/enums/role-name.enum';
 import { UserService } from '../../src/user/application/user.service';
 import { SignInDto } from '../../src/authentication/dtos/sign-in.dto';

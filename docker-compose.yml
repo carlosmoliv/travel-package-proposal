@@ -39,6 +39,7 @@ services:
       - .:/usr/src/app
     depends_on:
       - travel-package-postgres-db
+      - rabbitmq
   travel-package-postgres-db:
     image: postgres
     ports:

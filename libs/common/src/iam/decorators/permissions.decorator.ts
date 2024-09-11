@@ -1,6 +1,6 @@
 import { SetMetadata } from '@nestjs/common';
 
-import { PermissionType } from '../../../../../../apps/iam/src/authorization/permission.type';
+import { PermissionType } from '../permission.type';
 
 export const PERMISSIONS_KEY = 'permissions';
 export const Permissions = (...permissions: PermissionType[]) =>

@@ -3,18 +3,21 @@ import { Request } from 'express';
 import {
   CanActivate,
   ExecutionContext,
+  Inject,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 
-import { IS_PUBLIC_KEY } from '../../decorators/public.decorator';
-import { TokenService } from '../../../shared/token/token.service';
+import { IS_PUBLIC_KEY } from '@app/common/iam/decorators/public.decorator';
+import { ClientProxy } from '@nestjs/microservices';
+import { lastValueFrom } from 'rxjs';
+import { IAM_SERVICE } from '@app/common/iam/iam.constants';
 
 @Injectable()
 export class AuthenticationGuard implements CanActivate {
   constructor(
-    private readonly tokenService: TokenService,
+    @Inject(IAM_SERVICE) private readonly client: ClientProxy,
     private reflector: Reflector,
   ) {}
 
@@ -28,8 +31,9 @@ export class AuthenticationGuard implements CanActivate {
     const token = this.extractTokenFromHeader(request);
     if (!token) throw new UnauthorizedException('Token is missing.');
     try {
-      const payload = await this.tokenService.validateAndDecode(token);
-      request['user'] = payload;
+      request['user'] = await lastValueFrom(
+        this.client.send('validate.token', { token }),
+      );
     } catch {
       throw new UnauthorizedException();
     }

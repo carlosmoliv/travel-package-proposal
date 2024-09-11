@@ -4,10 +4,10 @@ import { Reflector } from '@nestjs/core';
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 
-import { PermissionType } from '../permission.type';
-import { PERMISSIONS_KEY } from '@app/common/iam/authorization/decorators/permissions';
-import { ActiveUserData } from '../../shared/interfaces/active-user-data.interface';
-import { REQUEST_USER_KEY } from '../../shared/iam.constants';
+import { PermissionType } from '../../permission.type';
+import { PERMISSIONS_KEY } from '@app/common/iam/decorators/permissions.decorator';
+import { ActiveUserData } from '../../interfaces/active-user-data.interface';
+import { REQUEST_USER_KEY } from '../../iam.constants';
 
 @Injectable()
 export class PermissionGuard implements CanActivate {
