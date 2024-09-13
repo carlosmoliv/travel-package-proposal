@@ -8,7 +8,7 @@ import { CreateRoleInput } from '../inputs/create-role.input';
 import { AddPermissionsToRoleInput } from '../inputs/add-permissions-to-role.input';
 import { Role } from '../domain/role';
 import { Permission } from '../../permission/domain/permission';
-import { ExamplePermission } from '../../permission/domain/enums/example-permission.enum';
+import { ExamplePermission } from '@app/common/iam/enums/example-permission.enum';
 import { PermissionService } from '../../permission/application/permission.service';
 import { RoleName } from '../domain/enums/role-name.enum';
 

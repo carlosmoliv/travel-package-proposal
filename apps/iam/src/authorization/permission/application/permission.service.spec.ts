@@ -4,7 +4,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { Permission } from '../domain/permission';
 import { PermissionService } from './permission.service';
-import { ExamplePermission } from '../domain/enums/example-permission.enum';
+import { ExamplePermission } from '@app/common/iam/enums/example-permission.enum';
 import { PermissionRepository } from './ports/permission.repository';
 import { CreatePermissionInput } from './inputs/create-permission.input';
 

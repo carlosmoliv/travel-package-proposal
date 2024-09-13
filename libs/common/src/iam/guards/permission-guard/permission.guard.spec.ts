@@ -8,7 +8,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { ActiveUserData } from '../../interfaces/active-user-data.interface';
 import { PermissionGuard } from './permission.guard';
-import { ExamplePermission } from '../../../../../../apps/iam/src/authorization/permission/domain/enums/example-permission.enum';
+import { ExamplePermission } from '../../enums/example-permission.enum';
 import { PermissionType } from '../../permission.type';
 import { ClientProxy } from '@nestjs/microservices';
 import { of } from 'rxjs';

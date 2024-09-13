@@ -13,9 +13,9 @@ import { OrmUser } from '../../src/user/infrastructure/persistance/orm/entities/
 import { AuthHelper } from '../helpers/auth.helper';
 import { OrmHelper } from '@app/common/test/helpers/orm.helper';
 import { RoleName } from '../../src/authorization/role/domain/enums/role-name.enum';
-import { RolePermission } from '../../src/authorization/role/domain/enums/role.permissions';
+import { RolePermission } from '@app/common/iam/enums/role.permissions';
 import { CreateRoleDto } from '../../src/authorization/role/presenters/dtos/create-role.dto';
-import { ExamplePermission } from '../../src/authorization/permission/domain/enums/example-permission.enum';
+import { ExamplePermission } from '@app/common/iam/enums/example-permission.enum';
 import { AddPermissionsToRoleDto } from '../../src/authorization/role/presenters/dtos/add-permissions-to-role.dto';
 import { UserModule } from '../../src/user/user.module';
 import { PermissionModule } from '../../src/authorization/permission/permission.module';

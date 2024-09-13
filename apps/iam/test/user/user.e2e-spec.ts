@@ -17,7 +17,7 @@ import { IamModule } from '../../src/iam.module';
 import { OrmHelper } from '@app/common/test/helpers/orm.helper';
 import { OrmPermission } from '../../src/authorization/permission/infrastructure/orm/orm-permission.entity';
 import { RoleName } from '../../src/authorization/role/domain/enums/role-name.enum';
-import { UserPermission } from '../../src/user/domain/enums/user.permissions';
+import { UserPermission } from '@app/common/iam/enums/user.permissions';
 import { Role } from '../../src/authorization/role/domain/role';
 
 describe('User (e2e)', () => {

@@ -13,7 +13,7 @@ import { Permissions } from '@app/common/iam/decorators/permissions.decorator';
 import { ActiveUserData } from '@app/common/iam/interfaces/active-user-data.interface';
 
 import { UserService } from '../../application/user.service';
-import { UserPermission } from '../../domain/enums/user.permissions';
+import { UserPermission } from '@app/common/iam/enums/user.permissions';
 import { AssignRolesToUserDto } from '../dtos/assign-roles-to-user.dto';
 import { ActiveUser } from '../../../shared/decorators/active-user';
 
