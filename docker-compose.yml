@@ -1,5 +1,6 @@
 services:
   iam:
+    container_name: iam-microservice
     build:
       context: .
       dockerfile: ./apps/iam/Dockerfile
@@ -26,6 +27,7 @@ services:
       - iam-postgres-data:/var/lib/postgresql/data
 
   travel-package:
+    container_name: travel-package-microservice
     build:
       context: .
       dockerfile: ./apps/travel-package/Dockerfile
@@ -55,15 +57,21 @@ services:
     ports:
       - "6379:6379"
   rabbitmq:
-    image: rabbitmq
+    image: rabbitmq:3-management
     ports:
       - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 30s
+      retries: 3
 
-   # e2e / integration tests
-#  test-postgres:
+  # e2e / integration tests
+#  test-db:
 #    image: postgres
 #    ports:
-#      - "5433:5432"
+#      - "5440:5432"
 #    environment:
 #      POSTGRES_PASSWORD: pass123
 #      POSTGRES_DB: travel-package-proposal-db
