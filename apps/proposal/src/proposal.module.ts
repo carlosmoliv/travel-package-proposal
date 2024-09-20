@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ProposalController } from './proposal.controller';
-import { ProposalService } from './proposal.service';
+import { ProposalService } from './application/proposal.service';
 
 @Module({
   imports: [],
