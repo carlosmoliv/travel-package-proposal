@@ -39,6 +39,15 @@
       "compilerOptions": {
         "tsConfigPath": "apps/travel-package/tsconfig.app.json"
       }
+    },
+    "proposal": {
+      "type": "application",
+      "root": "apps/proposal",
+      "entryFile": "main",
+      "sourceRoot": "apps/proposal/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/proposal/tsconfig.app.json"
+      }
     }
   }
 }
