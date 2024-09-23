@@ -52,6 +52,32 @@ services:
     volumes:
       - travel-package-postgres-data:/var/lib/postgresql/data
 
+  proposal:
+    container_name: proposal-microservice
+    build:
+      context: .
+      dockerfile: ./apps/proposal/Dockerfile
+      target: development
+    command: npm run start:dev proposal
+    env_file:
+      - ./apps/proposal/.env
+    ports:
+      - '3003:3003'
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - proposal-postgres-db
+      - rabbitmq
+  proposal-postgres-db:
+    image: postgres
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_PASSWORD: pass123
+      POSTGRES_DB: proposal-db
+    volumes:
+      - proposal-postgres-data:/var/lib/postgresql/data
+
   redis:
     image: redis
     ports:
@@ -83,3 +109,4 @@ services:
 volumes:
   iam-postgres-data:
   travel-package-postgres-data:
+  proposal-postgres-data:
