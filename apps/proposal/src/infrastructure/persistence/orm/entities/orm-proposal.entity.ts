@@ -1,6 +1,7 @@
 import { Column, Entity } from 'typeorm';
 
 import { OrmBaseEntity } from '@app/common/persistence/orm/entities/orm-base.entity';
+
 import { ProposalStatus } from '../../../../domain/enums/proposal-status';
 
 @Entity('proposals')

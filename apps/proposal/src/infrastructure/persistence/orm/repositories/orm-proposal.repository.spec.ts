@@ -3,7 +3,7 @@ import { Repository } from 'typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 
-import { OrmProposalRepository } from './orm-travel-package.repository';
+import { OrmProposalRepository } from './orm-proposal.repository';
 import { OrmProposal } from '../entities/orm-proposal.entity';
 import { ProposalStatus } from '../../../../domain/enums/proposal-status';
 
