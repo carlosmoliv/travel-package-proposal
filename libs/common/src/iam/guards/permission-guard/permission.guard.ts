@@ -1,13 +1,14 @@
 import { lastValueFrom } from 'rxjs';
 
 import { Reflector } from '@nestjs/core';
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+
+import { PERMISSIONS_KEY } from '@app/common/iam/decorators/permissions.decorator';
 
 import { PermissionType } from '../../permission.type';
-import { PERMISSIONS_KEY } from '@app/common/iam/decorators/permissions.decorator';
-import { ActiveUserData } from '../../interfaces/active-user-data.interface';
 import { REQUEST_USER_KEY } from '../../iam.constants';
+import { ActiveUserData } from '../../interfaces/active-user-data.interface';
 
 @Injectable()
 export class PermissionGuard implements CanActivate {

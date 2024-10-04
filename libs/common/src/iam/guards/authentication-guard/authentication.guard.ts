@@ -1,4 +1,5 @@
 import { Request } from 'express';
+import { lastValueFrom } from 'rxjs';
 
 import {
   CanActivate,
@@ -8,11 +9,10 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
+import { ClientProxy } from '@nestjs/microservices';
 
 import { IS_PUBLIC_KEY } from '@app/common/iam/decorators/public.decorator';
-import { ClientProxy } from '@nestjs/microservices';
-import { lastValueFrom } from 'rxjs';
-import { IAM_SERVICE } from '@app/common/iam/iam.constants';
+import { IAM_SERVICE } from '@app/common/constants';
 
 @Injectable()
 export class AuthenticationGuard implements CanActivate {

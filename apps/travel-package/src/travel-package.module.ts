@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { APP_GUARD } from '@nestjs/core';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { IAM_SERVICE } from '@app/common/iam/iam.constants';
+import { IAM_SERVICE } from '@app/common/constants';
 
 import { AuthenticationGuard } from '@app/common/iam/guards/authentication-guard/authentication.guard';
 
@@ -23,7 +23,7 @@ import { typeOrmAsyncConfig } from './config/orm.config';
         name: IAM_SERVICE,
         transport: Transport.RMQ,
         options: {
-          urls: [process.env.RABBITMQ_URL],
+          urls: [process.env.RABBITMQ_URI],
           queue: 'iam_queue',
         },
       },
