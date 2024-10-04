@@ -7,6 +7,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { OrmUserRepository } from './orm-user.repository';
 import { UserFactory } from '../../../../domain/factories/user.factory';
 import { OrmUser } from '../entities/orm-user.entity';
+import { RoleName } from '../../../../../authorization/role/domain/enums/role-name.enum';
+import { OrmRole } from '../../../../../authorization/role/infrastructure/orm/orm-role.entity';
+import objectContaining = jasmine.objectContaining;
 
 type MockRepository<T = any> = Partial<Record<keyof Repository<T>, jest.Mock>>;
 const createMockRepository = <T = any>(): MockRepository<T> => ({
@@ -53,16 +56,44 @@ describe('OrmUserRepository', () => {
     });
   });
 
-  describe('findByCriteria()', () => {
-    test('Return a User that match with the criteria', async () => {
+  describe('findByEmail()', () => {
+    test('Returns a User that match with the provided email', async () => {
       const email = faker.internet.email();
       const expectedUser = userFactory.create('Nobody', email, '12345678');
       await sut.save(expectedUser);
-      typeOrmRepository.findOne.mockReturnValue(expectedUser);
+      typeOrmRepository.findOne.mockReturnValueOnce(expectedUser);
 
       const user = await sut.findByEmail(email);
 
       expect(user).toEqual(expectedUser);
+    });
+  });
+
+  describe('findById()', () => {
+    test('Returns a User that match with the id', async () => {
+      // Arrange
+      const id = 'any_id_123';
+      const ormEntity = new OrmUser();
+      ormEntity.name = 'Nobody';
+      ormEntity.email = 'any_email@email.com';
+      ormEntity.password = '12345678';
+
+      const ormRole = new OrmRole();
+      ormRole.name = RoleName.Client;
+      ormRole.description = 'Some description';
+
+      ormEntity.roles = [ormRole];
+
+      typeOrmRepository.findOne.mockReturnValue(ormEntity);
+
+      const user = await sut.findById(id);
+
+      expect(user).toMatchObject({
+        name: 'Nobody',
+        roles: expect.arrayContaining([
+          expect.objectContaining({ name: RoleName.Client }),
+        ]),
+      });
     });
   });
 });
