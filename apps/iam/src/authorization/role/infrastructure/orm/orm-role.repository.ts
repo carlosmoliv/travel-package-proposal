@@ -23,14 +23,6 @@ export class OrmRoleRepository implements RoleRepository {
     return this.rolesRepository.findOne({ where: { id: id } });
   }
 
-  async findByIds(id: string[]): Promise<Role[]> {
-    return this.rolesRepository.find({
-      where: {
-        id: In(id),
-      },
-    });
-  }
-
   async findByNames(roleNames: RoleName[]): Promise<Role[]> {
     return this.rolesRepository.find({
       where: {

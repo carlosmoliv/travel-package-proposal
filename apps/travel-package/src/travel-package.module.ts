@@ -5,6 +5,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { IAM_SERVICE } from '@app/common/constants';
 
 import { AuthenticationGuard } from '@app/common/iam/guards/authentication-guard/authentication.guard';
+import { PermissionGuard } from '@app/common/iam/guards/permission-guard/permission.guard';
 
 import { TravelPackageController } from './presenters/controllers/travel-package.controller';
 import { TravelPackageService } from './application/travel-package.service';
@@ -40,6 +41,10 @@ import { typeOrmAsyncConfig } from './config/orm.config';
     {
       provide: APP_GUARD,
       useClass: AuthenticationGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: PermissionGuard,
     },
   ],
 })

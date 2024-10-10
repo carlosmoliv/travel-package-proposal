@@ -12,7 +12,7 @@ export const ormConfig = {
   password: process.env.DATABASE_PASSWORD || 'pass123',
   database: process.env.DATABASE_NAME || 'iam-db',
   synchronize: true,
-  logging: false,
+  logging: true,
   migrationsTableName: 'typeorm_migrations',
   autoLoadEntities: true,
   // entities: ['dist/**/*.entity.{ts,js}'],

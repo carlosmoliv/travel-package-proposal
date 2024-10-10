@@ -19,10 +19,6 @@ export class OrmPermissionRepository implements PermissionRepository {
     await this.permissionRepository.save(permission);
   }
 
-  findByRoles(): Promise<Permission[]> {
-    return Promise.resolve([]);
-  }
-
   async findByIds(ids: string[]): Promise<Permission[] | []> {
     const permissions = await this.permissionRepository.find({
       where: { id: In(ids) },
@@ -30,5 +26,14 @@ export class OrmPermissionRepository implements PermissionRepository {
     return permissions.map((permission: OrmPermission) =>
       PermissionMapper.toDomain(permission),
     );
+  }
+
+  async findUserPermissions(userId: string): Promise<Permission[]> {
+    return this.permissionRepository
+      .createQueryBuilder('permission')
+      .leftJoinAndSelect('permission.roles', 'role')
+      .leftJoinAndSelect('role.users', 'user')
+      .where('user.id = :userId', { userId })
+      .getMany();
   }
 }

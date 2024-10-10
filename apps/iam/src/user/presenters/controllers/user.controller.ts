@@ -8,12 +8,13 @@ import {
   Post,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { MessagePattern } from '@nestjs/microservices';
 
 import { Permissions } from '@app/common/iam/decorators/permissions.decorator';
 import { ActiveUserData } from '@app/common/iam/interfaces/active-user-data.interface';
+import { UserPermission } from '@app/common/iam/enums/user.permissions';
 
 import { UserService } from '../../application/user.service';
-import { UserPermission } from '@app/common/iam/enums/user.permissions';
 import { AssignRolesToUserDto } from '../dtos/assign-roles-to-user.dto';
 import { ActiveUser } from '../../../shared/decorators/active-user';
 
@@ -24,7 +25,6 @@ export class UserController {
 
   @Get('me')
   getCurrentUser(@ActiveUser() activeUserData: ActiveUserData) {
-    console.log(activeUserData);
     return this.userService.findById(activeUserData.userId);
   }
 
@@ -39,5 +39,11 @@ export class UserController {
       userId,
       roleNames: addRolesToUserDto.roleNames,
     });
+  }
+
+  @MessagePattern('user.checkIfExists')
+  async checkIfExists({ userId }: { userId: string }): Promise<boolean> {
+    const user = await this.userService.findById(userId);
+    return !!user;
   }
 }

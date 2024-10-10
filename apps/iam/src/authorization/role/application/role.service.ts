@@ -29,8 +29,8 @@ export class RoleService {
     await this.roleRepository.save(role);
   }
 
-  async findByIds(roleIds: string[]): Promise<Role[]> {
-    return this.roleRepository.findByIds(roleIds);
+  async findById(roleId: string): Promise<Role> {
+    return this.roleRepository.findById(roleId);
   }
 
   async findByNames(roleNames: RoleName[]): Promise<Role[]> {

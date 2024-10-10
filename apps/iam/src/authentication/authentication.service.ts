@@ -2,16 +2,17 @@ import { randomUUID } from 'crypto';
 
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 
+import { ActiveUserData } from '@app/common/iam/interfaces/active-user-data.interface';
+
 import { SignUpInput } from './inputs/sign-up.input';
 import { SignInInput } from './inputs/sign-in.input';
 import { TokenService } from '../shared/token/token.service';
-import { ActiveUserData } from '@app/common/iam/interfaces/active-user-data.interface';
 import { RefreshTokenData } from '../shared/interfaces/refresh-token-data.interface';
 import { RefreshTokenIdsStorage } from './refresh-token-ids/refresh-token-ids.storage';
 import { RefreshTokenInput } from './inputs/refresh-token.input';
-import { InvalidateRefreshTokenError } from './refresh-token-ids/invalidate-refresh-token.error';
 import { User } from '../user/domain/user';
 import { UserService } from '../user/application/user.service';
+import { InvalidateRefreshTokenError } from './refresh-token-ids/invalidate-refresh-token.error';
 
 @Injectable()
 export class AuthenticationService {

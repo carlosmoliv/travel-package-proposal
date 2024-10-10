@@ -8,9 +8,13 @@ export class UserMapper {
     user.name = ormUser.name;
     user.email = ormUser.email;
     user.password = ormUser.password;
-    user.roles = ormUser.roles.map(
-      (role) => new Role(role.name, role.description),
-    );
+    if (ormUser.roles && ormUser.roles.length > 0) {
+      user.roles = ormUser.roles.map((ormRole) => {
+        const role = new Role(ormRole.name, ormRole.description);
+        role.id = ormRole.id;
+        return role;
+      });
+    }
     return user;
   }
 }

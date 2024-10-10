@@ -15,8 +15,6 @@ export class TravelPackageController {
   @HttpCode(HttpStatus.CREATED)
   @Post()
   async create(@Body() createTravelPackageDto: CreateTravelPackageDto) {
-    console.log(createTravelPackageDto);
-
     await this.travelPackageService.create(createTravelPackageDto);
   }
 

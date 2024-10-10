@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { TravelPackageRepository } from './ports/travel-package.repository';
 import { TravelPackageFactory } from '../domain/factories/travel-package.factory';
 import { CreateTravelPackageInput } from './inputs/travel-package.input';
+import { TravelPackage } from '../domain/travel-pacckage';
 
 @Injectable()
 export class TravelPackageService {
@@ -23,5 +24,15 @@ export class TravelPackageService {
       createTravelPackageInput.description,
     );
     await this.travelPackageRepository.save(travelPackage);
+  }
+
+  async findById(id: string): Promise<TravelPackage> {
+    const travelPackage = await this.travelPackageRepository.findById(id);
+    if (!travelPackage) {
+      throw new NotFoundException(
+        `Travel Package with ID "${id}" does not exist.`,
+      );
+    }
+    return travelPackage;
   }
 }
