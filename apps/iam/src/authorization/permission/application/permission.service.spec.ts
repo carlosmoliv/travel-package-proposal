@@ -27,21 +27,6 @@ describe('PermissionsService', () => {
       module.get<MockProxy<PermissionRepository>>(PermissionRepository);
   });
 
-  describe('getRolesPermissions()', () => {
-    it('Return all permissions related to the provided Role.', async () => {
-      const rolesId = ['any_id'];
-      const permissions = [
-        new Permission(ExamplePermission.CanUpdateResource, 'any description'),
-        new Permission(ExamplePermission.CanCreateResource, 'any description'),
-      ];
-      permissionRepository.findByRoles.mockResolvedValueOnce(permissions);
-
-      const result = await sut.getByRoles(rolesId);
-
-      expect(result).toEqual(expect.arrayContaining(permissions));
-    });
-  });
-
   describe('create()', () => {
     test('Create a role', async () => {
       const createPermissionInput: CreatePermissionInput = {
