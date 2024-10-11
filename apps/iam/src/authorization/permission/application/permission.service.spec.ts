@@ -56,4 +56,54 @@ describe('PermissionsService', () => {
       expect(result).toEqual(expect.arrayContaining(permissions));
     });
   });
+
+  describe('userHasPermissions()', () => {
+    it('Return true if user has all required permissions', async () => {
+      const userId = 'user_123';
+      const requiredPermissions = [
+        ExamplePermission.CanCreateResource,
+        ExamplePermission.CanUpdateResource,
+      ];
+
+      const userPermissions = [
+        new Permission(ExamplePermission.CanCreateResource, 'any description'),
+        new Permission(ExamplePermission.CanUpdateResource, 'any description'),
+      ];
+
+      permissionRepository.findUserPermissions.mockResolvedValueOnce(
+        userPermissions,
+      );
+
+      const result = await sut.userHasPermissions(userId, requiredPermissions);
+
+      expect(result).toBe(true);
+      expect(permissionRepository.findUserPermissions).toHaveBeenCalledWith(
+        userId,
+      );
+    });
+
+    it('Return false if user lacks any required permissions', async () => {
+      const userId = 'user_123';
+      const requiredPermissions = [
+        ExamplePermission.CanCreateResource,
+        ExamplePermission.CanDeleteResource,
+      ];
+
+      const userPermissions = [
+        new Permission(ExamplePermission.CanCreateResource, 'any description'),
+        new Permission(ExamplePermission.CanUpdateResource, 'any description'),
+      ];
+
+      permissionRepository.findUserPermissions.mockResolvedValueOnce(
+        userPermissions,
+      );
+
+      const result = await sut.userHasPermissions(userId, requiredPermissions);
+
+      expect(result).toBe(false);
+      expect(permissionRepository.findUserPermissions).toHaveBeenCalledWith(
+        userId,
+      );
+    });
+  });
 });
