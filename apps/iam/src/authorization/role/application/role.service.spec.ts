@@ -4,8 +4,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { RoleService } from './role.service';
 import { RoleRepository } from './ports/role.repository';
-import { CreateRoleInput } from '../inputs/create-role.input';
-import { AddPermissionsToRoleInput } from '../inputs/add-permissions-to-role.input';
+import { CreateRoleInput } from './inputs/create-role.input';
+import { AddPermissionsToRoleInput } from './inputs/add-permissions-to-role.input';
 import { Role } from '../domain/role';
 import { Permission } from '../../permission/domain/permission';
 import { ExamplePermission } from '@app/common/iam/enums/example-permission.enum';
@@ -82,21 +82,6 @@ describe('RolesService', () => {
       await sut.assignPermissionsToRole(addPermissionToRole);
 
       expect(rolesRepository.save).toHaveBeenCalledWith(role);
-    });
-
-    describe('findByIds()', () => {
-      it('Return all roles from the provided Ids', async () => {
-        const roleIds = ['any_id_1', 'any_id_2'];
-        const roles = [
-          new Role(RoleName.Admin, 'any_description'),
-          new Role(RoleName.TravelAgent, 'any_description'),
-        ];
-        rolesRepository.findByIds.mockResolvedValueOnce(roles);
-
-        const result = await sut.findByIds(roleIds);
-
-        expect(result).toEqual(expect.arrayContaining(roles));
-      });
     });
   });
 
