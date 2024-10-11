@@ -13,15 +13,12 @@ import { PermissionService } from '../../authorization/permission/application/pe
 import { RoleService } from '../../authorization/role/application/role.service';
 import { HashingService } from '../../shared/hashing/hashing.service';
 import { User } from '../domain/user';
-import { Permission } from '../../authorization/permission/domain/permission';
 import { Role } from '../../authorization/role/domain/role';
 import { RoleName } from '../../authorization/role/domain/enums/role-name.enum';
-import { ExamplePermission } from '@app/common/iam/enums/example-permission.enum';
 
 describe('UserService', () => {
   let sut: UserService;
   let userRepository: MockProxy<UserRepository>;
-  let permissionsService: MockProxy<PermissionService>;
   let rolesService: MockProxy<RoleService>;
   let userFactory: MockProxy<UserFactory>;
   let hashingService: MockProxy<HashingService>;
@@ -52,8 +49,6 @@ describe('UserService', () => {
     }).compile();
     userRepository = module.get<MockProxy<UserRepository>>(UserRepository);
     userFactory = module.get<MockProxy<UserFactory>>(UserFactory);
-    permissionsService =
-      module.get<MockProxy<PermissionService>>(PermissionService);
     rolesService = module.get<MockProxy<RoleService>>(RoleService);
     hashingService = module.get<MockProxy<HashingService>>(HashingService);
     sut = module.get<UserService>(UserService);
@@ -102,32 +97,6 @@ describe('UserService', () => {
     });
   });
 
-  describe('getPermissionsTypes()', () => {
-    test('Return the User permissions', async () => {
-      const permissions = [
-        new Permission(ExamplePermission.CanCreateResource),
-        new Permission(ExamplePermission.CanUpdateResource),
-      ];
-      user.roles = [new Role(RoleName.Admin)];
-      userRepository.findById.mockResolvedValueOnce(user);
-      permissionsService.getByRoles.mockResolvedValueOnce(permissions);
-
-      const userPermissions = await sut.getPermissionTypes('any_id');
-
-      expect(userPermissions).toEqual(
-        expect.arrayContaining([permissions[0].type, permissions[1].type]),
-      );
-    });
-
-    test('Fails when User does not exists', async () => {
-      userRepository.findById.mockResolvedValueOnce(undefined);
-
-      const promise = sut.getPermissionTypes('any_id');
-
-      await expect(promise).rejects.toThrow(NotFoundException);
-    });
-  });
-
   describe('assignRolesToUser()', () => {
     let roles: Role[];
 
@@ -144,7 +113,7 @@ describe('UserService', () => {
         userId: 'any_user_id',
       };
       userRepository.findById.mockResolvedValueOnce(user);
-      rolesService.findByIds.mockResolvedValueOnce(roles);
+      rolesService.findByNames.mockResolvedValueOnce(roles);
       user.roles = roles;
 
       await sut.assignRolesToUser(assignRolesToUser);
