@@ -1,18 +1,25 @@
 import { mock, MockProxy } from 'jest-mock-extended';
 import { createMock } from '@golevelup/ts-jest';
+import { lastValueFrom, of } from 'rxjs';
 
-import { Test, TestingModule } from '@nestjs/testing';
 import { Reflector } from '@nestjs/core';
+import { ClientProxy } from '@nestjs/microservices';
+import { Test, TestingModule } from '@nestjs/testing';
 import { ExecutionContext, UnauthorizedException } from '@nestjs/common';
+
+import { IAM_SERVICE } from '@app/common/constants';
 
 import { AuthenticationGuard } from './authentication.guard';
 import { TokenService } from '../../../../../../apps/iam/src/shared/token/token.service';
 import { RoleName } from '../../../../../../apps/iam/src/authorization/role/domain/enums/role-name.enum';
 
+jest.mock('rxjs');
+
 describe('AuthenticationGuard', () => {
   let sut: AuthenticationGuard;
   let tokenService: MockProxy<TokenService>;
   let reflectorMock: jest.Mocked<Reflector>;
+  let iamService: MockProxy<ClientProxy>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -20,11 +27,13 @@ describe('AuthenticationGuard', () => {
         AuthenticationGuard,
         { provide: TokenService, useValue: mock() },
         { provide: Reflector, useValue: { getAllAndOverride: jest.fn() } },
+        { provide: ClientProxy, useValue: mock() },
+        { provide: IAM_SERVICE, useValue: mock() },
       ],
     }).compile();
     sut = module.get<AuthenticationGuard>(AuthenticationGuard);
-    tokenService = module.get<MockProxy<TokenService>>(TokenService);
     reflectorMock = module.get(Reflector);
+    iamService = module.get<MockProxy<ClientProxy>>(ClientProxy);
   });
 
   describe('canActivate()', () => {
@@ -50,7 +59,8 @@ describe('AuthenticationGuard', () => {
           },
         ],
       };
-      tokenService.validateAndDecode.mockResolvedValueOnce(user);
+      iamService.send.mockReturnValueOnce(of(user));
+      jest.mocked(lastValueFrom).mockResolvedValueOnce(user);
 
       // Act
       const result = await sut.canActivate(mockExecutionContext);
@@ -93,9 +103,9 @@ describe('AuthenticationGuard', () => {
           getRequest: () => mockRequest,
         }),
       });
-      tokenService.validateAndDecode.mockRejectedValueOnce(
-        new Error('Token service error'),
-      );
+      jest
+        .mocked(lastValueFrom)
+        .mockRejectedValueOnce(new Error('Token validation error'));
 
       // Act
       const promise = sut.canActivate(mockExecutionContext);
