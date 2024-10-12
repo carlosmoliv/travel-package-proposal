@@ -1,22 +1,25 @@
 import { faker } from '@faker-js/faker';
 import { createMock } from '@golevelup/ts-jest';
 import { mock, MockProxy } from 'jest-mock-extended';
+import { of, lastValueFrom } from 'rxjs';
 
 import { Reflector } from '@nestjs/core';
 import { ExecutionContext } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+import { ClientProxy } from '@nestjs/microservices';
+import { IAM_SERVICE } from '@app/common/constants';
 
 import { ActiveUserData } from '../../interfaces/active-user-data.interface';
 import { PermissionGuard } from './permission.guard';
 import { ExamplePermission } from '../../enums/example-permission.enum';
 import { PermissionType } from '../../permission.type';
-import { ClientProxy } from '@nestjs/microservices';
-import { of } from 'rxjs';
+
+jest.mock('rxjs');
 
 describe('PermissionsGuard', () => {
   let sut: PermissionGuard;
   let reflectorMock: jest.Mocked<Reflector>;
-  let userService: MockProxy<ClientProxy>;
+  let iamService: MockProxy<ClientProxy>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -24,10 +27,12 @@ describe('PermissionsGuard', () => {
         PermissionGuard,
         { provide: Reflector, useValue: { getAllAndOverride: jest.fn() } },
         { provide: ClientProxy, useValue: mock() },
+        { provide: IAM_SERVICE, useValue: mock() },
       ],
     }).compile();
+
     reflectorMock = module.get<jest.Mocked<Reflector>>(Reflector);
-    userService = module.get<MockProxy<ClientProxy>>(ClientProxy);
+    iamService = module.get<MockProxy<ClientProxy>>(ClientProxy);
     sut = module.get<PermissionGuard>(PermissionGuard);
   });
 
@@ -55,11 +60,9 @@ describe('PermissionsGuard', () => {
           getRequest: () => mockRequest,
         }),
       });
-      reflectorMock.getAllAndOverride.mockReturnValueOnce([
-        ExamplePermission.CanCreateResource,
-        ExamplePermission.CanUpdateResource,
-      ]);
-      userService.send.mockReturnValueOnce(of(permissionsTypes));
+      reflectorMock.getAllAndOverride.mockReturnValueOnce(permissionsTypes);
+      iamService.send.mockReturnValueOnce(of(true));
+      jest.mocked(lastValueFrom).mockResolvedValueOnce(true);
 
       // Act
       const result = await sut.canActivate(mockExecutionContext);

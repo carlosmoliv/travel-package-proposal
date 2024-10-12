@@ -36,7 +36,7 @@ export class PermissionGuard implements CanActivate {
     ];
 
     const isAuthorized = await lastValueFrom(
-      this.iamService.send<boolean>('user.hasPermissions', {
+      this.iamService.send('user.hasPermissions', {
         userId: activeUserData.userId,
         requiredPermissions: contextPermissions,
       }),
