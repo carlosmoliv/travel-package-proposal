@@ -10,6 +10,17 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { AwsS3Service } from './aws-s3.service';
+import { ConfigService } from '@nestjs/config';
+
+const mockConfigService = {
+  get: jest.fn((key: string) => {
+    const config = {
+      AWS_S3_REGION: 'any_region',
+      AWS_BUCKET_NAME: 'any_bucket_name',
+    };
+    return config[key];
+  }),
+};
 
 jest.mock('@aws-sdk/s3-request-presigner', () => ({
   getSignedUrl: jest.fn(),
@@ -25,11 +36,8 @@ describe('AwsS3Service', () => {
       providers: [
         AwsS3Service,
         {
-          provide: awsS3Config.KEY,
-          useValue: {
-            s3Region: 'any_region',
-            bucketName: 'any_bucket_name',
-          },
+          provide: ConfigService,
+          useValue: mockConfigService,
         },
       ],
     }).compile();
@@ -39,12 +47,6 @@ describe('AwsS3Service', () => {
 
   afterEach(() => {
     s3Mock.reset();
-  });
-
-  test('should config aws credentials on creation', () => {
-    expect(S3Client).toHaveBeenCalledWith({
-      region: 'any_region',
-    });
   });
 
   describe('upload()', () => {

@@ -1,9 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 
-import { AwsS3Service } from '../../src/shared/infrastructure/file-storage/aws-s3/aws-s3.service';
-import { ConfigModule } from '@nestjs/config';
-import awsS3Config from '../../src/shared/infrastructure/file-storage/aws-s3/aws-s3.config';
+import { AwsS3Service } from '@app/common/file-storage/aws-s3/aws-s3.service';
 
 describe('AwsS3Service (e2e external)', () => {
   let app: INestApplication;
@@ -11,7 +9,6 @@ describe('AwsS3Service (e2e external)', () => {
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [ConfigModule.forFeature(awsS3Config)],
       providers: [AwsS3Service],
     }).compile();
     app = moduleFixture.createNestApplication();
