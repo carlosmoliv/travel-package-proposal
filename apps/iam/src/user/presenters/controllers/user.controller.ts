@@ -8,7 +8,7 @@ import {
   Post,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { MessagePattern } from '@nestjs/microservices';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 
 import { Permissions } from '@app/common/iam/decorators/permissions.decorator';
 import { ActiveUserData } from '@app/common/iam/interfaces/active-user-data.interface';
@@ -42,8 +42,7 @@ export class UserController {
   }
 
   @MessagePattern('user.checkIfExists')
-  async checkIfExists({ userId }: { userId: string }): Promise<boolean> {
-    const user = await this.userService.findById(userId);
-    return !!user;
+  async checkIfExists(@Payload() data: { userId: string }): Promise<boolean> {
+    return this.userService.checkIfExists(data.userId);
   }
 }
