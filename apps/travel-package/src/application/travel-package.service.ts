@@ -35,4 +35,9 @@ export class TravelPackageService {
     }
     return travelPackage;
   }
+
+  async checkIfExists(id: string) {
+    const travelPackage = await this.travelPackageRepository.findById(id);
+    return !!travelPackage;
+  }
 }
