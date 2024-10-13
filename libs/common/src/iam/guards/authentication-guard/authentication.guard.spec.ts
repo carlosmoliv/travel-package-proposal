@@ -17,7 +17,6 @@ jest.mock('rxjs');
 
 describe('AuthenticationGuard', () => {
   let sut: AuthenticationGuard;
-  let tokenService: MockProxy<TokenService>;
   let reflectorMock: jest.Mocked<Reflector>;
   let iamService: MockProxy<ClientProxy>;
 
