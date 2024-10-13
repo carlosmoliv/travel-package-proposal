@@ -1,7 +1,8 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 
+import { MessagePattern, Payload } from '@nestjs/microservices';
+
 import { Permissions } from '@app/common/iam/decorators/permissions.decorator';
-import { MessagePattern } from '@nestjs/microservices';
 import { TravelPackagePermission } from '@app/common/iam/enums/travel-package.permissions.enum';
 
 import { TravelPackageService } from '../../application/travel-package.service';
@@ -19,13 +20,9 @@ export class TravelPackageController {
   }
 
   @MessagePattern('travel-package.checkIfExists')
-  async checkIfExists({
-    travelPackageId,
-  }: {
-    travelPackageId: string;
-  }): Promise<boolean> {
-    const travelPackage =
-      await this.travelPackageService.findById(travelPackageId);
-    return !!travelPackage;
+  async checkIfExists(
+    @Payload() data: { travelPackageId: string },
+  ): Promise<boolean> {
+    return this.travelPackageService.checkIfExists(data.travelPackageId);
   }
 }
