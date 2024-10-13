@@ -207,4 +207,22 @@ describe('UserService', () => {
       );
     });
   });
+
+  describe('checkIfExists()', () => {
+    test('Returns true if user exists', async () => {
+      userRepository.findById.mockResolvedValueOnce(user);
+
+      const result = await sut.checkIfExists(user.id);
+
+      expect(result).toBe(true);
+    });
+
+    test('Returns false if user does not exist', async () => {
+      userRepository.findById.mockResolvedValueOnce(undefined);
+
+      const result = await sut.checkIfExists('nonexistent_id');
+
+      expect(result).toBe(false);
+    });
+  });
 });

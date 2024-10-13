@@ -73,6 +73,11 @@ export class UserService {
     return user;
   }
 
+  async checkIfExists(userId: string): Promise<boolean> {
+    const user = await this.userRepository.findById(userId);
+    return !!user;
+  }
+
   private async ensureUserDoesNotExist(email: string): Promise<void> {
     const userExists = await this.userRepository.findByEmail(email);
     if (userExists) {
