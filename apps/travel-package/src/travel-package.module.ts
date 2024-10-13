@@ -1,9 +1,12 @@
+import * as Joi from 'joi';
+
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { APP_GUARD } from '@nestjs/core';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { IAM_SERVICE } from '@app/common/constants';
+import { ConfigModule } from '@nestjs/config';
 
+import { IAM_SERVICE } from '@app/common/constants';
 import { AuthenticationGuard } from '@app/common/iam/guards/authentication-guard/authentication.guard';
 import { PermissionGuard } from '@app/common/iam/guards/permission-guard/permission.guard';
 
@@ -17,6 +20,12 @@ import { typeOrmAsyncConfig } from './config/orm.config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      validationSchema: Joi.object({
+        PORT: Joi.number().required(),
+      }),
+    }),
     TypeOrmModule.forRootAsync(typeOrmAsyncConfig),
     TypeOrmModule.forFeature([OrmTravelPackage]),
     ClientsModule.register([
