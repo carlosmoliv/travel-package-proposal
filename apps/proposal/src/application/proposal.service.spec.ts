@@ -1,15 +1,16 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { ProposalService } from './proposal.service';
-import { ClientProxy } from '@nestjs/microservices';
+import { of } from 'rxjs';
+import { mock, MockProxy } from 'jest-mock-extended';
+
 import { NotFoundException } from '@nestjs/common';
-import { anyString, mock, MockProxy } from 'jest-mock-extended';
-import { lastValueFrom, of } from 'rxjs';
+import { ClientProxy } from '@nestjs/microservices';
+import { Test, TestingModule } from '@nestjs/testing';
+
+import { ProposalService } from './proposal.service';
 import { ProposalRepository } from './ports/proposal.repository';
 import { ProposalFactory } from '../domain/factories/proposal.factory';
 import { CreateProposalInput } from './inputs/create-proposal.input';
 import { IAM_SERVICE, TRAVEL_PACKAGE_SERVICE } from '@app/common/constants';
 import { ProposalStatus } from '../domain/enums/proposal-status';
-import objectContaining = jasmine.objectContaining;
 
 describe('ProposalService', () => {
   let proposalService: ProposalService;
@@ -69,6 +70,39 @@ describe('ProposalService', () => {
           status: ProposalStatus.Pending,
         }),
       );
+    });
+
+    it('should throw NotFoundException if client does not exist', async () => {
+      iamClient.send.mockReturnValueOnce(of(false));
+      iamClient.send.mockReturnValueOnce(of(true));
+      travelPackageClient.send.mockReturnValueOnce(of(true));
+
+      await expect(proposalService.create(createProposalInput)).rejects.toThrow(
+        new NotFoundException('Client does not exist'),
+      );
+      expect(proposalRepository.save).not.toHaveBeenCalled();
+    });
+
+    it('should throw NotFoundException if travel agent does not exist', async () => {
+      iamClient.send.mockReturnValueOnce(of(true));
+      iamClient.send.mockReturnValueOnce(of(false));
+      travelPackageClient.send.mockReturnValueOnce(of(true));
+
+      await expect(proposalService.create(createProposalInput)).rejects.toThrow(
+        new NotFoundException('Travel agent does not exist'),
+      );
+      expect(proposalRepository.save).not.toHaveBeenCalled();
+    });
+
+    it('should throw NotFoundException if travel package does not exist', async () => {
+      iamClient.send.mockReturnValueOnce(of(true));
+      iamClient.send.mockReturnValueOnce(of(true));
+      travelPackageClient.send.mockReturnValueOnce(of(false));
+
+      await expect(proposalService.create(createProposalInput)).rejects.toThrow(
+        new NotFoundException('Travel package does not exist'),
+      );
+      expect(proposalRepository.save).not.toHaveBeenCalled();
     });
   });
 });
