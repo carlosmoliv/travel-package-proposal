@@ -92,19 +92,19 @@ services:
       interval: 30s
       timeout: 30s
       retries: 3
-
+      
   # e2e / integration tests
-#  test-db:
-#    image: postgres
-#    ports:
-#      - "5440:5432"
-#    environment:
-#      POSTGRES_PASSWORD: pass123
-#      POSTGRES_DB: travel-package-proposal-db
-#  test-redis:
-#    image: redis
-#    ports:
-#      - "6380:6379"
+  test-db:
+    image: postgres
+    ports:
+      - "5440:5432"
+    environment:
+      POSTGRES_PASSWORD: pass123
+      POSTGRES_DB: travel-package-proposal-db
+  test-redis:
+    image: redis
+    ports:
+      - "6380:6379"
 
 volumes:
   iam-postgres-data:

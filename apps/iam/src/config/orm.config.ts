@@ -1,8 +1,9 @@
+import { DataSource } from 'typeorm';
+
 import {
   TypeOrmModuleAsyncOptions,
   TypeOrmModuleOptions,
 } from '@nestjs/typeorm';
-import { DataSource } from 'typeorm';
 
 export const ormConfig = {
   type: 'postgres' as const,

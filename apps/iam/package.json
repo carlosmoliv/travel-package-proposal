@@ -1,0 +1,17 @@
+{
+  "name": "iam",
+  "version": "1.0.0",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "pretest:e2e": "docker compose up -d test-db test-redis",
+    "test:e2e": "DOTENV_CONFIG_PATH=./.env.test jest --config ./test/jest-e2e.json",
+    "posttest:e2e": "docker compose stop test-db test-redis && docker compose rm -f test-db test-redis"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
