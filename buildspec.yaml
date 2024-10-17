@@ -1,0 +1,19 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 974535102734.dkr.ecr.us-east-1.amazonaws.com
+    build:
+      - docker build -t reservations -f ./apps/iam/Dockerfile .
+      - docker tag iam:latest 974535102734.dkr.ecr.us-east-1.amazonaws.com/iam:latest
+
+      - docker build -t travel-package -f ./apps/travel-package/Dockerfile .
+      - docker tag travel-package:latest 974535102734.dkr.ecr.us-east-1.amazonaws.com/iam:latest
+
+      - docker build -t proposal -f ./apps/proposal/Dockerfile .
+      - docker tag proposal:latest 974535102734.dkr.ecr.us-east-1.amazonaws.com/iam:latest
+    post_build:
+      - docker push 974535102734.dkr.ecr.us-east-1.amazonaws.com/iam:latest
+      - docker push 974535102734.dkr.ecr.us-east-1.amazonaws.com/travel-package:latest
+      - docker push 974535102734.dkr.ecr.us-east-1.amazonaws.com/proposal:latest
