@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: travel-package
+  name: travel-package
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: travel-package
+  template:
+    metadata:
+      labels:
+        app: travel-package
+    spec:
+      containers:
+      - image: carlosmoliveira/travel-package
+        name: travel-package
+        ports:
+          - containerPort: 3002
+        env:
+          - name: RABBITMQ_URI
+            value: 'amqp://rabbitmq:5672'
+          - name: PORT
+            value: '3002'
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: postgres
+                key: connectionUrl

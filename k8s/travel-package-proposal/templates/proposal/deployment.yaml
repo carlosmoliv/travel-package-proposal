@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: proposal
+  name: proposal
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: proposal
+  template:
+    metadata:
+      labels:
+        app: proposal
+    spec:
+      containers:
+      - image: carlosmoliveira/proposal
+        name: proposal
+        ports:
+          - containerPort: 3003
+        env:
+          - name: RABBITMQ_URI
+            value: 'amqp://rabbitmq:5672'
+          - name: PORT
+            value: '3003'
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: postgres
+                key: connectionUrl
