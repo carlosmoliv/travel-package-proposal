@@ -6,12 +6,12 @@
 
 ## :bulb: About the project
 
-- Nest monorepo approach
-- Microservices
-- Shared libraries
+- Monorepo Structure
+- Microservices Architecture
+- Shared Libraries:
 - Unit tests and integration/e2e tests
-- Each microservice with their own Dockerfile
-- 
+- Dockerized Microservices
+- Kubernetes Orchestration
 
 ## :spiral_notepad: System Architecture
 
