@@ -7,11 +7,9 @@ import {
 
 export const ormConfig = {
   type: 'postgres' as const,
-  host: process.env.DATABASE_HOST || 'localhost',
-  port: parseInt(process.env.DATABASE_PORT, 10) || 5432,
-  username: process.env.DATABASE_USER || 'postgres',
-  password: process.env.DATABASE_PASSWORD || 'pass123',
-  database: process.env.DATABASE_NAME || 'iam-db',
+  url:
+    process.env.DATABASE_URL ||
+    'postgresql://postgres:pass123@iam-postgres-db:5432/iam-db',
   synchronize: true,
   logging: false,
   migrationsTableName: 'typeorm_migrations',
