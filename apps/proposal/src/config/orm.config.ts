@@ -8,7 +8,7 @@ export const ormConfig = {
   type: 'postgres' as const,
   url:
     process.env.DATABASE_URL ||
-    'postgresql://postgres:pass123@proposal-postgres-db:5432/iam-db',
+    'postgresql://postgres:pass123@proposal-postgres-db:5432/proposal-db',
   synchronize: true,
   logging: false,
   migrationsTableName: 'typeorm_migrations',

@@ -25,11 +25,7 @@ import { typeOrmAsyncConfig } from './config/orm.config';
       validationSchema: Joi.object({
         PORT: Joi.number().required(),
         RABBITMQ_URI: Joi.string().required(),
-        DATABASE_HOST: Joi.string().required(),
-        DATABASE_USER: Joi.string().required(),
-        DATABASE_PASSWORD: Joi.string().required(),
-        DATABASE_NAME: Joi.string().required(),
-        DATABASE_PORT: Joi.number().required(),
+        DATABASE_URL: Joi.string().required(),
       }),
     }),
     TypeOrmModule.forRootAsync(typeOrmAsyncConfig),
