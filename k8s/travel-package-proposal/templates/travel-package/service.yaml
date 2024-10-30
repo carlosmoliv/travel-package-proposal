@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: travel-package
+  name: travel-package
+spec:
+  ports:
+    - name: 'http'
+      protocol: TCP
+      port: 3002
+      targetPort: 3002
+  selector:
+    app: travel-package
+  type: NodePort
