@@ -21,14 +21,17 @@ spec:
           - containerPort: 3001
         env:
           - name: RABBITMQ_URI
-            value: 'amqp://rabbitmq:5672'
+            valueFrom:
+              secretKeyRef:
+                name: rabbitmq
+                key: connectionUri
           - name: PORT
             value: '3001'
           - name: DATABASE_URL
             valueFrom:
               secretKeyRef:
                 name: postgres
-                key: connectionUrl
+                key: connectionUri
           - name: JWT_SECRET
             valueFrom:
               secretKeyRef:
@@ -43,9 +46,20 @@ spec:
           - name: REFRESH_TOKEN_TTL
             value: '86400'
           - name: REDIS_HOST
-            value: 'redis'
+            valueFrom:
+              secretKeyRef:
+                name: redis
+                key: host
           - name: REDIS_PORT
-            value: '6379'
+            valueFrom:
+              secretKeyRef:
+                name: redis
+                key: port
+          - name: REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: redis
+                key: password
 
 
 

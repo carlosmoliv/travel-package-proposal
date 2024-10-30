@@ -21,11 +21,14 @@ spec:
           - containerPort: 3002
         env:
           - name: RABBITMQ_URI
-            value: 'amqp://rabbitmq:5672'
+            valueFrom:
+              secretKeyRef:
+                name: rabbitmq
+                key: connectionUri
           - name: PORT
             value: '3002'
           - name: DATABASE_URL
             valueFrom:
               secretKeyRef:
                 name: postgres
-                key: connectionUrl
+                key: connectionUri

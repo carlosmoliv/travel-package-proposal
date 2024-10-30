@@ -37,6 +37,7 @@ import { IamController } from './iam.controller';
         REFRESH_TOKEN_TTL: Joi.number().required(),
         REDIS_HOST: Joi.string().required(),
         REDIS_PORT: Joi.number().required(),
+        REDIS_PASSWORD: Joi.string().required(),
       }),
     }),
     JwtModule.registerAsync({
