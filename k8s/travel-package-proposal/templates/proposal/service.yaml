@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: proposal
+  name: proposal
+spec:
+  ports:
+    - name: 'http'
+      protocol: TCP
+      port: 3003
+      targetPort: 3003
+  selector:
+    app: proposal
+  type: NodePort
