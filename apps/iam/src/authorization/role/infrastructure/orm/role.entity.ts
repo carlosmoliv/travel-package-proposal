@@ -7,7 +7,7 @@ import { RoleName } from '../../domain/enums/role-name.enum';
 import { OrmUser } from '../../../../user/infrastructure/persistance/orm/entities/orm-user.entity';
 
 @Entity('roles')
-export class OrmRole extends OrmBaseEntity {
+export class RoleEntity extends OrmBaseEntity {
   @Column({ unique: true })
   name: RoleName;
 

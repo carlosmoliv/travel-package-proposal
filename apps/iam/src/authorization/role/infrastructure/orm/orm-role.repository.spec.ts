@@ -3,7 +3,7 @@ import { In, Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
 import { OrmRoleRepository } from './orm-role.repository';
-import { OrmRole } from './orm-role.entity';
+import { RoleEntity } from './role.entity';
 import { Role } from '../../domain/role';
 import { RoleName } from '../../domain/enums/role-name.enum';
 
@@ -24,20 +24,22 @@ describe('OrmRolesRepository', () => {
       providers: [
         OrmRoleRepository,
         {
-          provide: getRepositoryToken(OrmRole),
+          provide: getRepositoryToken(RoleEntity),
           useValue: createMockRepository(),
         },
       ],
     }).compile();
     sut = module.get<OrmRoleRepository>(OrmRoleRepository);
-    typeOrmRepository = module.get<MockRepository>(getRepositoryToken(OrmRole));
+    typeOrmRepository = module.get<MockRepository>(
+      getRepositoryToken(RoleEntity),
+    );
   });
 
   describe('save()', () => {
     test('Persist a Role on database', async () => {
       const role = new Role(RoleName.Client);
       role.name = RoleName.Admin;
-      typeOrmRepository.save.mockResolvedValueOnce(OrmRole);
+      typeOrmRepository.save.mockResolvedValueOnce(RoleEntity);
 
       await sut.save(role);
 
@@ -49,8 +51,8 @@ describe('OrmRolesRepository', () => {
     it('Return roles by their names', async () => {
       const roleNames = [RoleName.Admin, RoleName.Client];
       const ormRoles = [
-        { id: '1', name: RoleName.Admin } as OrmRole,
-        { id: '2', name: RoleName.Client } as OrmRole,
+        { id: '1', name: RoleName.Admin } as RoleEntity,
+        { id: '2', name: RoleName.Client } as RoleEntity,
       ];
       typeOrmRepository.find.mockResolvedValueOnce(ormRoles);
 
@@ -64,7 +66,7 @@ describe('OrmRolesRepository', () => {
 
     it('should return an empty array if no roles are found', async () => {
       const roleNames = [RoleName.Admin, RoleName.Client];
-      const ormRoles: OrmRole[] = [];
+      const ormRoles: RoleEntity[] = [];
 
       typeOrmRepository.find.mockResolvedValueOnce(ormRoles);
 

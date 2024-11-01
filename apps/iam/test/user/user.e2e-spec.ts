@@ -12,8 +12,7 @@ import { AssignRolesToUserDto } from '../../src/user/presenters/dtos/assign-role
 import { UserFactory } from '../../src/user/domain/factories/user.factory';
 import { AuthHelper } from '../helpers/auth.helper';
 import { User } from '../../src/user/domain/user';
-import { OrmRole } from '../../src/authorization/role/infrastructure/orm/orm-role.entity';
-import { IamModule } from '../../src/iam.module';
+import { RoleEntity } from '../../src/authorization/role/infrastructure/orm/role.entity';
 import { OrmHelper } from '@app/common/test/helpers/orm.helper';
 import { OrmPermission } from '../../src/authorization/permission/infrastructure/orm/orm-permission.entity';
 import { RoleName } from '../../src/authorization/role/domain/enums/role-name.enum';
@@ -22,7 +21,7 @@ import { Role } from '../../src/authorization/role/domain/role';
 
 describe('User (e2e)', () => {
   let app: INestApplication;
-  let roleRepository: Repository<OrmRole>;
+  let roleRepository: Repository<RoleEntity>;
   let userRepository: Repository<OrmUser>;
   let userFactory: UserFactory;
   let dataSource: DataSource;
@@ -52,15 +51,19 @@ describe('User (e2e)', () => {
     await app.init();
 
     dataSource = app.get<DataSource>(DataSource);
-    roleRepository = moduleFixture.get<Repository<OrmRole>>(
-      getRepositoryToken(OrmRole),
+    roleRepository = moduleFixture.get<Repository<RoleEntity>>(
+      getRepositoryToken(RoleEntity),
     );
     userRepository = moduleFixture.get<Repository<OrmUser>>(
       getRepositoryToken(OrmUser),
     );
     userFactory = moduleFixture.get<UserFactory>(UserFactory);
 
-    await OrmHelper.clearTables(dataSource, [OrmUser, OrmRole, OrmPermission]);
+    await OrmHelper.clearTables(dataSource, [
+      OrmUser,
+      RoleEntity,
+      OrmPermission,
+    ]);
     const authUser = await new AuthHelper(app).createAuthenticatedUser(
       RoleName.Admin,
       [UserPermission.AssignRolesToUser],

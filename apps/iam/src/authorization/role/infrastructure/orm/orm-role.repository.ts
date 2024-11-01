@@ -5,14 +5,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { RoleRepository } from '../../application/ports/role.repository';
 import { Role } from '../../domain/role';
-import { OrmRole } from './orm-role.entity';
+import { RoleEntity } from './role.entity';
 import { RoleName } from '../../domain/enums/role-name.enum';
 
 @Injectable()
 export class OrmRoleRepository implements RoleRepository {
   constructor(
-    @InjectRepository(OrmRole)
-    private readonly rolesRepository: Repository<OrmRole>,
+    @InjectRepository(RoleEntity)
+    private readonly rolesRepository: Repository<RoleEntity>,
   ) {}
 
   async save(role: Role): Promise<Role> {

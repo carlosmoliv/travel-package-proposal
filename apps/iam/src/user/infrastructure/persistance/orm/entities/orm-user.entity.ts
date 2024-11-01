@@ -2,7 +2,7 @@ import { Column, Entity, JoinTable, ManyToMany } from 'typeorm';
 
 import { OrmBaseEntity } from '@app/common/persistence/orm/entities/orm-base.entity';
 
-import { OrmRole } from '../../../../../authorization/role/infrastructure/orm/orm-role.entity';
+import { RoleEntity } from '../../../../../authorization/role/infrastructure/orm/role.entity';
 
 @Entity('users')
 export class OrmUser extends OrmBaseEntity {
@@ -15,7 +15,7 @@ export class OrmUser extends OrmBaseEntity {
   @Column()
   password: string;
 
-  @ManyToMany(() => OrmRole, (role) => role.users)
+  @ManyToMany(() => RoleEntity, (role) => role.users)
   @JoinTable({ name: 'user_roles' })
-  roles: OrmRole[];
+  roles: RoleEntity[];
 }

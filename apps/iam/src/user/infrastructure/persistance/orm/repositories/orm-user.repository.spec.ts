@@ -8,8 +8,7 @@ import { OrmUserRepository } from './orm-user.repository';
 import { UserFactory } from '../../../../domain/factories/user.factory';
 import { OrmUser } from '../entities/orm-user.entity';
 import { RoleName } from '../../../../../authorization/role/domain/enums/role-name.enum';
-import { OrmRole } from '../../../../../authorization/role/infrastructure/orm/orm-role.entity';
-import objectContaining = jasmine.objectContaining;
+import { RoleEntity } from '../../../../../authorization/role/infrastructure/orm/role.entity';
 
 type MockRepository<T = any> = Partial<Record<keyof Repository<T>, jest.Mock>>;
 const createMockRepository = <T = any>(): MockRepository<T> => ({
@@ -78,7 +77,7 @@ describe('OrmUserRepository', () => {
       ormEntity.email = 'any_email@email.com';
       ormEntity.password = '12345678';
 
-      const ormRole = new OrmRole();
+      const ormRole = new RoleEntity();
       ormRole.name = RoleName.Client;
       ormRole.description = 'Some description';
 
