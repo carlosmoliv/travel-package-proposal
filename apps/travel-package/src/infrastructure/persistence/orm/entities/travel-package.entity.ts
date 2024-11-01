@@ -3,7 +3,7 @@ import { Column, Entity } from 'typeorm';
 import { OrmBaseEntity } from '@app/common/persistence/orm/entities/orm-base.entity';
 
 @Entity('travel-packages')
-export class OrmTravelPackage extends OrmBaseEntity {
+export class TravelPackageEntity extends OrmBaseEntity {
   @Column()
   name: string;
 

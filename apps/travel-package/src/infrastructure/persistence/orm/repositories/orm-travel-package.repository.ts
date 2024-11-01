@@ -3,15 +3,15 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
 
-import { OrmTravelPackage } from '../entities/orm-travel-package.entity';
+import { TravelPackageEntity } from '../entities/travel-package.entity';
 import { TravelPackage } from '../../../../domain/travel-pacckage';
 import { TravelPackageRepository } from '../../../../application/ports/travel-package.repository';
 
 @Injectable()
 export class OrmTravelPackageRepository implements TravelPackageRepository {
   constructor(
-    @InjectRepository(OrmTravelPackage)
-    private readonly travelPackageRepository: Repository<OrmTravelPackage>,
+    @InjectRepository(TravelPackageEntity)
+    private readonly travelPackageRepository: Repository<TravelPackageEntity>,
   ) {}
 
   async save(travelPackage: TravelPackage): Promise<void> {

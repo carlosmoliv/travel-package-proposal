@@ -3,7 +3,7 @@ import { Repository } from 'typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 
-import { OrmTravelPackage } from '../entities/orm-travel-package.entity';
+import { TravelPackageEntity } from '../entities/travel-package.entity';
 import { OrmTravelPackageRepository } from './orm-travel-package.repository';
 import { TravelPackage } from '../../../../domain/travel-pacckage';
 
@@ -23,7 +23,7 @@ describe('TravelPackageRepositoryService', () => {
       providers: [
         OrmTravelPackageRepository,
         {
-          provide: getRepositoryToken(OrmTravelPackage),
+          provide: getRepositoryToken(TravelPackageEntity),
           useValue: createMockRepository(),
         },
       ],
@@ -31,7 +31,7 @@ describe('TravelPackageRepositoryService', () => {
 
     sut = module.get<OrmTravelPackageRepository>(OrmTravelPackageRepository);
     ormRepository = module.get<MockRepository>(
-      getRepositoryToken(OrmTravelPackage),
+      getRepositoryToken(TravelPackageEntity),
     );
   });
 
