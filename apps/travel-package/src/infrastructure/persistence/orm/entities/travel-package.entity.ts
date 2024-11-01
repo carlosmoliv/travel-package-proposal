@@ -1,9 +1,9 @@
 import { Column, Entity } from 'typeorm';
 
-import { OrmBaseEntity } from '@app/common/persistence/orm/entities/orm-base.entity';
+import { BaseEntity } from '@app/common/persistence/orm/entities/base.entity';
 
 @Entity('travel-packages')
-export class TravelPackageEntity extends OrmBaseEntity {
+export class TravelPackageEntity extends BaseEntity {
   @Column()
   name: string;
 

@@ -1,13 +1,13 @@
 import { Column, Entity, ManyToMany, JoinTable } from 'typeorm';
 
-import { OrmBaseEntity } from '@app/common/persistence/orm/entities/orm-base.entity';
+import { BaseEntity } from '@app/common/persistence/orm/entities/base.entity';
 
 import { PermissionEntity } from '../../../permission/infrastructure/orm/permission.entity';
 import { RoleName } from '../../domain/enums/role-name.enum';
 import { UserEntity } from '../../../../user/infrastructure/persistance/orm/entities/user.entity';
 
 @Entity('roles')
-export class RoleEntity extends OrmBaseEntity {
+export class RoleEntity extends BaseEntity {
   @Column({ unique: true })
   name: RoleName;
 

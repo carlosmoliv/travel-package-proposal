@@ -1,11 +1,11 @@
 import { Column, Entity, JoinTable, ManyToMany } from 'typeorm';
 
-import { OrmBaseEntity } from '@app/common/persistence/orm/entities/orm-base.entity';
+import { BaseEntity } from '@app/common/persistence/orm/entities/base.entity';
 
 import { RoleEntity } from '../../../../../authorization/role/infrastructure/orm/role.entity';
 
 @Entity('users')
-export class UserEntity extends OrmBaseEntity {
+export class UserEntity extends BaseEntity {
   @Column()
   name: string;
 

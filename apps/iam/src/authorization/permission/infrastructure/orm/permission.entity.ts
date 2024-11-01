@@ -1,12 +1,12 @@
 import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 import { PermissionType } from '@app/common/iam/permission.type';
-import { OrmBaseEntity } from '@app/common/persistence/orm/entities/orm-base.entity';
+import { BaseEntity } from '@app/common/persistence/orm/entities/base.entity';
 
 import { RoleEntity } from '../../../role/infrastructure/orm/role.entity';
 
 @Entity('permissions')
-export class PermissionEntity extends OrmBaseEntity {
+export class PermissionEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
