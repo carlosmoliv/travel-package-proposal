@@ -5,7 +5,7 @@ import { OrmBaseEntity } from '@app/common/persistence/orm/entities/orm-base.ent
 import { ProposalStatus } from '../../../../domain/enums/proposal-status';
 
 @Entity('proposals')
-export class OrmProposal extends OrmBaseEntity {
+export class ProposalEntity extends OrmBaseEntity {
   @Column()
   clientId: string;
 

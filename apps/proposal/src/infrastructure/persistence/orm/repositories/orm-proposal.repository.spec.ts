@@ -4,7 +4,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 
 import { OrmProposalRepository } from './orm-proposal.repository';
-import { OrmProposal } from '../entities/orm-proposal.entity';
+import { ProposalEntity } from '../entities/proposal.entity';
 import { ProposalStatus } from '../../../../domain/enums/proposal-status';
 
 type MockRepository<T = any> = Partial<Record<keyof Repository<T>, jest.Mock>>;
@@ -22,19 +22,21 @@ describe('OrmProposalRepository', () => {
       providers: [
         OrmProposalRepository,
         {
-          provide: getRepositoryToken(OrmProposal),
+          provide: getRepositoryToken(ProposalEntity),
           useValue: createMockRepository(),
         },
       ],
     }).compile();
 
     sut = module.get<OrmProposalRepository>(OrmProposalRepository);
-    ormRepository = module.get<MockRepository>(getRepositoryToken(OrmProposal));
+    ormRepository = module.get<MockRepository>(
+      getRepositoryToken(ProposalEntity),
+    );
   });
 
   describe('save()', () => {
     test('persists a proposal on the database', async () => {
-      const proposal = new OrmProposal();
+      const proposal = new ProposalEntity();
       proposal.id = 'any_id';
       proposal.clientId = 'client_id_123';
       proposal.travelPackageId = 'travel_package_id';

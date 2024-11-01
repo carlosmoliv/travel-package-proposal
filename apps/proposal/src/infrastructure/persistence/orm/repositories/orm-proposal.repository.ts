@@ -5,17 +5,21 @@ import { Injectable } from '@nestjs/common';
 
 import { ProposalRepository } from '../../../../application/ports/proposal.repository';
 import { Proposal } from '../../../../domain/proposal';
-import { OrmProposal } from '../entities/orm-proposal.entity';
+import { ProposalEntity } from '../entities/proposal.entity';
 
 @Injectable()
 export class OrmProposalRepository implements ProposalRepository {
   constructor(
-    @InjectRepository(OrmProposal)
-    private readonly proposalRepository: Repository<OrmProposal>,
+    @InjectRepository(ProposalEntity)
+    private readonly proposalRepository: Repository<ProposalEntity>,
   ) {}
 
   async save(proposal: Proposal): Promise<void> {
     const proposalInstance = this.proposalRepository.create(proposal);
     await this.proposalRepository.save(proposalInstance);
+  }
+
+  findById(proposalId: string): Promise<Proposal> {
+    return Promise.resolve(undefined);
   }
 }

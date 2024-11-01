@@ -12,7 +12,7 @@ import { ProposalService } from './application/proposal.service';
 import { ProposalRepository } from './application/ports/proposal.repository';
 import { OrmProposalRepository } from './infrastructure/persistence/orm/repositories/orm-proposal.repository';
 import { ProposalFactory } from './domain/factories/proposal.factory';
-import { OrmProposal } from './infrastructure/persistence/orm/entities/orm-proposal.entity';
+import { ProposalEntity } from './infrastructure/persistence/orm/entities/proposal.entity';
 import { typeOrmAsyncConfig } from './config/orm.config';
 
 @Module({
@@ -26,7 +26,7 @@ import { typeOrmAsyncConfig } from './config/orm.config';
       }),
     }),
     TypeOrmModule.forRootAsync(typeOrmAsyncConfig),
-    TypeOrmModule.forFeature([OrmProposal]),
+    TypeOrmModule.forFeature([ProposalEntity]),
     ClientsModule.register([
       {
         name: IAM_SERVICE,
