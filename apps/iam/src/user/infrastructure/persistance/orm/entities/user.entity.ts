@@ -5,7 +5,7 @@ import { OrmBaseEntity } from '@app/common/persistence/orm/entities/orm-base.ent
 import { RoleEntity } from '../../../../../authorization/role/infrastructure/orm/role.entity';
 
 @Entity('users')
-export class OrmUser extends OrmBaseEntity {
+export class UserEntity extends OrmBaseEntity {
   @Column()
   name: string;
 

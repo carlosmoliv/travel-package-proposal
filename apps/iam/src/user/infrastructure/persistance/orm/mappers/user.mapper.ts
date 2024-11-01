@@ -1,9 +1,9 @@
-import { OrmUser } from '../entities/orm-user.entity';
+import { UserEntity } from '../entities/user.entity';
 import { User } from '../../../../domain/user';
 import { Role } from '../../../../../authorization/role/domain/role';
 
 export class UserMapper {
-  static toDomain(ormUser: OrmUser): User {
+  static toDomain(ormUser: UserEntity): User {
     const user = new User(ormUser.id);
     user.name = ormUser.name;
     user.email = ormUser.email;

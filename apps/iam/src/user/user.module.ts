@@ -4,7 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserRepository } from './application/ports/user.repository';
 import { OrmUserRepository } from './infrastructure/persistance/orm/repositories/orm-user.repository';
 import { UserFactory } from './domain/factories/user.factory';
-import { OrmUser } from './infrastructure/persistance/orm/entities/orm-user.entity';
+import { UserEntity } from './infrastructure/persistance/orm/entities/user.entity';
 import { UserController } from './presenters/controllers/user.controller';
 import { UserService } from './application/user.service';
 import { IamModule } from '../iam.module';
@@ -13,7 +13,7 @@ import { PermissionModule } from '../authorization/permission/permission.module'
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([OrmUser]),
+    TypeOrmModule.forFeature([UserEntity]),
     forwardRef(() => IamModule),
     RoleModule,
     PermissionModule,

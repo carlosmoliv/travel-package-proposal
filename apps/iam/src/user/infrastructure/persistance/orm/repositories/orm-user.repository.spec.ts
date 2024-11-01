@@ -6,7 +6,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { OrmUserRepository } from './orm-user.repository';
 import { UserFactory } from '../../../../domain/factories/user.factory';
-import { OrmUser } from '../entities/orm-user.entity';
+import { UserEntity } from '../entities/user.entity';
 import { RoleName } from '../../../../../authorization/role/domain/enums/role-name.enum';
 import { RoleEntity } from '../../../../../authorization/role/infrastructure/orm/role.entity';
 
@@ -29,14 +29,16 @@ describe('OrmUserRepository', () => {
         OrmUserRepository,
         UserFactory,
         {
-          provide: getRepositoryToken(OrmUser),
+          provide: getRepositoryToken(UserEntity),
           useValue: createMockRepository(),
         },
       ],
     }).compile();
     sut = module.get<OrmUserRepository>(OrmUserRepository);
     userFactory = module.get<UserFactory>(UserFactory);
-    typeOrmRepository = module.get<MockRepository>(getRepositoryToken(OrmUser));
+    typeOrmRepository = module.get<MockRepository>(
+      getRepositoryToken(UserEntity),
+    );
   });
 
   describe('save()', () => {
@@ -72,7 +74,7 @@ describe('OrmUserRepository', () => {
     test('Returns a User that match with the id', async () => {
       // Arrange
       const id = 'any_id_123';
-      const ormEntity = new OrmUser();
+      const ormEntity = new UserEntity();
       ormEntity.name = 'Nobody';
       ormEntity.email = 'any_email@email.com';
       ormEntity.password = '12345678';

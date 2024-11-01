@@ -4,7 +4,7 @@ import { OrmBaseEntity } from '@app/common/persistence/orm/entities/orm-base.ent
 
 import { PermissionEntity } from '../../../permission/infrastructure/orm/permission.entity';
 import { RoleName } from '../../domain/enums/role-name.enum';
-import { OrmUser } from '../../../../user/infrastructure/persistance/orm/entities/orm-user.entity';
+import { UserEntity } from '../../../../user/infrastructure/persistance/orm/entities/user.entity';
 
 @Entity('roles')
 export class RoleEntity extends OrmBaseEntity {
@@ -20,6 +20,6 @@ export class RoleEntity extends OrmBaseEntity {
   @JoinTable({ name: 'role_permissions' })
   permissions: PermissionEntity[];
 
-  @ManyToMany(() => OrmUser, (user) => user.roles)
-  users: OrmUser[];
+  @ManyToMany(() => UserEntity, (user) => user.roles)
+  users: UserEntity[];
 }

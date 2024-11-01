@@ -4,15 +4,15 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { UserRepository } from '../../../../application/ports/user.repository';
-import { OrmUser } from '../entities/orm-user.entity';
+import { UserEntity } from '../entities/user.entity';
 import { UserMapper } from '../mappers/user.mapper';
 import { User } from '../../../../domain/user';
 
 @Injectable()
 export class OrmUserRepository implements UserRepository {
   constructor(
-    @InjectRepository(OrmUser)
-    private readonly userRepository: Repository<OrmUser>,
+    @InjectRepository(UserEntity)
+    private readonly userRepository: Repository<UserEntity>,
   ) {}
 
   async save(user: User): Promise<void> {
