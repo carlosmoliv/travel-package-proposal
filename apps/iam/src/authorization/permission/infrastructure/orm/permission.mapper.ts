@@ -1,8 +1,8 @@
 import { Permission } from '../../domain/permission';
-import { OrmPermission } from './orm-permission.entity';
+import { PermissionEntity } from './permission.entity';
 
 export class PermissionMapper {
-  static toDomain(ormPermission: OrmPermission) {
+  static toDomain(ormPermission: PermissionEntity) {
     const { id, type, description } = ormPermission;
     return new Permission(type, description, id);
   }

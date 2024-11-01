@@ -2,7 +2,7 @@ import { Column, Entity, ManyToMany, JoinTable } from 'typeorm';
 
 import { OrmBaseEntity } from '@app/common/persistence/orm/entities/orm-base.entity';
 
-import { OrmPermission } from '../../../permission/infrastructure/orm/orm-permission.entity';
+import { PermissionEntity } from '../../../permission/infrastructure/orm/permission.entity';
 import { RoleName } from '../../domain/enums/role-name.enum';
 import { OrmUser } from '../../../../user/infrastructure/persistance/orm/entities/orm-user.entity';
 
@@ -14,11 +14,11 @@ export class RoleEntity extends OrmBaseEntity {
   @Column({ nullable: true })
   description: string;
 
-  @ManyToMany(() => OrmPermission, (permission) => permission.roles, {
+  @ManyToMany(() => PermissionEntity, (permission) => permission.roles, {
     cascade: true,
   })
   @JoinTable({ name: 'role_permissions' })
-  permissions: OrmPermission[];
+  permissions: PermissionEntity[];
 
   @ManyToMany(() => OrmUser, (user) => user.roles)
   users: OrmUser[];

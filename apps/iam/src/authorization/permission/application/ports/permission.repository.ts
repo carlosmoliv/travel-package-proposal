@@ -1,5 +1,4 @@
 import { Permission } from '../../domain/permission';
-import { PermissionType } from '@app/common/iam/permission.type';
 
 export abstract class PermissionRepository {
   abstract save(permission: Permission): Promise<void>;

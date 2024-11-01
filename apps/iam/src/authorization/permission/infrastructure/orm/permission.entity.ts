@@ -6,7 +6,7 @@ import { OrmBaseEntity } from '@app/common/persistence/orm/entities/orm-base.ent
 import { RoleEntity } from '../../../role/infrastructure/orm/role.entity';
 
 @Entity('permissions')
-export class OrmPermission extends OrmBaseEntity {
+export class PermissionEntity extends OrmBaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

@@ -4,15 +4,15 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { PermissionRepository } from '../../application/ports/permission.repository';
-import { OrmPermission } from './orm-permission.entity';
+import { PermissionEntity } from './permission.entity';
 import { Permission } from '../../domain/permission';
 import { PermissionMapper } from './permission.mapper';
 
 @Injectable()
 export class OrmPermissionRepository implements PermissionRepository {
   constructor(
-    @InjectRepository(OrmPermission)
-    private readonly permissionRepository: Repository<OrmPermission>,
+    @InjectRepository(PermissionEntity)
+    private readonly permissionRepository: Repository<PermissionEntity>,
   ) {}
 
   async save(permission: Permission): Promise<void> {
@@ -23,7 +23,7 @@ export class OrmPermissionRepository implements PermissionRepository {
     const permissions = await this.permissionRepository.find({
       where: { id: In(ids) },
     });
-    return permissions.map((permission: OrmPermission) =>
+    return permissions.map((permission: PermissionEntity) =>
       PermissionMapper.toDomain(permission),
     );
   }
