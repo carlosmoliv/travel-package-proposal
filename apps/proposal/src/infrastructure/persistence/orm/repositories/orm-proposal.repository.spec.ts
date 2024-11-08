@@ -68,5 +68,18 @@ describe('OrmProposalRepository', () => {
       });
       expect(result).toEqual(proposal);
     });
+
+    test('returns null when proposal is not found', async () => {
+      const proposalId = 'non_existent_id';
+
+      ormRepository.findOne.mockResolvedValue(null);
+
+      const result = await sut.findById(proposalId);
+
+      expect(ormRepository.findOne).toHaveBeenCalledWith({
+        where: { id: proposalId },
+      });
+      expect(result).toBeNull();
+    });
   });
 });
