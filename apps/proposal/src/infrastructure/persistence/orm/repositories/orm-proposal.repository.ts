@@ -19,7 +19,7 @@ export class OrmProposalRepository implements ProposalRepository {
     await this.proposalRepository.save(proposalInstance);
   }
 
-  findById(proposalId: string): Promise<Proposal> {
-    return Promise.resolve(undefined);
+  async findById(id: string): Promise<Proposal> {
+    return this.proposalRepository.findOne({ where: { id } });
   }
 }
