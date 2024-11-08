@@ -7,5 +7,7 @@ export class Proposal {
     public travelAgentId: string,
     public travelPackageId: string,
     public status: ProposalStatus,
+    public price: number,
+    public paymentId?: string,
   ) {}
 }
