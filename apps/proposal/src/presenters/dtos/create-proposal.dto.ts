@@ -1,4 +1,4 @@
-import { IsString } from 'class-validator';
+import { IsDecimal, IsString } from 'class-validator';
 
 export class CreateProposalDto {
   @IsString()
@@ -9,4 +9,7 @@ export class CreateProposalDto {
 
   @IsString()
   travelPackageId: string;
+
+  @IsDecimal()
+  price: number;
 }
