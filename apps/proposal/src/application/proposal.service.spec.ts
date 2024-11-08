@@ -9,8 +9,13 @@ import { ProposalService } from './proposal.service';
 import { ProposalRepository } from './ports/proposal.repository';
 import { ProposalFactory } from '../domain/factories/proposal.factory';
 import { CreateProposalInput } from './inputs/create-proposal.input';
-import { IAM_SERVICE, TRAVEL_PACKAGE_SERVICE } from '@app/common/constants';
+import {
+  IAM_SERVICE,
+  PAYMENT_SERVICE,
+  TRAVEL_PACKAGE_SERVICE,
+} from '@app/common/constants';
 import { ProposalStatus } from '../domain/enums/proposal-status';
+import { faker } from '@faker-js/faker';
 
 describe('ProposalService', () => {
   let proposalService: ProposalService;
@@ -26,6 +31,7 @@ describe('ProposalService', () => {
         { provide: ProposalRepository, useValue: mock() },
         { provide: IAM_SERVICE, useValue: mock() },
         { provide: TRAVEL_PACKAGE_SERVICE, useValue: mock() },
+        { provide: PAYMENT_SERVICE, useValue: mock() },
       ],
     }).compile();
 
@@ -49,6 +55,7 @@ describe('ProposalService', () => {
         travelPackageId,
         travelAgentId,
         clientId,
+        price: parseFloat(faker.commerce.price()),
       };
     });
 
@@ -64,10 +71,12 @@ describe('ProposalService', () => {
       // Assert
       expect(proposalRepository.save).toHaveBeenCalledWith(
         expect.objectContaining({
+          id: expect.any(String),
           clientId: 'client_id',
           travelAgentId: 'agent_id',
           travelPackageId: 'package_id',
           status: ProposalStatus.Pending,
+          price: createProposalInput.price,
         }),
       );
     });

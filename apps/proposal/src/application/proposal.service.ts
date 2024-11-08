@@ -2,11 +2,16 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { lastValueFrom } from 'rxjs';
 
 import { ClientProxy } from '@nestjs/microservices';
-import { IAM_SERVICE, TRAVEL_PACKAGE_SERVICE } from '@app/common/constants';
+import {
+  IAM_SERVICE,
+  PAYMENT_SERVICE,
+  TRAVEL_PACKAGE_SERVICE,
+} from '@app/common/constants';
 
 import { CreateProposalInput } from './inputs/create-proposal.input';
 import { ProposalRepository } from './ports/proposal.repository';
 import { ProposalFactory } from '../domain/factories/proposal.factory';
+import { ProposalStatus } from '../domain/enums/proposal-status';
 
 @Injectable()
 export class ProposalService {
@@ -17,6 +22,8 @@ export class ProposalService {
     private readonly iamClient: ClientProxy,
     @Inject(TRAVEL_PACKAGE_SERVICE)
     private readonly travelPackageClient: ClientProxy,
+    @Inject(PAYMENT_SERVICE)
+    private readonly paymentClient: ClientProxy,
   ) {}
 
   async create({
@@ -43,11 +50,27 @@ export class ProposalService {
     if (!travelPackageExists)
       throw new NotFoundException('Travel package does not exist');
 
-    const proposal = this.proposalFactory.create(
-      clientId,
-      travelAgentId,
+    const proposal = this.proposalFactory.create({
       travelPackageId,
+      travelAgentId,
+      clientId,
+      status: ProposalStatus.Pending,
+      price: 10,
+    });
+
+    await this.proposalRepository.save(proposal);
+  }
+
+  async acceptProposal(proposalId: string): Promise<void> {
+    const proposal = await this.proposalRepository.findById(proposalId);
+    if (!proposal) throw new NotFoundException('Proposal not found');
+
+    const paymentId = await lastValueFrom(
+      this.paymentClient.send('payment.create', { amount: proposal.price }),
     );
+
+    proposal.status = ProposalStatus.Accepted;
+    proposal.paymentId = paymentId;
 
     await this.proposalRepository.save(proposal);
   }

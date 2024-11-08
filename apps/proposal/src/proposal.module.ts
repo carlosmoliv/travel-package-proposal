@@ -5,7 +5,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ConfigModule } from '@nestjs/config';
 
-import { TRAVEL_PACKAGE_SERVICE, IAM_SERVICE } from '@app/common/constants';
+import {
+  TRAVEL_PACKAGE_SERVICE,
+  IAM_SERVICE,
+  PAYMENT_SERVICE,
+} from '@app/common/constants';
 
 import { ProposalController } from './presenters/controllers/proposal.controller';
 import { ProposalService } from './application/proposal.service';
@@ -44,6 +48,16 @@ import { typeOrmAsyncConfig } from './config/orm.config';
         options: {
           urls: [process.env.RABBITMQ_URI],
           queue: 'travel_package_queue',
+        },
+      },
+    ]),
+    ClientsModule.register([
+      {
+        name: PAYMENT_SERVICE,
+        transport: Transport.RMQ,
+        options: {
+          urls: [process.env.RABBITMQ_URI],
+          queue: 'payment_queue',
         },
       },
     ]),
