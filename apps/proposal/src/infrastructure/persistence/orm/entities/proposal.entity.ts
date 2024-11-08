@@ -17,4 +17,10 @@ export class ProposalEntity extends BaseEntity {
 
   @Column()
   status: ProposalStatus;
+
+  @Column({ type: 'decimal' })
+  price: number;
+
+  @Column({ nullable: true })
+  paymentId?: string;
 }
