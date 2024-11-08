@@ -78,10 +78,25 @@ services:
     volumes:
       - proposal-postgres-data:/var/lib/postgresql/data
 
+  payment:
+    container_name: payment-microservice
+    build:
+      context: .
+      dockerfile: ./apps/payment/Dockerfile
+      target: development
+    command: npm run start:dev payment
+    env_file:
+      - ./apps/payment/.env
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - rabbitmq
+
   redis:
     image: redis
     ports:
       - "6379:6379"
+    command: [ "redis-server", "--requirepass", "pass123" ]
   rabbitmq:
     image: rabbitmq:3-management
     ports:
