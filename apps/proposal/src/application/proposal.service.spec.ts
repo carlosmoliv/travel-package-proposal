@@ -16,12 +16,14 @@ import {
 } from '@app/common/constants';
 import { ProposalStatus } from '../domain/enums/proposal-status';
 import { faker } from '@faker-js/faker';
+import { Proposal } from '../domain/proposal';
 
 describe('ProposalService', () => {
   let proposalService: ProposalService;
   let proposalRepository: MockProxy<ProposalRepository>;
   let iamClient: MockProxy<ClientProxy>;
   let travelPackageClient: MockProxy<ClientProxy>;
+  let paymentClient: MockProxy<ClientProxy>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -42,6 +44,7 @@ describe('ProposalService', () => {
     travelPackageClient = module.get<MockProxy<ClientProxy>>(
       TRAVEL_PACKAGE_SERVICE,
     );
+    paymentClient = module.get<MockProxy<ClientProxy>>(PAYMENT_SERVICE);
   });
 
   describe('create', () => {
@@ -112,6 +115,34 @@ describe('ProposalService', () => {
         new NotFoundException('Travel package does not exist'),
       );
       expect(proposalRepository.save).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('acceptProposal', () => {
+    it('proposal is accepted when payment is processed successfully', async () => {
+      const paymentId = 'payment_id';
+      const proposal = new Proposal(
+        'proposal_id',
+        'client_id',
+        'travel_agent_id',
+        'travel_package_id',
+        ProposalStatus.Pending,
+        100,
+      );
+      proposalRepository.findById.mockResolvedValueOnce(proposal);
+      paymentClient.send.mockReturnValueOnce(of(paymentId));
+
+      await proposalService.acceptProposal(proposal.id);
+
+      expect(paymentClient.send).toHaveBeenCalledWith('payment.create', {
+        amount: proposal.price,
+      });
+      expect(proposalRepository.save).toHaveBeenCalledWith(
+        expect.objectContaining({
+          ...proposal,
+          paymentId,
+        }),
+      );
     });
   });
 });
