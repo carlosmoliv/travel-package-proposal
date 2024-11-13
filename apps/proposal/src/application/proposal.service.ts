@@ -1,5 +1,11 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { lastValueFrom } from 'rxjs';
+import {
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
+import { catchError, lastValueFrom, tap } from 'rxjs';
 
 import { ClientProxy } from '@nestjs/microservices';
 import {
@@ -15,6 +21,8 @@ import { ProposalStatus } from '../domain/enums/proposal-status';
 
 @Injectable()
 export class ProposalService {
+  private readonly logger = new Logger(ProposalService.name);
+
   constructor(
     private readonly proposalRepository: ProposalRepository,
     private readonly proposalFactory: ProposalFactory,
@@ -22,8 +30,7 @@ export class ProposalService {
     private readonly iamClient: ClientProxy,
     @Inject(TRAVEL_PACKAGE_SERVICE)
     private readonly travelPackageClient: ClientProxy,
-    @Inject(PAYMENT_SERVICE)
-    private readonly paymentClient: ClientProxy,
+    @Inject(PAYMENT_SERVICE) private readonly paymentClient: ClientProxy,
   ) {}
 
   async create({
@@ -65,13 +72,22 @@ export class ProposalService {
     const proposal = await this.proposalRepository.findById(proposalId);
     if (!proposal) throw new NotFoundException('Proposal not found');
 
-    const paymentId = await lastValueFrom(
-      this.paymentClient.send('payment.create', { amount: proposal.price }),
+    await lastValueFrom(
+      this.paymentClient
+        .send('payment.create', { amount: proposal.price })
+        .pipe(
+          tap(async (paymentId) => {
+            proposal.status = ProposalStatus.Accepted;
+            proposal.paymentId = paymentId;
+            await this.proposalRepository.save(proposal);
+          }),
+          catchError((error) => {
+            this.logger.error(error);
+            throw new InternalServerErrorException(
+              'Failed to process payment for the proposal',
+            );
+          }),
+        ),
     );
-
-    proposal.status = ProposalStatus.Accepted;
-    proposal.paymentId = paymentId;
-
-    await this.proposalRepository.save(proposal);
   }
 }

@@ -1,7 +1,10 @@
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { mock, MockProxy } from 'jest-mock-extended';
 
-import { NotFoundException } from '@nestjs/common';
+import {
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Test, TestingModule } from '@nestjs/testing';
 
@@ -143,6 +146,28 @@ describe('ProposalService', () => {
           paymentId,
         }),
       );
+    });
+
+    it('should throw InternalServerErrorException if payment creation fails', async () => {
+      const proposal = new Proposal(
+        'proposal_id',
+        'client_id',
+        'travel_agent_id',
+        'travel_package_id',
+        ProposalStatus.Pending,
+        100,
+      );
+      proposalRepository.findById.mockResolvedValueOnce(proposal);
+      paymentClient.send.mockReturnValueOnce(
+        throwError(() => new Error('Payment failure')),
+      );
+
+      await expect(proposalService.acceptProposal(proposal.id)).rejects.toThrow(
+        new InternalServerErrorException(
+          'Failed to process payment for the proposal',
+        ),
+      );
+      expect(proposalRepository.save).not.toHaveBeenCalled();
     });
   });
 });
