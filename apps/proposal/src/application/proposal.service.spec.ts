@@ -4,6 +4,7 @@ import { mock, MockProxy } from 'jest-mock-extended';
 import {
   InternalServerErrorException,
   NotFoundException,
+  UnprocessableEntityException,
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -122,8 +123,7 @@ describe('ProposalService', () => {
   });
 
   describe('acceptProposal', () => {
-    it('proposal is accepted when payment is processed successfully', async () => {
-      const paymentId = 'payment_id';
+    it('should accept proposal successfully', async () => {
       const proposal = new Proposal(
         'proposal_id',
         'client_id',
@@ -133,9 +133,59 @@ describe('ProposalService', () => {
         100,
       );
       proposalRepository.findById.mockResolvedValueOnce(proposal);
-      paymentClient.send.mockReturnValueOnce(of(paymentId));
 
       await proposalService.acceptProposal(proposal.id);
+
+      expect(proposalRepository.save).toHaveBeenCalledWith(
+        expect.objectContaining({
+          ...proposal,
+          status: ProposalStatus.Accepted,
+        }),
+      );
+    });
+
+    it('should throw NotFoundException if proposal does not exist', async () => {
+      const proposalId = 'nonexistent_proposal_id';
+      proposalRepository.findById.mockResolvedValueOnce(null);
+
+      await expect(proposalService.acceptProposal(proposalId)).rejects.toThrow(
+        new NotFoundException('Proposal not found'),
+      );
+      expect(proposalRepository.save).not.toHaveBeenCalled();
+    });
+
+    it('should not change proposal if it is already accepted', async () => {
+      const proposal = new Proposal(
+        'proposal_id',
+        'client_id',
+        'travel_agent_id',
+        'travel_package_id',
+        ProposalStatus.Accepted,
+        100,
+      );
+      proposalRepository.findById.mockResolvedValueOnce(proposal);
+
+      await proposalService.acceptProposal(proposal.id);
+
+      expect(proposalRepository.save).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('payProposal()', () => {
+    it('should process payment successfully', async () => {
+      const paymentId = 'payment_id';
+      const proposal = new Proposal(
+        'proposal_id',
+        'client_id',
+        'travel_agent_id',
+        'travel_package_id',
+        ProposalStatus.Accepted,
+        100,
+      );
+      proposalRepository.findById.mockResolvedValueOnce(proposal);
+      paymentClient.send.mockReturnValueOnce(of(paymentId));
+
+      await proposalService.payProposal(proposal.id);
 
       expect(paymentClient.send).toHaveBeenCalledWith('payment.create', {
         amount: proposal.price,
@@ -143,6 +193,7 @@ describe('ProposalService', () => {
       expect(proposalRepository.save).toHaveBeenCalledWith(
         expect.objectContaining({
           ...proposal,
+          status: ProposalStatus.Paid,
           paymentId,
         }),
       );
@@ -154,7 +205,7 @@ describe('ProposalService', () => {
         'client_id',
         'travel_agent_id',
         'travel_package_id',
-        ProposalStatus.Pending,
+        ProposalStatus.Accepted,
         100,
       );
       proposalRepository.findById.mockResolvedValueOnce(proposal);
@@ -162,11 +213,41 @@ describe('ProposalService', () => {
         throwError(() => new Error('Payment failure')),
       );
 
-      await expect(proposalService.acceptProposal(proposal.id)).rejects.toThrow(
+      await expect(proposalService.payProposal(proposal.id)).rejects.toThrow(
         new InternalServerErrorException(
           'Failed to process payment for the proposal',
         ),
       );
+      expect(proposalRepository.save).not.toHaveBeenCalled();
+    });
+
+    it('should throw NotFoundException if proposal does not exist', async () => {
+      const proposalId = 'nonexistent_proposal_id';
+      proposalRepository.findById.mockResolvedValueOnce(null);
+
+      await expect(proposalService.payProposal(proposalId)).rejects.toThrow(
+        new NotFoundException('Proposal not found'),
+      );
+      expect(proposalRepository.save).not.toHaveBeenCalled();
+    });
+
+    it('should throw UnprocessableEntityException if proposal is not accepted', async () => {
+      const proposal = new Proposal(
+        'proposal_id',
+        'client_id',
+        'travel_agent_id',
+        'travel_package_id',
+        ProposalStatus.Pending,
+        100,
+      );
+      proposalRepository.findById.mockResolvedValueOnce(proposal);
+
+      await expect(proposalService.payProposal(proposal.id)).rejects.toThrow(
+        new UnprocessableEntityException(
+          'Proposal must be accepted before payment',
+        ),
+      );
+      expect(paymentClient.send).not.toHaveBeenCalled();
       expect(proposalRepository.save).not.toHaveBeenCalled();
     });
   });
