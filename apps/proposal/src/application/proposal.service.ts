@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Inject,
   Injectable,
   InternalServerErrorException,
@@ -79,25 +78,28 @@ export class ProposalService {
 
   async payProposal(proposalId: string) {
     const proposal = await this.findById(proposalId);
-
     if (proposal.status !== ProposalStatus.Accepted) {
       throw new UnprocessableEntityException(
         'Proposal must be accepted before payment',
       );
     }
 
-    this.paymentClient.send('payment.create', { amount: proposal.price }).pipe(
-      tap(async (paymentId) => {
-        proposal.status = ProposalStatus.Paid;
-        proposal.paymentId = paymentId;
-        await this.proposalRepository.save(proposal);
-      }),
-      catchError((error) => {
-        this.logger.error(error);
-        throw new InternalServerErrorException(
-          'Failed to process payment for the proposal',
-        );
-      }),
+    await lastValueFrom(
+      this.paymentClient
+        .send('payment.create', { amount: proposal.price })
+        .pipe(
+          tap(async (paymentId) => {
+            proposal.status = ProposalStatus.Paid;
+            proposal.paymentId = paymentId;
+            await this.proposalRepository.save(proposal);
+          }),
+          catchError((error) => {
+            this.logger.error(error);
+            throw new InternalServerErrorException(
+              'Failed to process payment for the proposal',
+            );
+          }),
+        ),
     );
   }
 
