@@ -72,6 +72,11 @@ export class ProposalService {
 
   async acceptProposal(proposalId: string): Promise<void> {
     const proposal = await this.findById(proposalId);
+    if (proposal.status !== ProposalStatus.Pending) {
+      throw new UnprocessableEntityException(
+        'You cannot accept a proposal already accepted or rejected',
+      );
+    }
     proposal.status = ProposalStatus.Accepted;
     await this.proposalRepository.save(proposal);
   }

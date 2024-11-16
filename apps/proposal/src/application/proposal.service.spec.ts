@@ -123,8 +123,10 @@ describe('ProposalService', () => {
   });
 
   describe('acceptProposal', () => {
-    it('should accept proposal successfully', async () => {
-      const proposal = new Proposal(
+    let proposal: Proposal;
+
+    beforeEach(async () => {
+      proposal = new Proposal(
         'proposal_id',
         'client_id',
         'travel_agent_id',
@@ -132,6 +134,9 @@ describe('ProposalService', () => {
         ProposalStatus.Pending,
         100,
       );
+    });
+
+    it('should accept proposal successfully', async () => {
       proposalRepository.findById.mockResolvedValueOnce(proposal);
 
       await proposalService.acceptProposal(proposal.id);
@@ -150,6 +155,19 @@ describe('ProposalService', () => {
 
       await expect(proposalService.acceptProposal(proposalId)).rejects.toThrow(
         new NotFoundException('Proposal not found'),
+      );
+      expect(proposalRepository.save).not.toHaveBeenCalled();
+    });
+
+    it('should throw UnprocessableEntityException when status is different from Pending', async () => {
+      const proposalId = 'proposal_id';
+      proposal.status = ProposalStatus.Paid;
+      proposalRepository.findById.mockResolvedValueOnce(proposal);
+
+      await expect(proposalService.acceptProposal(proposalId)).rejects.toThrow(
+        new UnprocessableEntityException(
+          'You cannot accept a proposal already accepted or rejected',
+        ),
       );
       expect(proposalRepository.save).not.toHaveBeenCalled();
     });
