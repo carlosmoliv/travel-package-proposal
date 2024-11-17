@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: payment
+  name: payment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payment
+  template:
+    metadata:
+      labels:
+        app: payment
+    spec:
+      containers:
+      - image: carlosmoliveira/payment
+        name: payment
+        env:
+          - name: RABBITMQ_URI
+            valueFrom:
+              secretKeyRef:
+                name: rabbitmq
+                key: connectionUri
+          - name: STRIPE_SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: stripe
+                key: secretKey
