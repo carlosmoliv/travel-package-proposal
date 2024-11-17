@@ -1,42 +1,46 @@
 import { mock, MockProxy } from 'jest-mock-extended';
-import { faker } from '@faker-js/faker';
 
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { ProposalStatus } from '../../../proposal/src/domain/enums/proposal-status';
-import { PaymentRepository } from './ports/payment.repository';
 import { PaymentService } from './payment.service';
 import { CreatePaymentInput } from './inputs/create-payment.input';
+import { PaymentGatewayService } from './ports/payment-gateway.service';
 
 describe('PaymentService', () => {
   let sut: PaymentService;
-  let paymentRepository: MockProxy<PaymentRepository>;
+  let paymentGatewayMock: MockProxy<PaymentGatewayService>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         PaymentService,
-        { provide: PaymentRepository, useValue: mock() },
+        {
+          provide: PaymentGatewayService,
+          useValue: mock(),
+        },
       ],
     }).compile();
 
     sut = module.get<PaymentService>(PaymentService);
+    paymentGatewayMock = module.get<MockProxy<PaymentGatewayService>>(
+      PaymentGatewayService,
+    );
   });
 
   describe('create', () => {
-    it('process and save the payment', async () => {
-      const input: CreatePaymentInput = { amount: faker };
+    const mockInput: CreatePaymentInput = { amount: 100 };
 
-      await sut.processPayment(input);
+    it('should create a payment and return the reference ID', async () => {
+      // Arrange
+      const mockChargeResult = { referenceId: 'ref_123' };
+      paymentGatewayMock.createCharge.mockResolvedValue(mockChargeResult);
 
-      expect(payment.save).toHaveBeenCalledWith(
-        expect.objectContaining({
-          clientId: 'client_id',
-          travelAgentId: 'agent_id',
-          travelPackageId: 'package_id',
-          status: ProposalStatus.Pending,
-        }),
-      );
+      // Act
+      const result = await sut.create(mockInput);
+
+      // Assert
+      expect(paymentGatewayMock.createCharge).toHaveBeenCalledWith(100);
+      expect(result).toEqual({ referenceId: 'ref_123' });
     });
   });
 });
