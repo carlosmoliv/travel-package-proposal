@@ -5,6 +5,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PaymentService } from './payment.service';
 import { CreatePaymentInput } from './inputs/create-payment.input';
 import { PaymentGatewayService } from './ports/payment-gateway.service';
+import { InternalServerErrorException, Logger } from '@nestjs/common';
 
 describe('PaymentService', () => {
   let sut: PaymentService;
@@ -41,6 +42,15 @@ describe('PaymentService', () => {
       // Assert
       expect(paymentGatewayMock.createCharge).toHaveBeenCalledWith(100);
       expect(result).toEqual({ referenceId: 'ref_123' });
+    });
+
+    it('should log an error and throw InternalServerErrorException if the payment fails', async () => {
+      const error = new Error('Gateway error');
+      paymentGatewayMock.createCharge.mockRejectedValue(error);
+
+      await expect(sut.create(mockInput)).rejects.toThrow(
+        InternalServerErrorException,
+      );
     });
   });
 });
