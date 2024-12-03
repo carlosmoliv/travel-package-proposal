@@ -4,7 +4,7 @@ import { forwardRef, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 
 import { CommonModule } from '@app/common';
@@ -21,6 +21,7 @@ import { JwtService } from './shared/token/jwt/jwt.service';
 import { HashingService } from './shared/hashing/hashing.service';
 import { BcryptService } from './shared/hashing/bcrypt/bcrypt.service';
 import { IamController } from './iam.controller';
+import { LoggingInterceptor } from './logging.interceptor';
 
 @Module({
   imports: [
@@ -77,6 +78,10 @@ import { IamController } from './iam.controller';
     {
       provide: HashingService,
       useClass: BcryptService,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggingInterceptor,
     },
   ],
   controllers: [AuthenticationController, IamController],
