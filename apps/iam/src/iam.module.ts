@@ -21,7 +21,9 @@ import { JwtService } from './shared/token/jwt/jwt.service';
 import { HashingService } from './shared/hashing/hashing.service';
 import { BcryptService } from './shared/hashing/bcrypt/bcrypt.service';
 import { IamController } from './iam.controller';
+import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 import { LoggingInterceptor } from './logging.interceptor';
+import { PrometheusControllerImpl } from './prometheus.controller';
 
 @Module({
   imports: [
@@ -63,6 +65,11 @@ import { LoggingInterceptor } from './logging.interceptor';
         inject: [ConfigService],
       },
     ]),
+    PrometheusModule.register({
+      defaultLabels: {
+        app: 'IAM Microservice',
+      },
+    }),
   ],
   providers: [
     RefreshTokenIdsStorage,
@@ -84,7 +91,11 @@ import { LoggingInterceptor } from './logging.interceptor';
       useClass: LoggingInterceptor,
     },
   ],
-  controllers: [AuthenticationController, IamController],
+  controllers: [
+    AuthenticationController,
+    IamController,
+    PrometheusControllerImpl,
+  ],
   exports: [HashingService],
 })
 export class IamModule {}
