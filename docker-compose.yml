@@ -112,12 +112,12 @@ services:
     image: prom/prometheus
     container_name: prometheus
     command:
-      - "--config.file=/etc/prometheus/prometheus.yaml"
+      - '--config.file=/etc/prometheus/prometheus.yml'
     ports:
       - "9090:9090"
     restart: unless-stopped
     volumes:
-      - ./observability/prometheus/prometheus.yaml:/etc/prometheus/prometheus.yaml
+      - ./prometheus:/etc/prometheus
       - prom_data:/prometheus
   grafana:
     image: grafana/grafana
@@ -129,7 +129,7 @@ services:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=grafana
     volumes:
-      - ./observability/grafana/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml
+      - ./grafana:/etc/grafana/provisioning/datasources
 
 volumes:
   iam-postgres-data:
