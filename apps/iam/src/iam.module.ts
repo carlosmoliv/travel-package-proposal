@@ -22,8 +22,8 @@ import { HashingService } from './shared/hashing/hashing.service';
 import { BcryptService } from './shared/hashing/bcrypt/bcrypt.service';
 import { IamController } from './iam.controller';
 import { PrometheusModule } from '@willsoto/nestjs-prometheus';
-import { LoggingInterceptor } from './logging.interceptor';
-import { PrometheusControllerImpl } from './prometheus.controller';
+import { LoggingInterceptor } from '@app/common/logger/logging.interceptor';
+import { PrometheusControllerImpl } from '@app/common/observability/prometheus/prometheus.controller';
 
 @Module({
   imports: [
