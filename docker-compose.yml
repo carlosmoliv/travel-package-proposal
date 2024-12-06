@@ -117,7 +117,7 @@ services:
       - "9090:9090"
     restart: unless-stopped
     volumes:
-      - ./prometheus:/etc/prometheus
+      - ./monitoring/prometheus:/etc/prometheus
       - prom_data:/prometheus
   grafana:
     image: grafana/grafana
@@ -129,7 +129,7 @@ services:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=grafana
     volumes:
-      - ./grafana:/etc/grafana/provisioning/datasources
+      - ./monitoring/grafana:/etc/grafana/provisioning/datasources
 
 volumes:
   iam-postgres-data:
