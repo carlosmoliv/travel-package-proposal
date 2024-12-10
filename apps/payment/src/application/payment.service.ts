@@ -15,10 +15,7 @@ export class PaymentService {
 
   async create(input: CreatePaymentInput) {
     try {
-      const checkoutUrl = await this.paymentGateway.createCheckout(
-        input.amount,
-      );
-      return { url: checkoutUrl };
+      return await this.paymentGateway.createCheckout(input.amount);
     } catch (error) {
       this.logger.error(
         `Failed to create payment. Input: ${JSON.stringify(input)}`,

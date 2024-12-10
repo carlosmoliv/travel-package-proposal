@@ -12,14 +12,25 @@ export class StripeService implements PaymentGatewayService {
     this.client = new Stripe(process.env.STRIPE_SECRET_KEY);
   }
 
-  async createCharge(amount: number): Promise<{ referenceId: string }> {
-    const paymentIntent = await this.client.paymentIntents.create({
-      amount: amount * 100,
-      currency: 'usd',
-      confirm: true,
-      payment_method: 'pm_card_visa',
-      return_url: 'https://test.com',
+  async createCheckout(amount: number): Promise<string> {
+    const session = await this.client.checkout.sessions.create({
+      payment_method_types: ['card'],
+      mode: 'payment',
+      currency: 'USD',
+      line_items: [
+        {
+          price_data: {
+            currency: 'USD',
+            unit_amount: this.convertAmount(amount),
+          },
+          quantity: 1,
+        },
+      ],
     });
-    return { referenceId: paymentIntent.id };
+    return session.url;
+  }
+
+  private convertAmount(rawAmount: number) {
+    return Math.floor(rawAmount * 100);
   }
 }

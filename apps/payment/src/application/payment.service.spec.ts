@@ -41,7 +41,7 @@ describe('PaymentService', () => {
 
       // Assert
       expect(paymentGatewayMock.createCheckout).toHaveBeenCalledWith(100);
-      expect(result).toEqual({ url });
+      expect(result).toBe(url);
     });
 
     it('should log an error and throw InternalServerErrorException if the payment fails', async () => {

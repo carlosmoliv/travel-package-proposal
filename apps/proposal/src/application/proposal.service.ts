@@ -6,7 +6,7 @@ import {
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import { catchError, lastValueFrom, tap } from 'rxjs';
+import { lastValueFrom } from 'rxjs';
 
 import { ClientProxy } from '@nestjs/microservices';
 import {
@@ -89,11 +89,11 @@ export class ProposalService {
       );
     }
     try {
-      const { url: checkoutUrl } = await lastValueFrom(
+      const checkoutUrl = await lastValueFrom(
         this.paymentClient.send('payment.create', { amount: proposal.price }),
       );
       proposal.status = ProposalStatus.Paid;
-      proposal.paymentUrl = checkoutUrl;
+      proposal.checkoutUrl = checkoutUrl;
       await this.proposalRepository.save(proposal);
       return { checkoutUrl };
     } catch (error) {

@@ -22,5 +22,5 @@ export class ProposalEntity extends BaseEntity {
   price: number;
 
   @Column({ nullable: true })
-  paymentId?: string;
+  checkoutUrl?: string;
 }
