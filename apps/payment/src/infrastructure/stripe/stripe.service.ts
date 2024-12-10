@@ -22,10 +22,15 @@ export class StripeService implements PaymentGatewayService {
           price_data: {
             currency: 'USD',
             unit_amount: this.convertAmount(amount),
+            product_data: {
+              name: 'Example',
+            },
           },
           quantity: 1,
         },
       ],
+      success_url: 'https://localhost:3001/payments/checkout',
+      cancel_url: 'https://localhost:3001/payments/cancel',
     });
     return session.url;
   }
