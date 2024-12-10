@@ -88,24 +88,23 @@ export class ProposalService {
         'Proposal must be accepted before payment',
       );
     }
-
-    await lastValueFrom(
-      this.paymentClient
-        .send('payment.create', { amount: proposal.price })
-        .pipe(
-          tap(async (paymentId) => {
-            proposal.status = ProposalStatus.Paid;
-            proposal.paymentId = paymentId;
-            await this.proposalRepository.save(proposal);
-          }),
-          catchError((error) => {
-            this.logger.error(error);
-            throw new InternalServerErrorException(
-              'Failed to process payment for the proposal',
-            );
-          }),
-        ),
-    );
+    try {
+      const { url: checkoutUrl } = await lastValueFrom(
+        this.paymentClient.send('payment.create', { amount: proposal.price }),
+      );
+      proposal.status = ProposalStatus.Paid;
+      proposal.paymentUrl = checkoutUrl;
+      await this.proposalRepository.save(proposal);
+      return { checkoutUrl };
+    } catch (error) {
+      this.logger.error(
+        `Failed to process payment for proposal ${proposalId}`,
+        error.stack,
+      );
+      throw new InternalServerErrorException(
+        'Failed to create payment session for the proposal',
+      );
+    }
   }
 
   private async findById(id: string): Promise<Proposal> {

@@ -191,7 +191,7 @@ describe('ProposalService', () => {
 
   describe('payProposal()', () => {
     it('should process payment successfully', async () => {
-      const paymentId = 'payment_id';
+      const paymentUrl = 'https://checkout.url';
       const proposal = new Proposal(
         'proposal_id',
         'client_id',
@@ -201,20 +201,11 @@ describe('ProposalService', () => {
         100,
       );
       proposalRepository.findById.mockResolvedValueOnce(proposal);
-      paymentClient.send.mockReturnValueOnce(of(paymentId));
+      paymentClient.send.mockReturnValueOnce(of({ url: paymentUrl }));
 
-      await proposalService.payProposal(proposal.id);
+      const result = await proposalService.payProposal(proposal.id);
 
-      expect(paymentClient.send).toHaveBeenCalledWith('payment.create', {
-        amount: proposal.price,
-      });
-      expect(proposalRepository.save).toHaveBeenCalledWith(
-        expect.objectContaining({
-          ...proposal,
-          status: ProposalStatus.Paid,
-          paymentId,
-        }),
-      );
+      expect(result.checkoutUrl).toBe(paymentUrl);
     });
 
     it('should throw InternalServerErrorException if payment creation fails', async () => {
@@ -233,7 +224,7 @@ describe('ProposalService', () => {
 
       await expect(proposalService.payProposal(proposal.id)).rejects.toThrow(
         new InternalServerErrorException(
-          'Failed to process payment for the proposal',
+          'Failed to create payment session for the proposal',
         ),
       );
       expect(proposalRepository.save).not.toHaveBeenCalled();
