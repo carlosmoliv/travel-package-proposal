@@ -21,7 +21,7 @@ export class StripeService implements PaymentGatewayService {
         {
           price_data: {
             currency: 'USD',
-            unit_amount: this.convertAmount(amount),
+            unit_amount: Math.floor(amount * 100),
             product_data: {
               name: 'Example',
             },
@@ -33,9 +33,5 @@ export class StripeService implements PaymentGatewayService {
       cancel_url: 'https://localhost:3001/payments/cancel',
     });
     return session.url;
-  }
-
-  private convertAmount(rawAmount: number) {
-    return Math.floor(rawAmount * 100);
   }
 }
