@@ -206,6 +206,7 @@ describe('ProposalService', () => {
       const result = await proposalService.payProposal(proposal.id);
 
       expect(result.checkoutUrl).toBe(checkoutUrl);
+      expect(proposal.status).toBe(ProposalStatus.PendingPayment);
     });
 
     it('should throw InternalServerErrorException if payment creation fails', async () => {

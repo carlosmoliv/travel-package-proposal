@@ -92,7 +92,7 @@ export class ProposalService {
       const checkoutUrl = await lastValueFrom(
         this.paymentClient.send('payment.create', { amount: proposal.price }),
       );
-      proposal.status = ProposalStatus.Paid;
+      proposal.status = ProposalStatus.PendingPayment;
       proposal.checkoutUrl = checkoutUrl;
       await this.proposalRepository.save(proposal);
       return { checkoutUrl };
