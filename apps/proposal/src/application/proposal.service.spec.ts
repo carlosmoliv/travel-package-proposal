@@ -191,7 +191,7 @@ describe('ProposalService', () => {
 
   describe('payProposal()', () => {
     it('should process payment successfully', async () => {
-      const paymentUrl = 'https://checkout.url';
+      const checkoutUrl = 'https://checkout.url';
       const proposal = new Proposal(
         'proposal_id',
         'client_id',
@@ -201,11 +201,11 @@ describe('ProposalService', () => {
         100,
       );
       proposalRepository.findById.mockResolvedValueOnce(proposal);
-      paymentClient.send.mockReturnValueOnce(of({ url: paymentUrl }));
+      paymentClient.send.mockReturnValueOnce(of(checkoutUrl));
 
       const result = await proposalService.payProposal(proposal.id);
 
-      expect(result.checkoutUrl).toBe(paymentUrl);
+      expect(result.checkoutUrl).toBe(checkoutUrl);
     });
 
     it('should throw InternalServerErrorException if payment creation fails', async () => {

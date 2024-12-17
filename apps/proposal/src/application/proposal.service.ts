@@ -81,11 +81,11 @@ export class ProposalService {
     await this.proposalRepository.save(proposal);
   }
 
-  async payProposal(proposalId: string) {
+  async payProposal(proposalId: string): Promise<{ checkoutUrl: string }> {
     const proposal = await this.findById(proposalId);
     if (proposal.status !== ProposalStatus.Accepted) {
       throw new UnprocessableEntityException(
-        'Proposal must be accepted before payment',
+        `Cannot proceed with payment. Proposal status is '${proposal.status}'.`,
       );
     }
     try {
