@@ -29,7 +29,7 @@ describe('PaymentService', () => {
   });
 
   describe('create', () => {
-    const mockInput: CreatePaymentInput = { amount: 100 };
+    const mockInput: CreatePaymentInput = { amount: 100, entityId: 'id123' };
 
     it('should create a payment and return the reference ID', async () => {
       // Arrange
@@ -40,7 +40,10 @@ describe('PaymentService', () => {
       const result = await sut.create(mockInput);
 
       // Assert
-      expect(paymentGatewayMock.createCheckout).toHaveBeenCalledWith(100);
+      expect(paymentGatewayMock.createCheckout).toHaveBeenCalledWith(
+        mockInput.amount,
+        mockInput.entityId,
+      );
       expect(result).toBe(url);
     });
 

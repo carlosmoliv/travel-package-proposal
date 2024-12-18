@@ -15,7 +15,10 @@ export class PaymentService {
 
   async create(input: CreatePaymentInput) {
     try {
-      return await this.paymentGateway.createCheckout(input.amount);
+      return await this.paymentGateway.createCheckout(
+        input.amount,
+        input.entityId,
+      );
     } catch (error) {
       this.logger.error(
         `Failed to create payment. Input: ${JSON.stringify(input)}`,

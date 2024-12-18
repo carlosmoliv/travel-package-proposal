@@ -90,7 +90,10 @@ export class ProposalService {
     }
     try {
       const checkoutUrl = await lastValueFrom(
-        this.paymentClient.send('payment.create', { amount: proposal.price }),
+        this.paymentClient.send('payment.create', {
+          amount: proposal.price,
+          entityId: proposalId,
+        }),
       );
       proposal.status = ProposalStatus.PendingPayment;
       proposal.checkoutUrl = checkoutUrl;
