@@ -1,27 +1,15 @@
 import Stripe from 'stripe';
 
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 import { PaymentGatewayService } from '../../application/ports/payment-gateway.service';
-import { StripeWebhookHandler } from './stripe-webhook';
 
 @Injectable()
-export class StripeService
-  implements PaymentGatewayService, StripeWebhookHandler
-{
+export class StripeService implements PaymentGatewayService {
   private readonly client: Stripe;
-  private readonly logger = new Logger(StripeService.name);
 
   constructor() {
     this.client = new Stripe(process.env.STRIPE_SECRET_KEY);
-  }
-
-  verifyWebhookSignature(payload: string | Buffer, signature: string) {
-    return this.client.webhooks.constructEvent(
-      payload,
-      signature,
-      process.env.STRIPE_WEBHOOK_SECRET,
-    );
   }
 
   async createCheckout(amount: number, entityId: string): Promise<string> {
@@ -44,13 +32,10 @@ export class StripeService
       metadata: {
         entityId: entityId,
       },
+      // TODO: set env variables here
       success_url: 'https://localhost:3001/payments/checkout',
       cancel_url: 'https://localhost:3001/payments/cancel',
     });
     return session.url;
-  }
-
-  async processSuccess(data: any) {
-    this.logger.log(`Processing, event metadata: ${data.metadata}`);
   }
 }
