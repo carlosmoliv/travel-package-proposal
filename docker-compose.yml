@@ -87,6 +87,8 @@ services:
     command: npm run start:dev payment
     env_file:
       - ./apps/payment/.env
+    ports:
+      - '3004:3004'
     volumes:
       - .:/usr/src/app
     depends_on:
