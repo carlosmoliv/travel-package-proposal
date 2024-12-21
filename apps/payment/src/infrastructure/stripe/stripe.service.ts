@@ -1,18 +1,16 @@
 import Stripe from 'stripe';
 
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 
 import { PaymentGatewayService } from '../../application/ports/payment-gateway.service';
+import * as process from 'node:process';
 
 @Injectable()
 export class StripeService implements PaymentGatewayService {
-  private readonly client: Stripe;
-
-  constructor() {
-    this.client = new Stripe(process.env.STRIPE_SECRET_KEY);
-  }
+  constructor(@Inject('STRIPE_CLIENT') private readonly client: Stripe) {}
 
   async createCheckout(amount: number, entityId: string): Promise<string> {
+    // TODO: add more payment methods
     const session = await this.client.checkout.sessions.create({
       payment_method_types: ['card'],
       mode: 'payment',
@@ -32,9 +30,8 @@ export class StripeService implements PaymentGatewayService {
       metadata: {
         entityId: entityId,
       },
-      // TODO: set env variables here
-      success_url: 'https://localhost:3001/payments/checkout',
-      cancel_url: 'https://localhost:3001/payments/cancel',
+      success_url: process.env.STRIPE_CHECKOUT_SUCCESS_URL,
+      cancel_url: process.env.STRIPE_CHECKOUT_CANCEL_URL,
     });
     return session.url;
   }
