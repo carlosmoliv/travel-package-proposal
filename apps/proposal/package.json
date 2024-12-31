@@ -1,0 +1,16 @@
+{
+  "name": "iam",
+  "version": "1.0.0",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "pretest:e2e": "docker compose up -d proposal-postgres-db-test proposal-rabbitmq-test",
+    "test:e2e": "jest --config ./test/jest-e2e.json --detectOpenHandles",
+    "posttest:e2e": "docker compose stop proposal-postgres-db-test proposal-rabbitmq-test && docker compose rm -f proposal-postgres-db-test proposal-rabbitmq-test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

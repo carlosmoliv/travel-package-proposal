@@ -1,0 +1,12 @@
+services:
+  proposal-postgres-db-test:
+    image: postgres
+    ports:
+      - "5441:5432"
+    environment:
+      POSTGRES_PASSWORD: pass123
+      POSTGRES_DB: proposal-db
+  proposal-rabbitmq-test:
+    image: rabbitmq
+    ports:
+      - "5680:5672"
