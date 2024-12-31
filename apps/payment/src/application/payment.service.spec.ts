@@ -1,15 +1,20 @@
 import { mock, MockProxy } from 'jest-mock-extended';
 
 import { Test, TestingModule } from '@nestjs/testing';
+import { InternalServerErrorException } from '@nestjs/common';
+
+import { NOTIFICATION_SERVICE } from '@app/common/constants';
+import { UUID_REGEX } from '@app/common/test/constants/regex.constant';
 
 import { PaymentService } from './payment.service';
 import { CreatePaymentInput } from './inputs/create-payment.input';
 import { PaymentGatewayService } from './ports/payment-gateway.service';
-import { InternalServerErrorException } from '@nestjs/common';
+import { PaymentRepository } from './ports/payment-repository.service';
 
 describe('PaymentService', () => {
   let sut: PaymentService;
   let paymentGatewayMock: MockProxy<PaymentGatewayService>;
+  let paymentRepositoryMock: MockProxy<PaymentRepository>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -19,6 +24,14 @@ describe('PaymentService', () => {
           provide: PaymentGatewayService,
           useValue: mock(),
         },
+        {
+          provide: PaymentRepository,
+          useValue: mock(),
+        },
+        {
+          provide: NOTIFICATION_SERVICE,
+          useValue: mock(),
+        },
       ],
     }).compile();
 
@@ -26,14 +39,20 @@ describe('PaymentService', () => {
     paymentGatewayMock = module.get<MockProxy<PaymentGatewayService>>(
       PaymentGatewayService,
     );
+    paymentRepositoryMock =
+      module.get<MockProxy<PaymentRepository>>(PaymentRepository);
   });
 
   describe('create', () => {
-    const mockInput: CreatePaymentInput = { amount: 100, entityId: 'id123' };
+    const mockInput: CreatePaymentInput = {
+      amount: 100,
+      customerEmail: 'any_email@email.com',
+    };
 
     it('should create a payment and return the reference ID', async () => {
       // Arrange
       const url = 'http://checkout_url';
+      paymentRepositoryMock.save.mockResolvedValue();
       paymentGatewayMock.createCheckout.mockResolvedValue(url);
 
       // Act
@@ -42,7 +61,7 @@ describe('PaymentService', () => {
       // Assert
       expect(paymentGatewayMock.createCheckout).toHaveBeenCalledWith(
         mockInput.amount,
-        mockInput.entityId,
+        expect.stringMatching(UUID_REGEX),
       );
       expect(result).toBe(url);
     });
