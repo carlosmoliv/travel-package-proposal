@@ -12,7 +12,7 @@ import { NOTIFICATION_SERVICE } from '@app/common/constants';
 import { PaymentGatewayService } from './ports/payment-gateway.service';
 import { CreatePaymentInput } from './inputs/create-payment.input';
 import { PaymentRepository } from './ports/payment-repository.service';
-import { Payment } from '../domain/payment';
+import { PaymentFactory } from '../domain/factories/PaymentFactory';
 
 @Injectable()
 export class PaymentService {
@@ -22,15 +22,17 @@ export class PaymentService {
     private readonly paymentGateway: PaymentGatewayService,
     @Inject(NOTIFICATION_SERVICE)
     private readonly paymentRepository: PaymentRepository,
+    private readonly paymentFactory: PaymentFactory,
   ) {}
 
   async create(input: CreatePaymentInput) {
     try {
-      // TODO: move the id generation to the domain layer using a factory
-      const paymentId = randomUUID();
-      const payment = new Payment(paymentId, input.amount, input.customerEmail);
+      const payment = this.paymentFactory.create({
+        amount: input.amount,
+        customerEmail: input.customerEmail,
+      });
       await this.paymentRepository.save(payment);
-      return await this.paymentGateway.createCheckout(input.amount, paymentId);
+      return await this.paymentGateway.createCheckout(input.amount, payment.id);
     } catch (error) {
       this.logger.error(
         `Failed to create payment. Input: ${JSON.stringify(input)}`,

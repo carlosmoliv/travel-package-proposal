@@ -10,6 +10,7 @@ import { PaymentService } from './payment.service';
 import { CreatePaymentInput } from './inputs/create-payment.input';
 import { PaymentGatewayService } from './ports/payment-gateway.service';
 import { PaymentRepository } from './ports/payment-repository.service';
+import { PaymentFactory } from '../domain/factories/payment.factory';
 
 describe('PaymentService', () => {
   let sut: PaymentService;
@@ -20,6 +21,7 @@ describe('PaymentService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         PaymentService,
+        PaymentFactory,
         {
           provide: PaymentGatewayService,
           useValue: mock(),
