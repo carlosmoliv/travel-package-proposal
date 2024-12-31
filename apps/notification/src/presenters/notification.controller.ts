@@ -8,12 +8,12 @@ export class NotificationController {
   constructor(private readonly notificationService: NotificationService) {}
 
   @EventPattern('notify.email')
-  async sendEmail(
-    @Payload() data: { recipient: string; message: string; proposalId: string },
+  async notifyEmail(
+    @Payload() data: { recipient: string; subject: string; message: string },
   ) {
     await this.notificationService.sendEmail(
       data.recipient,
-      'Payment Successful',
+      data.subject,
       data.message,
     );
   }
