@@ -3,6 +3,7 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
+  NotFoundException,
 } from '@nestjs/common';
 
 import { NOTIFICATION_SERVICE } from '@app/common/constants';
@@ -11,6 +12,9 @@ import { PaymentGatewayService } from './ports/payment-gateway.service';
 import { CreatePaymentInput } from './inputs/create-payment.input';
 import { PaymentRepository } from './ports/payment-repository.service';
 import { PaymentFactory } from '../domain/factories/payment.factory';
+import { ConfirmPaymentInput } from './inputs/confirm-payment.input';
+import { PaymentStatus } from '../domain/enums/payment-status.enum';
+import { ClientProxy } from '@nestjs/microservices';
 
 @Injectable()
 export class PaymentService {
@@ -18,9 +22,10 @@ export class PaymentService {
 
   constructor(
     private readonly paymentGateway: PaymentGatewayService,
-    @Inject(NOTIFICATION_SERVICE)
     private readonly paymentRepository: PaymentRepository,
     private readonly paymentFactory: PaymentFactory,
+    @Inject(NOTIFICATION_SERVICE)
+    private readonly notificationClient: ClientProxy,
   ) {}
 
   async create(input: CreatePaymentInput) {
@@ -38,5 +43,19 @@ export class PaymentService {
       );
       throw new InternalServerErrorException('Payment failed');
     }
+  }
+
+  async confirmPayment({ paymentId }: ConfirmPaymentInput) {
+    const payment = await this.paymentRepository.findOne(paymentId);
+    if (!payment) throw new NotFoundException('Payment not found');
+
+    payment.status = PaymentStatus.Paid;
+    await this.paymentRepository.save(payment);
+
+    this.notificationClient.emit('notify.email', {
+      recipient: payment.customerEmail,
+      subject: 'Payment Successful',
+      message: 'Thank you for your payment!',
+    });
   }
 }
