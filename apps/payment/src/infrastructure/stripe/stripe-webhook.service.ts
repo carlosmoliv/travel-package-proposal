@@ -7,11 +7,17 @@ import {
   Logger,
 } from '@nestjs/common';
 
+import { PaymentService } from '../../application/payment.service';
+import { ConfirmPaymentInput } from '../../application/inputs/confirm-payment.input';
+
 @Injectable()
 export class StripeWebhookService {
   private readonly logger = new Logger(StripeWebhookService.name);
 
-  constructor(@Inject('STRIPE_CLIENT') private readonly client: Stripe) {}
+  constructor(
+    @Inject('STRIPE_CLIENT') private readonly client: Stripe,
+    private readonly paymentService: PaymentService,
+  ) {}
 
   async handleWebhook(signature: string, payload: string | Buffer) {
     try {
@@ -34,15 +40,17 @@ export class StripeWebhookService {
   private async processEvent(event: Stripe.Event) {
     switch (event.type) {
       case 'checkout.session.completed':
-        this.processSuccess(event.data.object);
+        await this.processSuccess(event.data.object);
         break;
       default:
         this.logger.warn(`Unhandled event type: ${event.type}`);
     }
   }
 
-  private processSuccess(data: any) {
-    this.logger.log(`Processing, event metadata: ${data.metadata}`);
-    // TODO: implement business logic
+  private async processSuccess(session: Stripe.Checkout.Session) {
+    this.logger.log('the payment was successfully processed.');
+    await this.paymentService.confirmPayment(
+      session.metadata as unknown as ConfirmPaymentInput,
+    );
   }
 }
