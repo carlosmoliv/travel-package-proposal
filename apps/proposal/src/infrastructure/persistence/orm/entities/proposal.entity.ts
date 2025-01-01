@@ -20,7 +20,4 @@ export class ProposalEntity extends BaseEntity {
 
   @Column({ type: 'decimal' })
   price: number;
-
-  @Column({ nullable: true })
-  checkoutUrl?: string;
 }

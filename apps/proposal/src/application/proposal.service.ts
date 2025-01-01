@@ -23,6 +23,7 @@ import { Proposal } from '../domain/proposal';
 
 @Injectable()
 export class ProposalService {
+  private readonly MOCK_EMAIL = 'freetier158@gmail.com';
   private readonly logger = new Logger(ProposalService.name);
 
   constructor(
@@ -92,11 +93,12 @@ export class ProposalService {
       const checkoutUrl = await lastValueFrom(
         this.paymentClient.send('payment.create', {
           amount: proposal.price,
-          entityId: proposalId,
+          referenceId: proposalId,
+          // TODO: replace mocked email with correct dynamic logic
+          customerEmail: this.MOCK_EMAIL,
         }),
       );
       proposal.status = ProposalStatus.PendingPayment;
-      proposal.checkoutUrl = checkoutUrl;
       await this.proposalRepository.save(proposal);
       return { checkoutUrl };
     } catch (error) {

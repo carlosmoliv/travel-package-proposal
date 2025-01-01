@@ -8,6 +8,5 @@ export class Proposal {
     public travelPackageId: string,
     public status: ProposalStatus,
     public price: number,
-    public checkoutUrl?: string,
   ) {}
 }

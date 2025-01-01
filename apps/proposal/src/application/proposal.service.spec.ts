@@ -254,7 +254,7 @@ describe('ProposalService', () => {
 
       await expect(proposalService.payProposal(proposal.id)).rejects.toThrow(
         new UnprocessableEntityException(
-          'Proposal must be accepted before payment',
+          "Cannot proceed with payment. Proposal status is 'pending'.",
         ),
       );
       expect(paymentClient.send).not.toHaveBeenCalled();
