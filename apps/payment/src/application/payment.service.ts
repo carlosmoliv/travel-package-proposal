@@ -1,5 +1,3 @@
-import { randomUUID } from 'crypto';
-
 import {
   Inject,
   Injectable,
@@ -12,7 +10,7 @@ import { NOTIFICATION_SERVICE } from '@app/common/constants';
 import { PaymentGatewayService } from './ports/payment-gateway.service';
 import { CreatePaymentInput } from './inputs/create-payment.input';
 import { PaymentRepository } from './ports/payment-repository.service';
-import { PaymentFactory } from '../domain/factories/PaymentFactory';
+import { PaymentFactory } from '../domain/factories/payment.factory';
 
 @Injectable()
 export class PaymentService {
