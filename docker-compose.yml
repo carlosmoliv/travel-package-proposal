@@ -93,6 +93,16 @@ services:
       - .:/usr/src/app
     depends_on:
       - rabbitmq
+      - payment-postgres-db
+  payment-postgres-db:
+    image: postgres
+    ports:
+      - "5435:5432"
+    environment:
+      POSTGRES_PASSWORD: pass123
+      POSTGRES_DB: payment-db
+    volumes:
+      - payment-postgres-data:/var/lib/postgresql/data
 
   redis:
     image: redis
@@ -137,4 +147,5 @@ volumes:
   iam-postgres-data:
   travel-package-postgres-data:
   proposal-postgres-data:
+  payment-postgres-data:
   prom_data:
