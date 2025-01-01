@@ -104,6 +104,20 @@ services:
     volumes:
       - payment-postgres-data:/var/lib/postgresql/data
 
+  notification:
+    container_name: notification-microservice
+    build:
+      context: .
+      dockerfile: ./apps/notification/Dockerfile
+      target: development
+    command: npm run start:dev notification
+    env_file:
+      - ./apps/notification/.env
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - rabbitmq
+
   redis:
     image: redis
     ports:
