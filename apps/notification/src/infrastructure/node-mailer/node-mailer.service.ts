@@ -10,12 +10,13 @@ export class NodemailerService implements EmailService {
 
   constructor() {
     this.transporter = createTransport({
-      host: process.env.SMTP_HOST,
-      port: +process.env.SMTP_PORT,
-      secure: false,
+      service: 'gmail',
       auth: {
+        type: 'OAuth2',
         user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
+        clientId: process.env.GOOGLE_OAUTH_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_OAUTH_CLIENT_SECRET,
+        refreshToken: process.env.GOOGLE_OAUTH_REFRESH_TOKEN,
       },
     });
   }
