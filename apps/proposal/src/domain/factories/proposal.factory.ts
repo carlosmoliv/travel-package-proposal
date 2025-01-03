@@ -13,7 +13,6 @@ export class ProposalFactory {
     travelAgentId,
     status,
     price,
-    checkoutUrl,
   }: Partial<Proposal>): Proposal {
     const proposalId = id ?? randomUUID();
     return new Proposal(
@@ -23,7 +22,6 @@ export class ProposalFactory {
       travelPackageId,
       status,
       price,
-      checkoutUrl,
     );
   }
 }

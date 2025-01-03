@@ -161,7 +161,7 @@ describe('ProposalService', () => {
 
     it('should throw UnprocessableEntityException when status is different from Pending', async () => {
       const proposalId = 'proposal_id';
-      proposal.status = ProposalStatus.Paid;
+      proposal.status = ProposalStatus.Accepted;
       proposalRepository.findById.mockResolvedValueOnce(proposal);
 
       await expect(proposalService.acceptProposal(proposalId)).rejects.toThrow(
@@ -183,9 +183,9 @@ describe('ProposalService', () => {
       );
       proposalRepository.findById.mockResolvedValueOnce(proposal);
 
-      await proposalService.acceptProposal(proposal.id);
+      const promise = proposalService.acceptProposal(proposal.id);
 
-      expect(proposalRepository.save).not.toHaveBeenCalled();
+      await expect(promise).rejects.toThrow(UnprocessableEntityException);
     });
   });
 
@@ -206,7 +206,6 @@ describe('ProposalService', () => {
       const result = await proposalService.payProposal(proposal.id);
 
       expect(result.checkoutUrl).toBe(checkoutUrl);
-      expect(proposal.status).toBe(ProposalStatus.PendingPayment);
     });
 
     it('should throw InternalServerErrorException if payment creation fails', async () => {

@@ -36,11 +36,9 @@ export class ProposalService {
     @Inject(PAYMENT_SERVICE) private readonly paymentClient: ClientProxy,
   ) {}
 
-  async create({
-    travelPackageId,
-    travelAgentId,
-    clientId,
-  }: CreateProposalInput): Promise<void> {
+  async create(input: CreateProposalInput): Promise<void> {
+    const { clientId, travelAgentId, travelPackageId, price } = input;
+
     const [clientExists, travelAgentExists, travelPackageExists] =
       await Promise.all([
         lastValueFrom(this.iamClient.send('user.checkIfExists', { clientId })),
@@ -65,7 +63,7 @@ export class ProposalService {
       travelAgentId,
       clientId,
       status: ProposalStatus.Pending,
-      price: 10,
+      price,
     });
 
     await this.proposalRepository.save(proposal);
@@ -98,8 +96,6 @@ export class ProposalService {
           customerEmail: this.MOCK_EMAIL,
         }),
       );
-      proposal.status = ProposalStatus.PendingPayment;
-      await this.proposalRepository.save(proposal);
       return { checkoutUrl };
     } catch (error) {
       this.logger.error(
