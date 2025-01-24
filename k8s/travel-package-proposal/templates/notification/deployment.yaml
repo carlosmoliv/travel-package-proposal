@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: notification
+  name: notification
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notification
+  template:
+    metadata:
+      labels:
+        app: notification
+    spec:
+      containers:
+      - image: carlosmoliveira/notification
+        name: notification
+        env:
+          - name: RABBITMQ_URI
+            valueFrom:
+              secretKeyRef:
+                name: rabbitmq
+                key: connectionUri
+          - name: SMTP_USER
+            valueFrom:
+              secretKeyRef:
+                name: smtp
+                key: user
+          - name: GOOGLE_OAUTH_CLIENT_ID
+            valueFrom:
+              secretKeyRef:
+                name: google-oauth
+                key: clientId
+          - name: GOOGLE_OAUTH_CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: google-oauth
+                key: clientSecret
+          - name: GOOGLE_OAUTH_REFRESH_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: google-oauth
+                key: refreshToken
