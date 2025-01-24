@@ -18,6 +18,8 @@ spec:
       - image: carlosmoliveira/payment
         name: payment
         env:
+          - name: PORT
+            value: '3004'
           - name: RABBITMQ_URI
             valueFrom:
               secretKeyRef:
@@ -28,3 +30,12 @@ spec:
               secretKeyRef:
                 name: stripe
                 key: secretKey
+          - name: STRIPE_WEBHOOK_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: stripe
+                key: webhookSecretKey
+          - name: STRIPE_CHECKOUT_SUCCESS_URL
+            value: 'https://localhost:3001/payments/checkout'
+          - name: STRIPE_CHECKOUT_CANCEL_URL
+            value: 'https://localhost:3001/payments/cancel'
