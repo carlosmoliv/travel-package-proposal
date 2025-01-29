@@ -32,6 +32,7 @@ import { PaymentFactory } from './domain/factories/payment.factory';
         STRIPE_WEBHOOK_SECRET: Joi.string().required(),
         STRIPE_CHECKOUT_SUCCESS_URL: Joi.string().required(),
         RABBITMQ_URI: Joi.string().required(),
+        DATABASE_URL: Joi.string().required(),
       }),
     }),
     TypeOrmModule.forRootAsync(typeOrmAsyncConfig),
