@@ -55,15 +55,14 @@ spec:
                 name: redis
                 key: host
           - name: REDIS_PORT
-            valueFrom:
-              secretKeyRef:
-                name: redis
-                key: port
+            value: '15428'
           - name: REDIS_PASSWORD
             valueFrom:
               secretKeyRef:
                 name: redis
                 key: password
+          - name: REDIS_USERNAME
+            value: 'default'
         imagePullPolicy: Always
 
 #      imagePullSecrets:
