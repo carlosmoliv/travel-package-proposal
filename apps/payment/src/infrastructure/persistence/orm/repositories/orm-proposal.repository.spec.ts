@@ -2,10 +2,9 @@ import { Repository } from 'typeorm';
 
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-
-import { OrmProposalRepository } from './orm-proposal.repository';
-import { ProposalEntity } from '../entities/proposal.entity';
-import { ProposalStatus } from '../../../../domain/enums/proposal-status';
+import { OrmProposalRepository } from '../../../../../../proposal/src/infrastructure/persistence/orm/repositories/orm-proposal.repository';
+import { ProposalEntity } from '../../../../../../proposal/src/infrastructure/persistence/orm/entities/proposal.entity';
+import { ProposalStatus } from '../../../../../../proposal/src/domain/enums/proposal-status';
 
 type MockRepository<T = any> = Partial<Record<keyof Repository<T>, jest.Mock>>;
 const createMockRepository = <T = any>(): MockRepository<T> => ({
