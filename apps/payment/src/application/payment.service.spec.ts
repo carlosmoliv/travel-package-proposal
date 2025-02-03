@@ -1,7 +1,10 @@
 import { mock, MockProxy } from 'jest-mock-extended';
 
 import { Test, TestingModule } from '@nestjs/testing';
-import { InternalServerErrorException } from '@nestjs/common';
+import {
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 
 import { NOTIFICATION_SERVICE } from '@app/common/constants';
 import { UUID_REGEX } from '@app/common/test/constants/regex.constant';
@@ -68,7 +71,12 @@ describe('PaymentService', () => {
         mockInput.amount,
         expect.stringMatching(UUID_REGEX),
       );
-      expect(result).toBe(url);
+      expect(result).toEqual(
+        expect.objectContaining({
+          paymentId: expect.stringMatching(UUID_REGEX),
+          checkoutUrl: url,
+        }),
+      );
     });
 
     it('should log an error and throw InternalServerErrorException if the payment fails', async () => {
@@ -117,13 +125,13 @@ describe('PaymentService', () => {
       });
     });
 
-    it('should throw an InternalServerErrorException if the payment is not found', async () => {
+    it('should throw an NotFoundException if the payment is not found', async () => {
       // Arrange
       paymentRepositoryMock.findOne.mockResolvedValue(null);
 
       // Act & Assert
       await expect(sut.confirmPayment(mockInput)).rejects.toThrow(
-        InternalServerErrorException,
+        NotFoundException,
       );
       expect(paymentRepositoryMock.findOne).toHaveBeenCalledWith(
         mockInput.paymentId,

@@ -15,6 +15,7 @@ import { PaymentFactory } from '../domain/factories/payment.factory';
 import { ConfirmPaymentInput } from './inputs/confirm-payment.input';
 import { PaymentStatus } from '../domain/enums/payment-status.enum';
 import { ClientProxy } from '@nestjs/microservices';
+import { CreatePaymentOutput } from './outputs/CreatePaymentOutput';
 
 @Injectable()
 export class PaymentService {
@@ -28,14 +29,20 @@ export class PaymentService {
     private readonly notificationClient: ClientProxy,
   ) {}
 
-  async create(input: CreatePaymentInput) {
+  async create(input: CreatePaymentInput): Promise<CreatePaymentOutput> {
     try {
       const payment = this.paymentFactory.create({
         amount: input.amount,
         customerEmail: input.customerEmail,
       });
       await this.paymentRepository.save(payment);
-      return await this.paymentGateway.createCheckout(input.amount, payment.id);
+      return {
+        paymentId: payment.id,
+        checkoutUrl: await this.paymentGateway.createCheckout(
+          input.amount,
+          payment.id,
+        ),
+      };
     } catch (error) {
       this.logger.error(
         `Failed to create payment. Input: ${JSON.stringify(input)}`,
