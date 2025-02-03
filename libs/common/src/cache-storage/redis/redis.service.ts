@@ -21,6 +21,7 @@ export class RedisService
       host: this.configService.get('REDIS_HOST'),
       port: this.configService.get('REDIS_PORT'),
       password: this.configService.get('REDIS_PASSWORD'),
+      username: this.configService.get('REDIS_USERNAME'),
     });
   }
 
